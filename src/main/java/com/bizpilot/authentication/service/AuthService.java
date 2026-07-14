@@ -1,12 +1,19 @@
 package com.bizpilot.authentication.service;
 
 
+import com.bizpilot.authentication.dto.request.LoginRequest;
 import com.bizpilot.authentication.dto.request.RegisterRequest;
 import com.bizpilot.authentication.dto.response.AuthResponse;
+import com.bizpilot.authentication.entity.RefreshTokenEntity;
 import com.bizpilot.authentication.entity.UserEntity;
+import com.bizpilot.authentication.jwt.JwtService;
 import com.bizpilot.authentication.mapper.UserMapper;
 import com.bizpilot.authentication.repository.RefreshTokenRepository;
 import com.bizpilot.authentication.repository.UserRepository;
+import com.bizpilot.common.exception.EmailAlreadyExistsException;
+import com.bizpilot.common.exception.PhoneAlreadyExistsException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,28 +28,31 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public AuthService(UserRepository userRepository,
                        RefreshTokenRepository refreshTokenRepository,
                        UserMapper userMapper,
                        PasswordEncoder passwordEncoder,
-                       JwtService jwtService) {
+                       JwtService jwtService,
+                       AuthenticationManager authenticationManager) {
 
         this.userRepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already registered.");
+            throw new EmailAlreadyExistsException(request.getEmail());
         }
 
         if (userRepository.existsByPhone(request.getPhone())) {
-            throw new RuntimeException("Phone already registered.");
+            throw new PhoneAlreadyExistsException(request.getPhone());
         }
 
         UserEntity user = userMapper.toEntity(request);
@@ -53,18 +63,70 @@ public class AuthService {
 
         String accessToken = jwtService.generateAccessToken(user);
 
-        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
-                .token(UUID.randomUUID().toString())
-                .user(user)
-                .expiryDate(LocalDateTime.now().plusDays(30))
-                .build();
+        String refreshTokenValue = jwtService.generateRefreshToken(user);
+
+        RefreshTokenEntity refreshToken =
+                RefreshTokenEntity.builder()
+                        .token(refreshTokenValue)
+                        .user(user)
+                        .expiryDate(LocalDateTime.now().plusDays(30))
+                        .revoked(false)
+                        .build();
 
         refreshTokenRepository.save(refreshToken);
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken.getToken())
+                .refreshToken(refreshTokenValue)
                 .user(userMapper.toResponse(user))
+                .build();
+    }
+
+
+    public AuthResponse login(LoginRequest request) {
+
+        authenticationManager.authenticate(
+
+                new UsernamePasswordAuthenticationToken(
+
+                        request.getEmail(),
+
+                        request.getPassword()
+
+                )
+
+        );
+
+        UserEntity user = userRepository.findByEmail(request.getEmail())
+
+                .orElseThrow();
+
+        String accessToken = jwtService.generateAccessToken(user);
+
+        String refreshTokenValue = jwtService.generateRefreshToken(user);
+
+        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
+
+                .token(refreshTokenValue)
+
+                .user(user)
+
+                .expiryDate(LocalDateTime.now().plusDays(30))
+
+                .revoked(false)
+
+                .build();
+
+        refreshTokenRepository.save(refreshToken);
+
+        return AuthResponse.builder()
+
+                .accessToken(accessToken)
+
+                .refreshToken(refreshTokenValue)
+
+                .user(userMapper.toResponse(user))
+
                 .build();
     }
 

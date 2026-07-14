@@ -1,5 +1,6 @@
 package com.bizpilot.authentication.jwt;
 
+import com.bizpilot.authentication.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -19,6 +20,24 @@ public class JwtService {
     @Value("${app.jwt.access-token-expiration}")
     private long accessTokenExpiration;
 
+    @Value("${app.jwt.refresh-token-expiration}")
+    private long refreshTokenExpiration;
+
+    public String generateRefreshToken(UserEntity user) {
+
+        Date now = new Date();
+
+        Date expiry = new Date(now.getTime() + refreshTokenExpiration);
+
+        return Jwts.builder()
+                .subject(user.getEmail())
+                .claim("userId", user.getId())
+                .issuedAt(now)
+                .expiration(expiry)
+                .signWith(getSigningKey())
+                .compact();
+    }
+
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
@@ -28,14 +47,16 @@ public class JwtService {
 //        return Keys.hmacShaKeyFor(keyBytes);
 //    }
 
-    public String generateAccessToken(String email) {
+    public String generateAccessToken(UserEntity user) {
 
         Date now = new Date();
 
         Date expiry = new Date(now.getTime() + accessTokenExpiration);
 
         return Jwts.builder()
-                .subject(email)
+                .subject(user.getEmail())
+                .claim("userId", user.getId())
+                .claim("role", user.getRole().name())
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(getSigningKey())

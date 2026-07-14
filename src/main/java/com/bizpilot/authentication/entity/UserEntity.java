@@ -5,6 +5,9 @@ import com.bizpilot.authentication.model.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Stores application users.
  */
@@ -39,4 +42,7 @@ public class UserEntity extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean enabled;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<RefreshTokenEntity> refreshTokens = new ArrayList<>();
 }
