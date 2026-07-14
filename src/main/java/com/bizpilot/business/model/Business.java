@@ -2,16 +2,15 @@ package com.bizpilot.business.model;
 
 import lombok.*;
 
+/**
+ * Represents a business profile displayed on the public website.
+ */
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-/**
- * Represents a business profile displayed on the public website.
- */
-
 public class Business {
 
     private Long id;
@@ -39,5 +38,7 @@ public class Business {
     private String theme;
 
     private boolean published;
+
+    private BusinessCategory category;
 
 }
