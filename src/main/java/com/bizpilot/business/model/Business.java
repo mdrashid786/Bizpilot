@@ -1,5 +1,8 @@
 package com.bizpilot.business.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 /**
@@ -37,8 +40,9 @@ public class Business {
 
     private String theme;
 
-    private boolean published;
+    private Boolean published;
 
+    @Enumerated(EnumType.STRING)
     private BusinessCategory category;
 
 }
