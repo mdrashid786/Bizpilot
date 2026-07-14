@@ -7,6 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
+/**
+ * Represents a business profile displayed on the public website.
+ */
+
 public class Business {
 
     private Long id;
