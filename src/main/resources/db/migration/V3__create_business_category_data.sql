@@ -8,5 +8,9 @@ CREATE TABLE business_category_data
 
     field_value TEXT,
 
-    sort_order INT
+    sort_order INT,
+
+    created_at DATETIME,
+
+    updated_at DATETIME
 );

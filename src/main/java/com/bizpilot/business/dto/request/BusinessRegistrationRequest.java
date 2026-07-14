@@ -16,6 +16,9 @@ public class BusinessRegistrationRequest {
     @NotBlank
     private String phone;
 
+    @NotBlank
+    private String slug;
+
     @Email
     private String email;
 

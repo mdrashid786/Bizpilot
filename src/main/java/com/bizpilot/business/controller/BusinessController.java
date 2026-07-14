@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api/business")
 public class BusinessController {
 
     private final BusinessService businessService;

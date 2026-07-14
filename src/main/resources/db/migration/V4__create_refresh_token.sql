@@ -6,6 +6,12 @@ CREATE TABLE refresh_token (
 
     user_id BIGINT NOT NULL,
 
+    device_id VARCHAR(200) NOT NULL,
+
+    device_name VARCHAR(200) NOT NULL,
+
+    ip_address VARCHAR(100) NOT NULL,
+
     expiry_date DATETIME NOT NULL,
 
     revoked BOOLEAN NOT NULL DEFAULT FALSE,

@@ -83,5 +83,20 @@ public class JwtService {
                 .getPayload();
     }
 
+    public boolean isRefreshTokenValid(String token) {
+
+        try {
+
+            return !extractClaims(token)
+                    .getExpiration()
+                    .before(new Date());
+
+        } catch (Exception e) {
+
+            return false;
+
+        }
+    }
+
 
 }

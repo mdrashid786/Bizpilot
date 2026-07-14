@@ -33,4 +33,13 @@ public class RefreshTokenEntity extends BaseEntity {
     @Builder.Default
     private boolean revoked = false;
 
+    @Column(length = 200)
+    private String deviceId;
+
+    @Column(length = 200)
+    private String deviceName;
+
+    @Column(nullable = false, length = 100)
+    private String ipAddress;
+
 }
