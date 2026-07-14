@@ -2,8 +2,6 @@ CREATE TABLE business
 (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
 
-    owner_id BIGINT NOT NULL,
-
     business_name VARCHAR(150) NOT NULL,
 
     slug VARCHAR(120) UNIQUE NOT NULL,

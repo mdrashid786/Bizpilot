@@ -1,5 +1,6 @@
 package com.bizpilot.business.entity;
 
+import com.bizpilot.authentication.entity.UserEntity;
 import com.bizpilot.business.model.BusinessCategory;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,6 +20,10 @@ public class BusinessEntity extends BaseEntity {
 
     @Column(name = "business_name", nullable = false, length = 150)
     private String businessName;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private UserEntity owner;
 
     @Column(nullable = false, unique = true, length = 120)
     private String slug;
