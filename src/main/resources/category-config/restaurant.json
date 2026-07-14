@@ -1,0 +1,17 @@
+{
+  "category": "RESTAURANT",
+  "template": "restaurant-modern",
+  "dashboardSectionLabel": "Menu",
+  "fields": [
+    {
+      "key": "itemName",
+      "label": "Item Name",
+      "type": "text"
+    },
+    {
+      "key": "itemPrice",
+      "label": "Price (₹)",
+      "type": "number"
+    }
+  ]
+}

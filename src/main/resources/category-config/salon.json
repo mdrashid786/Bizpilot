@@ -1,0 +1,22 @@
+{
+  "category": "SALON",
+  "template": "salon-modern",
+  "dashboardSectionLabel": "Services",
+  "fields": [
+    {
+      "key": "serviceName",
+      "label": "Service Name",
+      "type": "text"
+    },
+    {
+      "key": "servicePrice",
+      "label": "Price (₹)",
+      "type": "number"
+    },
+    {
+      "key": "durationMinutes",
+      "label": "Duration (Minutes)",
+      "type": "number"
+    }
+  ]
+}
