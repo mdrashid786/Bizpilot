@@ -38,4 +38,14 @@ public class CategoryConfigService {
             throw new RuntimeException("Unable to load category config : " + category, e);
         }
     }
+
+    public boolean isValidField(BusinessCategory category, String fieldKey) {
+
+        CategoryConfig config = load(category);
+
+        return config.getFields()
+                .stream()
+                .anyMatch(field ->
+                        field.getKey().equals(fieldKey));
+    }
 }

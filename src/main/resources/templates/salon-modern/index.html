@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${business.businessName}"></title>
+</head>
+
+<body>
+
+<div th:replace="~{common/business-header :: header(${business})}"></div>
+
+<div th:replace="~{common/category-section :: categorySection(${config}, ${categoryData})}"></div>
+
+</body>
+
+</html>

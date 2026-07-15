@@ -2,6 +2,7 @@ package com.bizpilot.authentication.controller;
 
 
 import com.bizpilot.authentication.dto.request.LoginRequest;
+import com.bizpilot.authentication.dto.request.LogoutRequest;
 import com.bizpilot.authentication.dto.request.RegisterRequest;
 import com.bizpilot.authentication.dto.response.AuthResponse;
 import com.bizpilot.authentication.service.AuthService;
@@ -54,10 +55,20 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
-            @Valid @RequestBody LoginRequest request) {
+            @Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
 
-        return ResponseEntity.ok(authService.login(request));
+        String ipAddress = deviceUtils.extractIp(httpRequest);
+        return ResponseEntity.ok(authService.login(request, ipAddress));
 
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody(required = false) LogoutRequest request) {
+
+        authService.logout(authHeader, request);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/refresh")

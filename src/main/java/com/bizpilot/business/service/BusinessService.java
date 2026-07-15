@@ -97,6 +97,17 @@ public class BusinessService {
         return businessMapper.toModel(entity);
     }
 
+    public BusinessEntity getBusinessBySlug(String slug) {
+
+        BusinessEntity entity = businessRepository
+                .findBySlugAndPublishedTrue(slug)
+                .orElseThrow(() ->
+                        new BusinessNotFoundException(slug));
+
+        return entity;
+    }
+
+
     private String generateSlug(String businessName) {
 
         return businessName
@@ -131,5 +142,24 @@ public class BusinessService {
                         new RuntimeException("Business not found"));
 
         return businessMapper.toModel(entity);
+    }
+
+    public BusinessEntity getCurrentBusinessEntity() {
+
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        String email = authentication.getName();
+
+        UserEntity owner =
+                userRepository.findByEmail(email)
+                        .orElseThrow();
+
+        return businessRepository
+                .findByOwner(owner)
+                .orElseThrow(() ->
+                        new RuntimeException("Business not found"));
     }
 }

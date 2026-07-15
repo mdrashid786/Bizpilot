@@ -1,5 +1,6 @@
 package com.bizpilot.authentication.jwt;
 
+import com.bizpilot.authentication.entity.RefreshTokenEntity;
 import com.bizpilot.authentication.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class JwtService {
@@ -97,6 +99,8 @@ public class JwtService {
 
         }
     }
+
+
 
 
 }

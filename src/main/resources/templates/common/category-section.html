@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="categorySection(config, categoryData)">
+
+    <h2 th:text="${config.dashboardSectionLabel}"></h2>
+
+    <div th:each="item : ${categoryData}">
+
+        <div th:each="field : ${config.fields}">
+
+            <strong th:text="${field.label}"></strong>
+
+            :
+
+            <span th:text="${item[field.key]}"></span>
+
+            <br>
+
+        </div>
+
+        <hr>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

@@ -2,6 +2,7 @@ package com.bizpilot.authentication.service;
 
 
 import com.bizpilot.authentication.dto.request.LoginRequest;
+import com.bizpilot.authentication.dto.request.LogoutRequest;
 import com.bizpilot.authentication.dto.request.RegisterRequest;
 import com.bizpilot.authentication.dto.response.AuthResponse;
 import com.bizpilot.authentication.entity.RefreshTokenEntity;
@@ -46,6 +47,10 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+    }
+
+    Optional<RefreshTokenEntity> findByToken(String token){
+        return refreshTokenRepository.findByToken(token);
     }
 
 //    public AuthResponse register(RegisterRequest request) {
@@ -170,7 +175,7 @@ public class AuthService {
 //                .build();
 //    }
 
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request, String ipAddress) {
 
         try {
             authenticationManager.authenticate(
@@ -186,11 +191,11 @@ public class AuthService {
         UserEntity user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
-        refreshTokenRepository.findByUserAndDeviceId(user, request.getDeviceId())
-                .ifPresent(token -> {
-                    token.setRevoked(true);
-                    refreshTokenRepository.save(token);
-                });
+//        refreshTokenRepository.findByUserAndDeviceId(user, request.getDeviceId())
+//                .ifPresent(token -> {
+//                    token.setRevoked(true);
+//                    refreshTokenRepository.save(token);
+//                });
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshTokenValue = jwtService.generateRefreshToken(user);
@@ -200,7 +205,7 @@ public class AuthService {
                 .user(user)
                 .deviceId(request.getDeviceId())
                 .deviceName(request.getDeviceName() != null ? request.getDeviceName() : "Unknown Device")
-                .ipAddress("0.0.0.0") // agla step mein fix karenge
+                .ipAddress(ipAddress) // agla step mein fix karenge
                 .expiryDate(LocalDateTime.now().plusDays(30))
                 .revoked(false)
                 .build();
@@ -273,4 +278,21 @@ public class AuthService {
                 .build();
     }
 
+    public void logout(String authHeader, LogoutRequest request) {
+
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtService.extractEmail(token);
+
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new InvalidCredentialsException("User not found"));
+
+        if (request != null && request.getRefreshToken() != null) {
+            // Specific refresh token revoke karo
+            refreshTokenRepository.findByToken(request.getRefreshToken())
+                    .ifPresent(rt -> {
+                        rt.setRevoked(true);
+                        refreshTokenRepository.save(rt);
+                    });
+        }
+    }
 }
