@@ -25,7 +25,6 @@ public class BusinessEntity extends BaseEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
-    @Column(nullable = false, unique = true, length = 120)
     private String slug;
 
     @Column(columnDefinition = "TEXT")

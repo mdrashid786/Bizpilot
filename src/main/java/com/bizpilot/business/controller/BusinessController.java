@@ -1,6 +1,7 @@
 package com.bizpilot.business.controller;
 
 import com.bizpilot.business.dto.request.BusinessRegistrationRequest;
+import com.bizpilot.business.dto.request.BusinessUpdateRequest;
 import com.bizpilot.business.dto.response.BusinessResponse;
 import com.bizpilot.business.mapper.BusinessMapper;
 import com.bizpilot.business.model.Business;
@@ -40,6 +41,30 @@ public class BusinessController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(businessMapper.toResponse(business));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<BusinessResponse> getMyBusiness() {
+
+        Business business = businessService.getMyBusiness();
+
+        if (business == null) {
+            return ResponseEntity.noContent().build(); // 204 - business nahi bana abhi tak
+        }
+
+        System.out.println("bbb : "+business.getBusinessName());
+
+        return ResponseEntity.ok(businessMapper.toResponse(business));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BusinessResponse> update(
+            @PathVariable Long id,
+            @Valid @RequestBody BusinessUpdateRequest request) {
+
+        Business business = businessService.update(id, request);
+
+        return ResponseEntity.ok(businessMapper.toResponse(business));
     }
 
     @GetMapping("/{slug}")

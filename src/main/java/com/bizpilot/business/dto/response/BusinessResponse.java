@@ -14,6 +14,16 @@ public class BusinessResponse {
 
     private String slug;
 
+    private String description;
+
+    private String phone;
+
+    private String email;
+
+    private String whatsapp;
+
+    private String address;
+
     private BusinessCategory category;
 
     private String theme;

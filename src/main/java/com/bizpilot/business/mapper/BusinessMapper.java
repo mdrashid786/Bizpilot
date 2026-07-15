@@ -56,13 +56,17 @@ public class BusinessMapper {
                 .category(model.getCategory())
                 .build();
     }
-
     public BusinessResponse toResponse(Business business){
 
         return BusinessResponse.builder()
                 .id(business.getId())
                 .businessName(business.getBusinessName())
                 .slug(business.getSlug())
+                .description(business.getDescription())
+                .phone(business.getPhone())
+                .email(business.getEmail())
+                .whatsapp(business.getWhatsapp())
+                .address(business.getAddress())
                 .category(business.getCategory())
                 .theme(business.getTheme())
                 .published(business.getPublished())

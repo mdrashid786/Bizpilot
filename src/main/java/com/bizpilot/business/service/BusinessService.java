@@ -3,6 +3,7 @@ package com.bizpilot.business.service;
 import com.bizpilot.authentication.entity.UserEntity;
 import com.bizpilot.authentication.repository.UserRepository;
 import com.bizpilot.business.dto.request.BusinessRegistrationRequest;
+import com.bizpilot.business.dto.request.BusinessUpdateRequest;
 import com.bizpilot.business.entity.BusinessEntity;
 import com.bizpilot.business.mapper.BusinessMapper;
 import com.bizpilot.business.model.Business;
@@ -10,6 +11,8 @@ import com.bizpilot.business.model.CategoryConfig;
 import com.bizpilot.business.repository.BusinessRepository;
 import com.bizpilot.common.exception.BusinessNotFoundException;
 import com.bizpilot.common.exception.DuplicateSlugException;
+import jakarta.validation.Valid;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -161,5 +164,45 @@ public class BusinessService {
                 .findByOwner(owner)
                 .orElseThrow(() ->
                         new RuntimeException("Business not found"));
+    }
+
+
+
+    public Business update(Long id, BusinessUpdateRequest request) {
+
+        UserEntity loggedInUser = getLoggedInUser();
+
+
+        BusinessEntity entity = businessRepository.findById(id)
+                .orElseThrow(() -> new BusinessNotFoundException("Business not found with slug :"));
+
+        // Ownership check — koi aur user kisi aur ka business update na kar sake
+        if (!entity.getOwner().getId().equals(loggedInUser.getId())) {
+            throw new AccessDeniedException("You are not allowed to update this business");
+        }
+
+        entity.setBusinessName(request.getBusinessName());
+        entity.setPhone(request.getPhone());
+        entity.setEmail(request.getEmail());
+        entity.setWhatsapp(request.getWhatsapp());
+        entity.setAddress(request.getAddress());
+        entity.setDescription(request.getDescription());
+
+        // category, slug, theme, published — jaan bujh kar touch nahi kiya
+
+        entity = businessRepository.save(entity);
+
+        return businessMapper.toModel(entity);
+    }
+
+    // Helper — dono methods mein reuse ho raha hai, existing register() mein bhi isi se replace kar sakte ho
+    private UserEntity getLoggedInUser() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
