@@ -23,6 +23,9 @@ public class BusinessCategoryDataEntity extends BaseEntity {
     @Column(name = "field_key", nullable = false)
     private String fieldKey;
 
+    @Column(name = "row_id", nullable = false, length = 36)
+    private String rowId;
+
     @Column(name = "field_value", columnDefinition = "TEXT")
     private String fieldValue;
 

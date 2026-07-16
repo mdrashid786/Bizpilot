@@ -23,6 +23,7 @@ public class BusinessUpdateRequest {
     private String address;
 
     private String description;
+    private String googleMap;   // 👈 naya field
 
     // category jaan-bujh kar nahi hai — update mein change nahi hona chahiye
 }

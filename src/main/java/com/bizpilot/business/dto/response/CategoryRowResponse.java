@@ -8,8 +8,7 @@ import java.util.Map;
 @Getter
 @Builder
 public class CategoryRowResponse {
-
+    private String rowId;
     private Integer sortOrder;
-
     private Map<String, String> fields;
 }

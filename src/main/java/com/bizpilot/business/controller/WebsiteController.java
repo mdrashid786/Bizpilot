@@ -16,14 +16,24 @@ public class WebsiteController {
         this.websiteService = websiteService;
     }
 
-    @GetMapping("/{slug}")
-    public String website(
-
-            @PathVariable String slug,
-
-            Model model) {
-
+    // Regex guard: slug mein dot (.) allowed nahi — isse favicon.ico,
+    // manifest.json jaisi static file requests is controller se clash nahi karengi
+    @GetMapping("/{slug:^(?!.*\\.).*$}")
+    public String website(@PathVariable String slug, Model model) {
+        System.out.println("slug : "+slug);
         return websiteService.render(slug, model);
     }
+
+//    @GetMapping("/w/{slug}")
+//    public String website(
+//
+//            @PathVariable String slug,
+//
+//            Model model) {
+//        System.out.println("slog : "+slug);
+//
+//        return websiteService.render(slug, model);
+//    }
+
 
 }

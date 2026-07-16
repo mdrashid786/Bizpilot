@@ -70,11 +70,15 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**"
                         ).permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
 
                         .requestMatchers(
                                 "/",
                                 "/error",
+                                "/**",
+                                "/themes/**",     // 👈 EK HI GENERIC PATTERN — kabhi dobara add nahi karna
                                 "/css/**",
+                                "/test/**",
                                 "/js/**",
                                 "/images/**"
                         ).permitAll()

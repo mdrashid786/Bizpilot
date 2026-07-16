@@ -16,6 +16,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -26,16 +27,19 @@ public class BusinessService {
     private final BusinessMapper businessMapper;
     private final UserRepository userRepository;
     private final CategoryConfigService categoryConfigService;
+    private final FileStorageService fileStorageService;
 
     public BusinessService(BusinessRepository businessRepository,
                            BusinessMapper businessMapper,
                            UserRepository userRepository,
-                           CategoryConfigService categoryConfigService) {
+                           CategoryConfigService categoryConfigService,
+                           FileStorageService fileStorageService) {
 
         this.businessRepository = businessRepository;
         this.businessMapper = businessMapper;
         this.userRepository = userRepository;
         this.categoryConfigService = categoryConfigService;
+        this.fileStorageService = fileStorageService;
     }
 
     public Business register(BusinessRegistrationRequest request) {
@@ -110,6 +114,24 @@ public class BusinessService {
         return entity;
     }
 
+    public Business togglePublish(Long id) {
+
+        UserEntity loggedInUser = getLoggedInUser();
+
+        BusinessEntity entity = businessRepository.findById(id)
+                .orElseThrow(() -> new BusinessNotFoundException("Not Fount Business "));
+
+        if (!entity.getOwner().getId().equals(loggedInUser.getId())) {
+            throw new AccessDeniedException("You are not allowed to modify this business");
+        }
+
+        entity.setPublished(!entity.getPublished());
+
+        entity = businessRepository.save(entity);
+
+        return businessMapper.toModel(entity);
+    }
+
 
     private String generateSlug(String businessName) {
 
@@ -168,32 +190,32 @@ public class BusinessService {
 
 
 
-    public Business update(Long id, BusinessUpdateRequest request) {
-
-        UserEntity loggedInUser = getLoggedInUser();
-
-
-        BusinessEntity entity = businessRepository.findById(id)
-                .orElseThrow(() -> new BusinessNotFoundException("Business not found with slug :"));
-
-        // Ownership check — koi aur user kisi aur ka business update na kar sake
-        if (!entity.getOwner().getId().equals(loggedInUser.getId())) {
-            throw new AccessDeniedException("You are not allowed to update this business");
-        }
-
-        entity.setBusinessName(request.getBusinessName());
-        entity.setPhone(request.getPhone());
-        entity.setEmail(request.getEmail());
-        entity.setWhatsapp(request.getWhatsapp());
-        entity.setAddress(request.getAddress());
-        entity.setDescription(request.getDescription());
-
-        // category, slug, theme, published — jaan bujh kar touch nahi kiya
-
-        entity = businessRepository.save(entity);
-
-        return businessMapper.toModel(entity);
-    }
+//    public Business update(Long id, BusinessUpdateRequest request) {
+//
+//        UserEntity loggedInUser = getLoggedInUser();
+//
+//
+//        BusinessEntity entity = businessRepository.findById(id)
+//                .orElseThrow(() -> new BusinessNotFoundException("Business not found with slug :"));
+//
+//        // Ownership check — koi aur user kisi aur ka business update na kar sake
+//        if (!entity.getOwner().getId().equals(loggedInUser.getId())) {
+//            throw new AccessDeniedException("You are not allowed to update this business");
+//        }
+//
+//        entity.setBusinessName(request.getBusinessName());
+//        entity.setPhone(request.getPhone());
+//        entity.setEmail(request.getEmail());
+//        entity.setWhatsapp(request.getWhatsapp());
+//        entity.setAddress(request.getAddress());
+//        entity.setDescription(request.getDescription());
+//
+//        // category, slug, theme, published — jaan bujh kar touch nahi kiya
+//
+//        entity = businessRepository.save(entity);
+//
+//        return businessMapper.toModel(entity);
+//    }
 
     // Helper — dono methods mein reuse ho raha hai, existing register() mein bhi isi se replace kar sakte ho
     private UserEntity getLoggedInUser() {
@@ -204,5 +226,68 @@ public class BusinessService {
 
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public Business update(Long id, BusinessUpdateRequest request) {
+
+        UserEntity loggedInUser = getLoggedInUser();
+
+        BusinessEntity entity = businessRepository.findById(id)
+                .orElseThrow(() -> new BusinessNotFoundException("Not Fund Exception"));
+
+        if (!entity.getOwner().getId().equals(loggedInUser.getId())) {
+            throw new AccessDeniedException("You are not allowed to update this business");
+        }
+
+        entity.setBusinessName(request.getBusinessName());
+        entity.setPhone(request.getPhone());
+        entity.setEmail(request.getEmail());
+        entity.setWhatsapp(request.getWhatsapp());
+        entity.setAddress(request.getAddress());
+        entity.setDescription(request.getDescription());
+        entity.setGoogleMap(request.getGoogleMap());   // 👈 add kiya
+
+        entity = businessRepository.save(entity);
+
+        return businessMapper.toModel(entity);
+    }
+
+    public Business uploadLogo(Long id, MultipartFile file) {
+
+        BusinessEntity entity = getOwnedBusiness(id);
+
+        fileStorageService.delete(entity.getLogo());
+
+        String path = fileStorageService.storeLogo(file);  // 👈 naya method
+        entity.setLogo(path);
+
+        entity = businessRepository.save(entity);
+        return businessMapper.toModel(entity);
+    }
+
+    public Business uploadCoverImage(Long id, MultipartFile file) {
+
+        BusinessEntity entity = getOwnedBusiness(id);
+
+        fileStorageService.delete(entity.getCoverImage());
+
+        String path = fileStorageService.storeCoverImage(file);  // 👈 naya method
+        entity.setCoverImage(path);
+
+        entity = businessRepository.save(entity);
+        return businessMapper.toModel(entity);
+    }
+
+    private BusinessEntity getOwnedBusiness(Long id) {
+        UserEntity loggedInUser = getLoggedInUser();
+
+        BusinessEntity entity = businessRepository.findById(id)
+                .orElseThrow(() -> new BusinessNotFoundException("Business not found exception"));
+
+        if (!entity.getOwner().getId().equals(loggedInUser.getId())) {
+            throw new AccessDeniedException("You are not allowed to modify this business");
+        }
+
+        return entity;
     }
 }

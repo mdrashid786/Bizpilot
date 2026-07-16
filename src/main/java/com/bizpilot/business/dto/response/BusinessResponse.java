@@ -9,24 +9,17 @@ import lombok.Getter;
 public class BusinessResponse {
 
     private Long id;
-
     private String businessName;
-
     private String slug;
-
     private String description;
-
     private String phone;
-
     private String email;
-
     private String whatsapp;
-
     private String address;
-
+    private String googleMap;
+    private String logo;
+    private String coverImage;
     private BusinessCategory category;
-
     private String theme;
-
     private Boolean published;
 }

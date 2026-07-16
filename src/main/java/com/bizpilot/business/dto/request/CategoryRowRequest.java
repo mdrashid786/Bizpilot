@@ -10,9 +10,6 @@ import java.util.Map;
 @Setter
 public class CategoryRowRequest {
 
-//    @NotNull
-//    private Integer sortOrder;
-
     @NotNull
     private Map<String, String> fields;
 }

@@ -12,10 +12,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/menu")
-@RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
+
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     @PostMapping
     public MenuItemResponse addMenuItem( @Valid  @RequestBody MenuItemRequest request){

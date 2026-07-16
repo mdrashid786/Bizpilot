@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -66,6 +67,30 @@ public class BusinessController {
 
         return ResponseEntity.ok(businessMapper.toResponse(business));
     }
+    @PostMapping("/{id}/logo")
+    public ResponseEntity<BusinessResponse> uploadLogo(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+
+        Business business = businessService.uploadLogo(id, file);
+        return ResponseEntity.ok(businessMapper.toResponse(business));
+    }
+
+    @PostMapping("/{id}/cover-image")
+    public ResponseEntity<BusinessResponse> uploadCoverImage(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+
+        Business business = businessService.uploadCoverImage(id, file);
+        return ResponseEntity.ok(businessMapper.toResponse(business));
+    }
+
+    @PatchMapping("/{id}/publish")
+    public ResponseEntity<BusinessResponse> togglePublish(@PathVariable Long id) {
+        Business business = businessService.togglePublish(id);
+        return ResponseEntity.ok(businessMapper.toResponse(business));
+    }
+
 
     @GetMapping("/{slug}")
     public ResponseEntity<BusinessResponse> getBusiness(

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BusinessCategoryDataRepository
         extends JpaRepository<BusinessCategoryDataEntity, Long> {
@@ -36,4 +37,12 @@ public interface BusinessCategoryDataRepository
     List<BusinessCategoryDataEntity> findByBusinessIdAndSortOrder(
             Long businessId,
             Integer sortOrder);
+
+    List<BusinessCategoryDataEntity> findByBusinessIdOrderBySortOrderAscIdAsc(Long businessId);
+
+    List<BusinessCategoryDataEntity> findByBusinessIdAndRowId(Long businessId, String rowId);
+
+    void deleteByBusinessIdAndRowId(Long businessId, String rowId);
+
+    Optional<BusinessCategoryDataEntity> findFirstByBusinessIdOrderBySortOrderDesc(Long businessId);
 }

@@ -17,6 +17,11 @@
       "key": "durationMinutes",
       "label": "Duration (Minutes)",
       "type": "number"
+    },
+    {
+      "key": "serviceImage",
+      "label": "Service Image",
+      "type": "image"
     }
   ]
 }

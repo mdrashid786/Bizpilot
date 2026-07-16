@@ -67,6 +67,9 @@ public class BusinessMapper {
                 .email(business.getEmail())
                 .whatsapp(business.getWhatsapp())
                 .address(business.getAddress())
+                .googleMap(business.getGoogleMap())
+                .logo(business.getLogo())
+                .coverImage(business.getCoverImage())
                 .category(business.getCategory())
                 .theme(business.getTheme())
                 .published(business.getPublished())
@@ -89,4 +92,5 @@ public class BusinessMapper {
                 .category(request.getCategory())
                 .build();
     }
+
 }

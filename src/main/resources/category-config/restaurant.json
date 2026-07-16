@@ -12,6 +12,11 @@
       "key": "itemPrice",
       "label": "Price (₹)",
       "type": "number"
+    },
+    {
+      "key": "itemImage",
+      "label": "Item Image",
+      "type": "image"
     }
   ]
 }
