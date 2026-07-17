@@ -19,4 +19,8 @@ public interface BusinessRepository extends JpaRepository<BusinessEntity, Long> 
     Optional<BusinessEntity>  findByOwner(UserEntity owner);
 
     Optional<BusinessEntity> findByOwnerId(Long ownerId);
+
+   // BusinessEntity getBusinessBySlugIgnorePublished(String slug);
+
+    BusinessEntity getBusinessBySlug(String slug);
 }

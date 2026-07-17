@@ -77,6 +77,7 @@ public class SecurityConfig {
                                 "/error",
                                 "/**",
                                 "/themes/**",     // 👈 EK HI GENERIC PATTERN — kabhi dobara add nahi karna
+                                "/preview/**",     // 👈 YE ADD KARO
                                 "/css/**",
                                 "/test/**",
                                 "/js/**",

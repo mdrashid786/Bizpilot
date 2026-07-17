@@ -18,4 +18,5 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshTokenEntity
             String deviceId
     );
 
+    List<RefreshTokenEntity> findAllByUserAndDeviceId(UserEntity user, String deviceId);
 }

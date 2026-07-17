@@ -8,9 +8,11 @@ import com.bizpilot.business.entity.BusinessEntity;
 import com.bizpilot.business.mapper.BusinessMapper;
 import com.bizpilot.business.model.Business;
 import com.bizpilot.business.model.CategoryConfig;
+import com.bizpilot.business.model.ThemeOption;
 import com.bizpilot.business.repository.BusinessRepository;
 import com.bizpilot.common.exception.BusinessNotFoundException;
 import com.bizpilot.common.exception.DuplicateSlugException;
+import com.bizpilot.common.exception.ThemeNotSelectedException;
 import jakarta.validation.Valid;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,18 +31,22 @@ public class BusinessService {
     private final UserRepository userRepository;
     private final CategoryConfigService categoryConfigService;
     private final FileStorageService fileStorageService;
+    private final ThemeConfigService themeConfigService; // constructor mein inject karo
+
 
     public BusinessService(BusinessRepository businessRepository,
                            BusinessMapper businessMapper,
                            UserRepository userRepository,
                            CategoryConfigService categoryConfigService,
-                           FileStorageService fileStorageService) {
+                           FileStorageService fileStorageService,
+                           ThemeConfigService themeConfigService) {
 
         this.businessRepository = businessRepository;
         this.businessMapper = businessMapper;
         this.userRepository = userRepository;
         this.categoryConfigService = categoryConfigService;
         this.fileStorageService = fileStorageService;
+        this.themeConfigService = themeConfigService;
     }
 
     public Business register(BusinessRegistrationRequest request) {
@@ -114,23 +121,23 @@ public class BusinessService {
         return entity;
     }
 
-    public Business togglePublish(Long id) {
-
-        UserEntity loggedInUser = getLoggedInUser();
-
-        BusinessEntity entity = businessRepository.findById(id)
-                .orElseThrow(() -> new BusinessNotFoundException("Not Fount Business "));
-
-        if (!entity.getOwner().getId().equals(loggedInUser.getId())) {
-            throw new AccessDeniedException("You are not allowed to modify this business");
-        }
-
-        entity.setPublished(!entity.getPublished());
-
-        entity = businessRepository.save(entity);
-
-        return businessMapper.toModel(entity);
-    }
+//    public Business togglePublish(Long id) {
+//
+//        UserEntity loggedInUser = getLoggedInUser();
+//
+//        BusinessEntity entity = businessRepository.findById(id)
+//                .orElseThrow(() -> new BusinessNotFoundException("Not Fount Business "));
+//
+//        if (!entity.getOwner().getId().equals(loggedInUser.getId())) {
+//            throw new AccessDeniedException("You are not allowed to modify this business");
+//        }
+//
+//        entity.setPublished(!entity.getPublished());
+//
+//        entity = businessRepository.save(entity);
+//
+//        return businessMapper.toModel(entity);
+//    }
 
 
     private String generateSlug(String businessName) {
@@ -290,4 +297,48 @@ public class BusinessService {
 
         return entity;
     }
+
+
+    public List<ThemeOption> getAvailableThemes() {
+        BusinessEntity business = getOwnedBusinessOfCurrentUser();
+        return themeConfigService.loadThemes(business.getCategory());
+    }
+
+    public Business selectTheme(Long id, String theme) {
+
+        BusinessEntity entity = getOwnedBusiness(id); // existing helper (ownership check karta hai)
+
+        entity.setTheme(theme);
+        entity = businessRepository.save(entity);
+
+        return businessMapper.toModel(entity);
+    }
+
+    public Business togglePublish(Long id) {
+
+        BusinessEntity entity = getOwnedBusiness(id);
+
+        boolean willBePublished = !entity.getPublished();
+
+        // Agar publish karne ja rahe hain (draft se live), theme check karo
+        if (willBePublished && (entity.getTheme() == null || entity.getTheme().isBlank())) {
+            throw new ThemeNotSelectedException();
+        }
+
+        entity.setPublished(willBePublished);
+        entity = businessRepository.save(entity);
+
+        return businessMapper.toModel(entity);
+    }
+
+    private BusinessEntity getOwnedBusinessOfCurrentUser() {
+        UserEntity owner = getLoggedInUser();
+        return businessRepository.findByOwnerId(owner.getId())
+                .orElseThrow(() -> new RuntimeException("Business not found for logged in user"));
+    }
+
+    public BusinessEntity getBusinessBySlugIgnorePublished(String slug) {
+        return businessRepository.getBusinessBySlug(slug);
+    }
+
 }

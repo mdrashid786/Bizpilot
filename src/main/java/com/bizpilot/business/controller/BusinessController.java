@@ -2,10 +2,12 @@ package com.bizpilot.business.controller;
 
 import com.bizpilot.business.dto.request.BusinessRegistrationRequest;
 import com.bizpilot.business.dto.request.BusinessUpdateRequest;
+import com.bizpilot.business.dto.request.SelectThemeRequest;
 import com.bizpilot.business.dto.response.BusinessResponse;
 import com.bizpilot.business.mapper.BusinessMapper;
 import com.bizpilot.business.model.Business;
 import com.bizpilot.business.model.CategoryConfig;
+import com.bizpilot.business.model.ThemeOption;
 import com.bizpilot.business.service.BusinessService;
 import com.bizpilot.business.service.CategoryConfigService;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -104,6 +107,22 @@ public class BusinessController {
                 businessMapper.toResponse(business)
         );
     }
+
+    @GetMapping("/themes")
+    public List<ThemeOption> getAvailableThemes() {
+        return businessService.getAvailableThemes();
+    }
+
+    @PutMapping("/{id}/theme")
+    public ResponseEntity<BusinessResponse> selectTheme(
+            @PathVariable Long id,
+            @Valid @RequestBody SelectThemeRequest request) {
+
+        Business business = businessService.selectTheme(id, request.getTheme());
+        return ResponseEntity.ok(businessMapper.toResponse(business));
+    }
+
+
 
 
 }

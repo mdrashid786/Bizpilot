@@ -1,0 +1,17 @@
+[
+  {
+    "key": "restaurant-modern",
+    "name": "Modern Elegance",
+    "description": "Warm tones, elegant typography — perfect for fine dining."
+  },
+  {
+    "key": "restaurant-classic",
+    "name": "Classic Charm",
+    "description": "Traditional layout with a timeless, cozy feel."
+  },
+  {
+    "key": "restaurant-minimal",
+    "name": "Minimal Fresh",
+    "description": "Clean and simple, puts your menu front and center."
+  }
+]

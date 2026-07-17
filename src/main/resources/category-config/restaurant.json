@@ -17,6 +17,18 @@
       "key": "itemImage",
       "label": "Item Image",
       "type": "image"
+    },
+    {
+      "key": "itemDescription",
+      "label": "Short Description",
+      "type": "text"
+    },
+    {
+      "key": "foodType",
+      "label": "Veg / Non-Veg",
+      "type": "select",
+      "options": ["Veg", "Non-Veg"]
     }
+
   ]
 }

@@ -134,4 +134,16 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponse.builder().message(ex.getMessage()).status(400).build());
     }
 
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRefreshToken(InvalidRefreshTokenException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponse.builder().message(ex.getMessage()).status(401).build());
+    }
+
+    @ExceptionHandler(ThemeNotSelectedException.class)
+    public ResponseEntity<ErrorResponse> handleThemeNotSelected(ThemeNotSelectedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.builder().message(ex.getMessage()).status(400).build());
+    }
+
 }

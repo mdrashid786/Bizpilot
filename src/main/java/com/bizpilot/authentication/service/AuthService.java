@@ -13,6 +13,7 @@ import com.bizpilot.authentication.repository.RefreshTokenRepository;
 import com.bizpilot.authentication.repository.UserRepository;
 import com.bizpilot.common.exception.EmailAlreadyExistsException;
 import com.bizpilot.common.exception.InvalidCredentialsException;
+import com.bizpilot.common.exception.InvalidRefreshTokenException;
 import com.bizpilot.common.exception.PhoneAlreadyExistsException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,6 +53,30 @@ public class AuthService {
 
     Optional<RefreshTokenEntity> findByToken(String token){
         return refreshTokenRepository.findByToken(token);
+    }
+
+    public AuthResponse refreshAccessToken(String refreshTokenValue) {
+
+        RefreshTokenEntity storedToken = refreshTokenRepository.findByToken(refreshTokenValue)
+                .orElseThrow(() -> new InvalidRefreshTokenException("Invalid refresh token"));
+
+        if (storedToken.isRevoked()) {
+            throw new InvalidRefreshTokenException("Refresh token has been revoked");
+        }
+
+        if (storedToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new InvalidRefreshTokenException("Refresh token has expired");
+        }
+
+        UserEntity user = storedToken.getUser();
+
+        String newAccessToken = jwtService.generateAccessToken(user);
+
+        return AuthResponse.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(refreshTokenValue) // same refresh token wapas bhejo, naya generate nahi karna
+                .user(userMapper.toResponse(user))
+                .build();
     }
 
 //    public AuthResponse register(RegisterRequest request) {
@@ -131,43 +157,44 @@ public class AuthService {
     }
 
 
-//    public AuthResponse login(LoginRequest request) {
+
+//    public AuthResponse login(LoginRequest request, String ipAddress) {
 //
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getEmail(),
-//                        request.getPassword()
-//                )
-//        );
+//        try {
+//            authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(
+//                            request.getEmail(),
+//                            request.getPassword()
+//                    )
+//            );
+//        } catch (BadCredentialsException ex) {
+//            throw new InvalidCredentialsException("Invalid email or password");
+//        }
 //
 //        UserEntity user = userRepository.findByEmail(request.getEmail())
-//                .orElseThrow();
+//                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 //
-//        // 1. Revoke old token of same device
-//        refreshTokenRepository.findByUserAndDeviceId(user, request.getDeviceId())
-//                .ifPresent(token -> {
-//                    token.setRevoked(true);
-//                    refreshTokenRepository.save(token);
-//                });
+////        refreshTokenRepository.findByUserAndDeviceId(user, request.getDeviceId())
+////                .ifPresent(token -> {
+////                    token.setRevoked(true);
+////                    refreshTokenRepository.save(token);
+////                });
 //
-//        // 2. Generate new tokens
 //        String accessToken = jwtService.generateAccessToken(user);
 //        String refreshTokenValue = jwtService.generateRefreshToken(user);
 //
-//        // 3. Save new refresh token
 //        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
 //                .token(refreshTokenValue)
 //                .user(user)
 //                .deviceId(request.getDeviceId())
-//                .deviceName(request.getDeviceName())
-//                .ipAddress("TODO") // next task me automatically nikalenge
+//                .deviceName(request.getDeviceName() != null ? request.getDeviceName() : "Unknown Device")
+//                .ipAddress(ipAddress) // agla step mein fix karenge
 //                .expiryDate(LocalDateTime.now().plusDays(30))
 //                .revoked(false)
 //                .build();
 //
 //        refreshTokenRepository.save(refreshToken);
 //
-//        // 4. Response
 //        return AuthResponse.builder()
 //                .accessToken(accessToken)
 //                .refreshToken(refreshTokenValue)
@@ -175,49 +202,47 @@ public class AuthService {
 //                .build();
 //    }
 
-    public AuthResponse login(LoginRequest request, String ipAddress) {
+public AuthResponse login(LoginRequest request, String ipAddress) {
 
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
-        } catch (BadCredentialsException ex) {
-            throw new InvalidCredentialsException("Invalid email or password");
-        }
-
-        UserEntity user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
-
-//        refreshTokenRepository.findByUserAndDeviceId(user, request.getDeviceId())
-//                .ifPresent(token -> {
-//                    token.setRevoked(true);
-//                    refreshTokenRepository.save(token);
-//                });
-
-        String accessToken = jwtService.generateAccessToken(user);
-        String refreshTokenValue = jwtService.generateRefreshToken(user);
-
-        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
-                .token(refreshTokenValue)
-                .user(user)
-                .deviceId(request.getDeviceId())
-                .deviceName(request.getDeviceName() != null ? request.getDeviceName() : "Unknown Device")
-                .ipAddress(ipAddress) // agla step mein fix karenge
-                .expiryDate(LocalDateTime.now().plusDays(30))
-                .revoked(false)
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
-
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshTokenValue)
-                .user(userMapper.toResponse(user))
-                .build();
+    try {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+    } catch (BadCredentialsException ex) {
+        throw new InvalidCredentialsException("Invalid email or password");
     }
+
+    UserEntity user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
+
+    // Same device ke SAARE purane tokens revoke karo (list — crash-proof)
+    List<RefreshTokenEntity> existingTokens =
+            refreshTokenRepository.findAllByUserAndDeviceId(user, request.getDeviceId());
+
+    existingTokens.forEach(token -> token.setRevoked(true));
+    refreshTokenRepository.saveAll(existingTokens);
+
+    String accessToken = jwtService.generateAccessToken(user);
+    String refreshTokenValue = jwtService.generateRefreshToken(user);
+
+    RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
+            .token(refreshTokenValue)
+            .user(user)
+            .deviceId(request.getDeviceId())
+            .deviceName(request.getDeviceName() != null ? request.getDeviceName() : "Unknown Device")
+            .ipAddress(ipAddress)
+            .expiryDate(LocalDateTime.now().plusDays(30))
+            .revoked(false)
+            .build();
+
+    refreshTokenRepository.save(refreshToken);
+
+    return AuthResponse.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshTokenValue)
+            .user(userMapper.toResponse(user))
+            .build();
+}
 
     public AuthResponse refresh(String refreshToken) {
 

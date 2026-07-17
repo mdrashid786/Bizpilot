@@ -3,6 +3,7 @@ package com.bizpilot.authentication.controller;
 
 import com.bizpilot.authentication.dto.request.LoginRequest;
 import com.bizpilot.authentication.dto.request.LogoutRequest;
+import com.bizpilot.authentication.dto.request.RefreshTokenRequest;
 import com.bizpilot.authentication.dto.request.RegisterRequest;
 import com.bizpilot.authentication.dto.response.AuthResponse;
 import com.bizpilot.authentication.service.AuthService;
@@ -71,14 +72,19 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+//    @PostMapping("/refresh")
+//    public ResponseEntity<AuthResponse> refresh(
+//            @RequestParam String refreshToken){
+//
+//        return ResponseEntity.ok(
+//                authService.refresh(refreshToken)
+//        );
+//
+//    }
+
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(
-            @RequestParam String refreshToken){
-
-        return ResponseEntity.ok(
-                authService.refresh(refreshToken)
-        );
-
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.refreshAccessToken(request.getRefreshToken()));
     }
 
 }
