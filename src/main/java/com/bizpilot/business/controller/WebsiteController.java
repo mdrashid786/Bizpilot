@@ -24,14 +24,14 @@ public class WebsiteController {
         return websiteService.render(slug, model);
     }
 
-    @GetMapping("/preview/{slug}/{theme}")
-    public String preview(
-            @PathVariable String slug,
-            @PathVariable String theme,
-            Model model) {
-
-        return websiteService.renderWithTheme(slug, theme, model);
-    }
+//    @GetMapping("/preview/{slug}/{theme}")
+//    public String preview(
+//            @PathVariable String slug,
+//            @PathVariable String theme,
+//            Model model) {
+//
+//        return websiteService.renderWithTheme(slug, theme, model);
+//    }
 
 //    @GetMapping("/w/{slug}")
 //    public String website(

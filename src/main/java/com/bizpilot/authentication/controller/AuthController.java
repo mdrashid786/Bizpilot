@@ -72,19 +72,20 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PostMapping("/refresh")
-//    public ResponseEntity<AuthResponse> refresh(
-//            @RequestParam String refreshToken){
-//
-//        return ResponseEntity.ok(
-//                authService.refresh(refreshToken)
-//        );
-//
-//    }
-
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
-        return ResponseEntity.ok(authService.refreshAccessToken(request.getRefreshToken()));
+    public ResponseEntity<AuthResponse> refresh(
+            @RequestParam String refreshToken){
+        System.out.println("refreshToken :"+refreshToken);
+
+        return ResponseEntity.ok(
+                authService.refresh(refreshToken)
+        );
+
     }
+
+//    @PostMapping("/refresh")
+//    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
+//        return ResponseEntity.ok(authService.refreshAccessToken(request.getRefreshToken()));
+//    }
 
 }

@@ -51,8 +51,8 @@ public class BusinessMapper {
                 .googleMap(model.getGoogleMap())
                 .logo(model.getLogo())
                 .coverImage(model.getCoverImage())
-                .theme(model.getTheme())
                 .published(model.getPublished())
+                .theme(model.getTheme())
                 .category(model.getCategory())
                 .build();
     }

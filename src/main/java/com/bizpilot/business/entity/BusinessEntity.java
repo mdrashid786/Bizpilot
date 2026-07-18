@@ -49,7 +49,6 @@ public class BusinessEntity extends BaseEntity {
 
     private String coverImage;
 
-    @Column(nullable = false)
     private String theme;
 
     @Column(nullable = false)

@@ -1,16 +1,483 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title th:text="${business.businessName}"></title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:Poppins,sans-serif;
+        }
+
+        body{
+        background:#fff;
+        color:#333;
+        }
+
+        header{
+
+        position:fixed;
+        width:100%;
+        top:0;
+        background:white;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:18px 8%;
+        box-shadow:0 5px 15px rgba(0,0,0,.08);
+        z-index:999;
+
+        }
+
+        .logo{
+
+        font-size:28px;
+        font-weight:bold;
+        color:#ff4d88;
+
+        }
+
+        nav a{
+
+        text-decoration:none;
+        margin-left:30px;
+        color:#444;
+        font-weight:500;
+
+        }
+
+        .hero{
+
+        height:100vh;
+
+        background:
+
+        linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),
+
+        url("https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600&q=80");
+
+        background-size:cover;
+        background-position:center;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        color:white;
+        padding:20px;
+
+        }
+
+        .hero h1{
+
+        font-size:60px;
+        margin-bottom:20px;
+
+        }
+
+        .hero p{
+
+        font-size:22px;
+        margin-bottom:40px;
+
+        }
+
+        .btn{
+
+        display:inline-block;
+        padding:15px 35px;
+        background:#ff4d88;
+        color:white;
+        border-radius:40px;
+        text-decoration:none;
+        margin:10px;
+        transition:.3s;
+
+        }
+
+        .btn:hover{
+
+        background:#ff2d72;
+
+        }
+
+        section{
+
+        padding:90px 8%;
+
+        }
+
+        .title{
+
+        text-align:center;
+        font-size:40px;
+        margin-bottom:60px;
+
+        }
+
+        .services{
+
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+        gap:30px;
+
+        }
+
+        .card{
+
+        background:white;
+        padding:40px;
+        border-radius:20px;
+        box-shadow:0 10px 30px rgba(0,0,0,.08);
+        text-align:center;
+        transition:.3s;
+
+        }
+
+        .card:hover{
+
+        transform:translateY(-10px);
+
+        }
+
+        .card img{
+
+        width:80px;
+        margin-bottom:20px;
+
+        }
+
+        .why{
+
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+        gap:50px;
+        align-items:center;
+
+        }
+
+        .why img{
+
+        width:100%;
+        border-radius:20px;
+
+        }
+
+        .list{
+
+        line-height:3;
+        font-size:20px;
+
+        }
+
+        .pricing{
+
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+        gap:30px;
+
+        }
+
+        .price{
+
+        padding:40px;
+        border-radius:20px;
+        background:white;
+        box-shadow:0 10px 30px rgba(0,0,0,.08);
+        text-align:center;
+
+        }
+
+        .price h2{
+
+        color:#ff4d88;
+        font-size:50px;
+        margin:20px 0;
+
+        }
+
+        .team{
+
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+        gap:30px;
+
+        }
+
+        .member img{
+
+        width:100%;
+        border-radius:20px;
+
+        }
+
+        .member{
+
+        text-align:center;
+
+        }
+
+        .review{
+
+        background:#fff5f8;
+        padding:30px;
+        border-radius:20px;
+
+        }
+
+        .testimonials{
+
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+        gap:30px;
+
+        }
+
+        .cta{
+
+        background:linear-gradient(135deg,#ff4d88,#ff7aa8);
+        color:white;
+        text-align:center;
+        padding:80px 20px;
+
+        }
+
+        footer{
+
+        background:#222;
+        color:white;
+        padding:40px;
+        text-align:center;
+
+        }
+
+        @media(max-width:768px){
+
+        .hero h1{
+
+        font-size:40px;
+
+        }
+
+        .hero p{
+
+        font-size:18px;
+
+        }
+
+        nav{
+
+        display:none;
+
+        }
+
+        }
+
+    </style>
+
 </head>
 
 <body>
 
-<div th:replace="~{common/business-header :: header(${business})}"></div>
+<header>
 
-<div th:replace="~{common/category-section :: categorySection(${config}, ${categoryData})}"></div>
+    <div class="logo">GlowSalon</div>
+
+    <nav>
+
+        <a href="#">Home</a>
+        <a href="#">Services</a>
+        <a href="#">Pricing</a>
+        <a href="#">Gallery</a>
+        <a href="#">Contact</a>
+
+    </nav>
+
+</header>
+
+<section class="hero">
+
+    <div>
+
+        <h1>Luxury Hair & Beauty Salon</h1>
+
+        <p>Experience elegance, confidence and premium beauty services.</p>
+
+        <a class="btn" href="#">Book Appointment</a>
+
+        <a class="btn" href="#">Our Services</a>
+
+    </div>
+
+</section>
+
+<section>
+
+    <h2 class="title">Our Services</h2>
+
+    <div class="services">
+
+        <div class="card">
+            <img src="https://img.icons8.com/color/96/hair-dryer.png">
+            <h3>Hair Styling</h3>
+            <p>Modern cuts and professional styling.</p>
+        </div>
+
+        <div class="card">
+            <img src="https://img.icons8.com/color/96/spa-flower.png">
+            <h3>Spa</h3>
+            <p>Relax your body and mind.</p>
+        </div>
+
+        <div class="card">
+            <img src="https://img.icons8.com/color/96/lipstick.png">
+            <h3>Makeup</h3>
+            <p>Bridal and party makeup experts.</p>
+        </div>
+
+        <div class="card">
+            <img src="https://img.icons8.com/color/96/face-massage.png">
+            <h3>Facial</h3>
+            <p>Healthy glowing skin treatment.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section>
+
+    <h1> Hello Rashid Modern </h1>
+
+    <div class="why">
+
+        <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=800&q=80">
+
+        <div class="list">
+
+            <p>✔ Certified Beauty Experts</p>
+            <p>✔ Premium Products</p>
+            <p>✔ Hygienic Environment</p>
+            <p>✔ Affordable Packages</p>
+            <p>✔ Luxury Experience</p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section>
+
+    <h2 class="title">Pricing</h2>
+
+    <div class="pricing">
+
+        <div class="price">
+            <h3>Basic</h3>
+            <h2>$19</h2>
+            <p>Hair Cut</p>
+            <p>Hair Wash</p>
+            <p>Styling</p>
+        </div>
+
+        <div class="price">
+            <h3>Premium</h3>
+            <h2>$49</h2>
+            <p>Hair Spa</p>
+            <p>Facial</p>
+            <p>Hair Styling</p>
+        </div>
+
+        <div class="price">
+            <h3>Luxury</h3>
+            <h2>$99</h2>
+            <p>Bridal Makeup</p>
+            <p>Premium Spa</p>
+            <p>Luxury Facial</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section>
+
+    <h2 class="title">Meet Our Experts</h2>
+
+    <div class="team">
+
+        <div class="member">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg">
+            <h3>Emma</h3>
+            <p>Hair Stylist</p>
+        </div>
+
+        <div class="member">
+            <img src="https://randomuser.me/api/portraits/women/45.jpg">
+            <h3>Sophia</h3>
+            <p>Makeup Artist</p>
+        </div>
+
+        <div class="member">
+            <img src="https://randomuser.me/api/portraits/women/32.jpg">
+            <h3>Olivia</h3>
+            <p>Spa Expert</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section>
+
+    <h2 class="title">Happy Clients</h2>
+
+    <div class="testimonials">
+
+        <div class="review">
+            ★★★★★
+            <p>Excellent service. Amazing staff.</p>
+        </div>
+
+        <div class="review">
+            ★★★★★
+            <p>Luxury experience and beautiful ambience.</p>
+        </div>
+
+        <div class="review">
+            ★★★★★
+            <p>Highly recommended salon.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="cta">
+
+    <h2>Ready for Your New Look?</h2>
+
+    <br>
+
+    <a class="btn" href="#">Book Appointment</a>
+
+</section>
+
+<footer>
+
+    © 2026 GlowSalon. All Rights Reserved.
+
+</footer>
 
 </body>
-
 </html>

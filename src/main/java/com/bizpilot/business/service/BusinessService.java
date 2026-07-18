@@ -57,6 +57,7 @@ public class BusinessService {
                 .phone(request.getPhone())
                 .email(request.getEmail())
                 .whatsapp(request.getWhatsapp())
+                .googleMap(request.getGoogleMap())
                 .address(request.getAddress())
                 .description(request.getDescription())
                 .category(request.getCategory())
@@ -92,6 +93,8 @@ public class BusinessService {
         // 5. Convert Model -> Entity
         BusinessEntity entity = businessMapper.toEntity(business);
 
+        System.out.println("business : "+business.getGoogleMap());
+        System.out.println("BusinessRegistrationRequest : "+request.getGoogleMap());
         entity.setOwner(owner);
 
         // 6. Save

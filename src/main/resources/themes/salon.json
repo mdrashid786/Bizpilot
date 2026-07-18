@@ -1,0 +1,17 @@
+[
+  {
+    "key": "salon-modern",
+    "name": "Modern Glam",
+    "description": "Sleek, bold, and stylish — perfect for a premium salon experience."
+  },
+  {
+    "key": "salon-classic",
+    "name": "Classic Elegance",
+    "description": "Soft tones and refined layout for a timeless, sophisticated look."
+  },
+  {
+    "key": "salon-minimal",
+    "name": "Minimal Chic",
+    "description": "Clean and simple, puts your services and pricing front and center."
+  }
+]

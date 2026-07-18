@@ -1,7 +1,9 @@
 package com.bizpilot.authentication.config;
-
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import com.bizpilot.authentication.filter.JwtAuthenticationFilter;
 import com.bizpilot.authentication.service.CustomUserDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -55,45 +57,44 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
 
+
+
+// securityFilterChain method mein:
         http
-
                 .csrf(csrf -> csrf.disable())
-
                 .cors(Customizer.withDefaults())
-
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write(
+                                    "{\"message\":\"Unauthorized - token missing or expired\",\"status\":401}"
+                            );
+                        })
+                )
 
                 .authorizeHttpRequests(auth -> auth
-
-                        .requestMatchers(
-                                "/api/auth/**"
-                        ).permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
-
                         .requestMatchers(
                                 "/",
                                 "/error",
-                                "/**",
-                                "/themes/**",     // 👈 EK HI GENERIC PATTERN — kabhi dobara add nahi karna
-                                "/preview/**",     // 👈 YE ADD KARO
+                                "/{slug:^(?!.*\\.).*$}",
+                                "/themes/**",
+                                "/preview/**",
+                                "/theme-previews/**",
                                 "/css/**",
-                                "/test/**",
                                 "/js/**",
                                 "/images/**"
                         ).permitAll()
-
-                        .anyRequest()
-                        .authenticated()
+                        .anyRequest().authenticated()
                 )
 
                 .authenticationProvider(authenticationProvider())
-
-                .addFilterBefore(
-                        jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

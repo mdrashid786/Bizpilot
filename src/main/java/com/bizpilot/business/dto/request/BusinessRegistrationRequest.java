@@ -23,6 +23,8 @@ public class BusinessRegistrationRequest {
 
     private String whatsapp;
 
+    private String googleMap;
+
     private String address;
 
     private String description;
