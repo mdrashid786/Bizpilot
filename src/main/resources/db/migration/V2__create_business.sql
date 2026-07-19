@@ -4,6 +4,8 @@ CREATE TABLE business
 
     business_name VARCHAR(150) NOT NULL,
 
+    owner_id BIGINT NOT NULL,
+
     slug VARCHAR(120) UNIQUE NOT NULL,
 
     category VARCHAR(50) NOT NULL,
@@ -26,9 +28,19 @@ CREATE TABLE business
 
     cover_image VARCHAR(255),
 
+    tagline VARCHAR(200),
+
+    business_hours TEXT,
+
+    instagram_url VARCHAR(255),
+
+    facebook_url VARCHAR(255),
+
     published BOOLEAN DEFAULT FALSE,
 
     created_at DATETIME,
 
-    updated_at DATETIME
+    updated_at DATETIME,
+
+    CONSTRAINT fk_business_owner FOREIGN KEY (owner_id) REFERENCES users(id)
 );

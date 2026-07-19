@@ -44,5 +44,10 @@ public class Business {
 
     @Enumerated(EnumType.STRING)
     private BusinessCategory category;
+    private String tagline;
+    private String businessHours;
+    private String instagramUrl;
+    private String facebookUrl;
+
 
 }

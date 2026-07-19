@@ -10,10 +10,7 @@ import com.bizpilot.common.exception.BusinessNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class WebsiteService {
@@ -37,43 +34,48 @@ public class WebsiteService {
 
 //    public String render(String slug, Model model) {
 //
-//        if (RESERVED_SLUGS.contains(slug.toLowerCase())) {
-//            throw new BusinessNotFoundException(slug); // ya apna 404 handler
-//        }
+//        BusinessEntity business = businessService.getBusinessBySlug(slug);
 //
-//        BusinessEntity business =
-//                businessService.getBusinessBySlug(slug);
-//
-//        CategoryConfig config =
-//                categoryConfigService.load(business.getCategory());
+//        CategoryConfig config = categoryConfigService.load(business.getCategory());
 //
 //        List<BusinessCategoryDataEntity> rows =
 //                categoryDataRepository.findByBusinessOrderBySortOrder(business);
 //
-//        Map<Integer, Map<String, String>> grouped =
-//                new LinkedHashMap<>();
+//        Map<Integer, Map<String, String>> grouped = new LinkedHashMap<>();
 //
 //        for (BusinessCategoryDataEntity row : rows) {
-//
-//            grouped.computeIfAbsent(
-//                    row.getSortOrder(),
-//                    key -> new LinkedHashMap<>());
-//
-//            grouped.get(row.getSortOrder())
-//                    .put(
-//                            row.getFieldKey(),
-//                            row.getFieldValue()
-//                    );
+//            grouped.computeIfAbsent(row.getSortOrder(), key -> new LinkedHashMap<>());
+//            grouped.get(row.getSortOrder()).put(row.getFieldKey(), row.getFieldValue());
 //        }
+//
+//        // Generic field-key resolution — template ko exact key naam nahi pata hona chahiye
+//        String nameKey = config.getFields().stream()
+//                .filter(f -> "text".equals(f.getType()))
+//                .map(CategoryField::getKey)
+//                .findFirst()
+//                .orElse(null);
+//
+//        String priceKey = config.getFields().stream()
+//                .filter(f -> "number".equals(f.getType()))
+//                .map(CategoryField::getKey)
+//                .findFirst()
+//                .orElse(null);
+//
+//        String imageKey = config.getFields().stream()
+//                .filter(f -> "image".equals(f.getType()))
+//                .map(CategoryField::getKey)
+//                .findFirst()
+//                .orElse(null);
 //
 //        model.addAttribute("business", business);
 //        model.addAttribute("config", config);
 //        model.addAttribute("categoryData", grouped.values());
-//
+//        model.addAttribute("nameKey", nameKey);
+//        model.addAttribute("priceKey", priceKey);
+//        model.addAttribute("imageKey", imageKey);
 //        System.out.println("theme : "+business.getTheme());
 //        return business.getTheme() + "/index";
 //    }
-
 
     public String render(String slug, Model model) {
 
@@ -85,38 +87,56 @@ public class WebsiteService {
                 categoryDataRepository.findByBusinessOrderBySortOrder(business);
 
         Map<Integer, Map<String, String>> grouped = new LinkedHashMap<>();
-
         for (BusinessCategoryDataEntity row : rows) {
             grouped.computeIfAbsent(row.getSortOrder(), key -> new LinkedHashMap<>());
             grouped.get(row.getSortOrder()).put(row.getFieldKey(), row.getFieldValue());
         }
 
-        // Generic field-key resolution — template ko exact key naam nahi pata hona chahiye
-        String nameKey = config.getFields().stream()
+        List<Map<String, String>> rowsList = new ArrayList<>(grouped.values());
+
+        // Generic field-key resolution — text fields do ho sakte hain (name + description)
+        List<String> textKeys = config.getFields().stream()
                 .filter(f -> "text".equals(f.getType()))
                 .map(CategoryField::getKey)
-                .findFirst()
-                .orElse(null);
+                .toList();
+
+        String nameKey = textKeys.isEmpty() ? null : textKeys.get(0);
+        String descriptionKey = textKeys.size() > 1 ? textKeys.get(1) : null;
 
         String priceKey = config.getFields().stream()
                 .filter(f -> "number".equals(f.getType()))
-                .map(CategoryField::getKey)
-                .findFirst()
-                .orElse(null);
+                .map(CategoryField::getKey).findFirst().orElse(null);
 
         String imageKey = config.getFields().stream()
                 .filter(f -> "image".equals(f.getType()))
-                .map(CategoryField::getKey)
+                .map(CategoryField::getKey).findFirst().orElse(null);
+
+        String typeKey = config.getFields().stream()
+                .filter(f -> "select".equals(f.getType()))
+                .map(CategoryField::getKey).findFirst().orElse(null);
+
+        List<String> typeOptions = config.getFields().stream()
+                .filter(f -> "select".equals(f.getType()))
                 .findFirst()
-                .orElse(null);
+                .map(CategoryField::getOptions)
+                .orElse(List.of());
+
+        // Special/featured items — pehli 2 items (kal agar "featured" flag chahiye ho to alag field add kar sakte ho)
+        List<Map<String, String>> specialItems = rowsList.size() > 2
+                ? rowsList.subList(0, 2)
+                : rowsList;
 
         model.addAttribute("business", business);
         model.addAttribute("config", config);
-        model.addAttribute("categoryData", grouped.values());
+        model.addAttribute("categoryData", rowsList);
+        model.addAttribute("specialItems", specialItems);
         model.addAttribute("nameKey", nameKey);
+        model.addAttribute("descriptionKey", descriptionKey);
         model.addAttribute("priceKey", priceKey);
         model.addAttribute("imageKey", imageKey);
-        System.out.println("theme : "+business.getTheme());
+        model.addAttribute("typeKey", typeKey);
+        model.addAttribute("typeOptions", typeOptions);
+
         return business.getTheme() + "/index";
     }
 

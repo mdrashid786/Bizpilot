@@ -24,6 +24,10 @@ public class BusinessUpdateRequest {
 
     private String description;
     private String googleMap;   // 👈 naya field
+    private String tagline;
+    private String businessHours;
+    private String instagramUrl;
+    private String facebookUrl;
 
     // category jaan-bujh kar nahi hai — update mein change nahi hona chahiye
 }

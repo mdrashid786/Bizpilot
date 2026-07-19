@@ -61,6 +61,10 @@ public class BusinessService {
                 .address(request.getAddress())
                 .description(request.getDescription())
                 .category(request.getCategory())
+                .tagline(request.getTagline())
+                .businessHours(request.getBusinessHours())
+                .instagramUrl(request.getInstagramUrl())
+                .facebookUrl(request.getFacebookUrl())
                 .build();
 
         // 2. Generate Slug
@@ -256,6 +260,10 @@ public class BusinessService {
         entity.setAddress(request.getAddress());
         entity.setDescription(request.getDescription());
         entity.setGoogleMap(request.getGoogleMap());   // 👈 add kiya
+        entity.setTagline(request.getTagline());
+        entity.setBusinessHours(request.getBusinessHours());
+        entity.setInstagramUrl(request.getInstagramUrl());
+        entity.setFacebookUrl(request.getFacebookUrl());
 
         entity = businessRepository.save(entity);
 

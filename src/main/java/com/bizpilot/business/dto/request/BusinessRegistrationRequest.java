@@ -30,4 +30,9 @@ public class BusinessRegistrationRequest {
     private String description;
 
     private BusinessCategory category;
+
+    private String tagline;
+    private String businessHours;
+    private String instagramUrl;
+    private String facebookUrl;
 }

@@ -58,5 +58,17 @@ public class BusinessEntity extends BaseEntity {
     @Column(nullable = false)
     private BusinessCategory category;
 
+    @Column(name = "tagline", length = 200)
+    private String tagline;
+
+    @Column(name = "business_hours", columnDefinition = "TEXT")
+    private String businessHours;
+
+    @Column(name = "instagram_url", length = 255)
+    private String instagramUrl;
+
+    @Column(name = "facebook_url", length = 255)
+    private String facebookUrl;
+
 
 }

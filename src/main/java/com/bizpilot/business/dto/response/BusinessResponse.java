@@ -22,4 +22,9 @@ public class BusinessResponse {
     private BusinessCategory category;
     private String theme;
     private Boolean published;
+
+    private String tagline;
+    private String businessHours;
+    private String instagramUrl;
+    private String facebookUrl;
 }

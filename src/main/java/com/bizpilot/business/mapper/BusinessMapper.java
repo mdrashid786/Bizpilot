@@ -30,6 +30,10 @@ public class BusinessMapper {
                 .theme(entity.getTheme())
                 .published(entity.getPublished())
                 .category(entity.getCategory())
+                .tagline(entity.getTagline())
+                .businessHours(entity.getBusinessHours())
+                .instagramUrl(entity.getInstagramUrl())
+                .facebookUrl(entity.getFacebookUrl())
                 .build();
     }
 
@@ -54,6 +58,10 @@ public class BusinessMapper {
                 .published(model.getPublished())
                 .theme(model.getTheme())
                 .category(model.getCategory())
+                .tagline(model.getTagline())
+                .businessHours(model.getBusinessHours())
+                .instagramUrl(model.getInstagramUrl())
+                .facebookUrl(model.getFacebookUrl())
                 .build();
     }
     public BusinessResponse toResponse(Business business){
@@ -73,6 +81,10 @@ public class BusinessMapper {
                 .category(business.getCategory())
                 .theme(business.getTheme())
                 .published(business.getPublished())
+                .tagline(business.getTagline())
+                .businessHours(business.getBusinessHours())
+                .instagramUrl(business.getInstagramUrl())
+                .facebookUrl(business.getFacebookUrl())
                 .build();
     }
 
@@ -90,6 +102,11 @@ public class BusinessMapper {
                 .address(request.getAddress())
                 .description(request.getDescription())
                 .category(request.getCategory())
+                .googleMap(request.getGoogleMap())        // 👈 naya
+                .tagline(request.getTagline())              // 👈 naya
+                .businessHours(request.getBusinessHours())  // 👈 naya
+                .instagramUrl(request.getInstagramUrl())    // 👈 naya
+                .facebookUrl(request.getFacebookUrl())      // 👈 naya
                 .build();
     }
 
