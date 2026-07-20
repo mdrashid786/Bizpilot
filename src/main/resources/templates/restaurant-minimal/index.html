@@ -1,10 +1,839 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Hello Rashid</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${business.businessName} + ' — ' + (${business.tagline} != null ? ${business.tagline} : ${config.dashboardSectionLabel})">Velvet Ember</title>
+    <meta name="description" th:content="${business.description}" content="Fine dining.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,ital@9..144,300..900,0..1&family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+    <style>
+        :root{
+          --gold:#C9A227; --copper:#B5651D; --ember:#E85D2C;
+          --ease:cubic-bezier(.16,.84,.44,1); --container:1320px;
+        }
+        html[data-theme="dark"]{
+          --bg:#0A0908; --bg-alt:#131110; --bg-raise:#1B1815;
+          --surface:rgba(237,230,214,0.045); --surface-strong:rgba(237,230,214,0.09);
+          --ink:#EDE6D6; --ink-dim:#A79C89; --line:rgba(237,230,214,0.12); --line-strong:rgba(237,230,214,0.22);
+          --shadow:0 30px 80px -20px rgba(0,0,0,.7); --glass-blur:blur(18px); --scrim:rgba(10,9,8,.55);
+        }
+        *{box-sizing:border-box; margin:0; padding:0;}
+        html{scroll-behavior:smooth;}
+        body{ background:var(--bg); color:var(--ink); font-family:'Manrope',sans-serif; overflow-x:hidden; }
+        img{max-width:100%; display:block;}
+        a{color:inherit; text-decoration:none;}
+        button{font-family:inherit; cursor:pointer;}
+        .container{max-width:var(--container); margin:0 auto; padding:0 32px;}
+        h1,h2,h3,h4{font-family:'Fraunces',serif; font-weight:600; line-height:1.05; letter-spacing:-.01em;}
+        .eyebrow{ font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:var(--copper); display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+        .eyebrow::before{content:''; width:28px; height:1px; background:var(--copper);}
+        ::-webkit-scrollbar{width:9px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--copper); border-radius:10px;}
+
+        #emberCanvas{ position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.55; }
+
+        header{ position:fixed; top:0; left:0; right:0; z-index:500; padding:22px 0; transition:padding .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease); border-bottom:1px solid transparent; }
+        header.scrolled{ padding:12px 0; background:var(--scrim); backdrop-filter:var(--glass-blur); border-bottom:1px solid var(--line); }
+        .nav-row{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
+        .brand{ display:flex; align-items:center; gap:12px; font-family:'Fraunces',serif; font-size:21px; letter-spacing:.02em; }
+        .brand img{ width:34px; height:34px; border-radius:50%; object-fit:cover; }
+        .brand svg{ width:30px; height:30px; }
+        .brand-flame path{ stroke:var(--gold); stroke-width:1.3; fill:none; }
+        nav.menu-links{ display:flex; gap:34px; align-items:center; }
+        nav.menu-links a{ font-size:13px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; position:relative; padding:4px 0; color:var(--ink); }
+        nav.menu-links a::after{ content:''; position:absolute; left:0; bottom:0; width:0%; height:1px; background:var(--gold); transition:width .35s var(--ease); }
+        nav.menu-links a:hover::after{ width:100%; }
+        .nav-actions{ display:flex; align-items:center; gap:14px; }
+        .btn{ display:inline-flex; align-items:center; gap:8px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; padding:13px 24px; border-radius:2px; border:1px solid var(--line-strong); position:relative; overflow:hidden; white-space:nowrap; }
+        .btn-solid{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+        .btn-solid span{position:relative; z-index:2;}
+        .btn-solid::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,var(--copper),var(--gold)); transform:translateX(-101%); transition:transform .45s var(--ease); z-index:1;}
+        .btn-solid:hover::before{ transform:translateX(0); } .btn-solid:hover{ color:#0A0908; }
+        .btn-ghost{ background:transparent; color:var(--ink); } .btn-ghost:hover{ border-color:var(--gold); color:var(--gold); }
+        .icon-btn{ width:40px; height:40px; border-radius:50%; border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center; background:var(--surface); transition:border-color .3s, transform .3s; }
+        .icon-btn:hover{ border-color:var(--gold); transform:rotate(12deg); }
+        .icon-btn svg{ width:17px; height:17px; }
+        .burger{ display:none; }
+
+        .hero{ position:relative; min-height:100vh; display:flex; align-items:flex-end; overflow:hidden; }
+        .hero-bg{ position:absolute; inset:0; z-index:0; background-size:cover; background-position:center; }
+        .hero-bg::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,9,8,.15) 0%, rgba(10,9,8,.55) 55%, var(--bg) 100%); }
+        .hero-inner{ position:relative; z-index:3; width:100%; padding:180px 0 90px; }
+        .hero-eyebrow{ font-family:'JetBrains Mono',monospace; letter-spacing:.3em; font-size:12px; text-transform:uppercase; color:var(--gold); margin-bottom:22px; }
+        .hero-title{ font-size:clamp(44px,8vw,110px); line-height:.98; font-weight:500; max-width:900px; }
+        .hero-desc{ max-width:460px; color:var(--ink-dim); font-size:16px; line-height:1.7; margin-top:26px; }
+        .hero-cta{ display:flex; gap:16px; margin-top:44px; flex-wrap:wrap; }
+        .scroll-ind{ position:absolute; left:50%; bottom:34px; transform:translateX(-50%); z-index:3; display:flex; flex-direction:column; align-items:center; gap:10px; }
+        .scroll-ind .line{ width:1px; height:46px; background:var(--line-strong); position:relative; overflow:hidden; }
+        .scroll-ind .line::after{ content:''; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--gold); animation:scrolldrop 2.2s ease-in-out infinite; }
+        @keyframes scrolldrop{ 0%{top:-100%;} 60%{top:100%;} 100%{top:100%;} }
+        .scroll-ind span{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.3em; color:var(--ink-dim); text-transform:uppercase;}
+
+        section{ position:relative; padding:150px 0; z-index:2; background:var(--bg); }
+        .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:40px; margin-bottom:70px; flex-wrap:wrap; }
+        .section-title{ font-size:clamp(32px,4.4vw,54px); }
+        .section-sub{ max-width:380px; color:var(--ink-dim); font-size:15px; line-height:1.7; }
+
+        .about{ background:var(--bg-alt); }
+        .about-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:80px; align-items:center; }
+        .about-imgwrap{ position:relative; }
+        .about-imgwrap img{ border-radius:2px; width:100%; height:520px; object-fit:cover; }
+        .about-badge{ position:absolute; bottom:-30px; left:-30px; background:var(--bg-raise); border:1px solid var(--line-strong); padding:26px 30px; box-shadow:var(--shadow); max-width:230px; }
+        .about-badge b{ font-family:'Fraunces',serif; font-size:34px; color:var(--gold); display:block; }
+        .about-badge span{ font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim); }
+        .about-text p{ color:var(--ink-dim); line-height:1.85; font-size:16px; margin-bottom:20px; }
+        .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin:44px 0; }
+        .stat b{ font-family:'Fraunces',serif; font-size:36px; color:var(--ink); display:block; }
+        .stat span{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-dim); }
+        .about-meta{ display:grid; grid-template-columns:1fr 1fr; gap:18px; border-top:1px solid var(--line); padding-top:30px; }
+        .about-meta div{ font-size:14px; color:var(--ink-dim); }
+        .about-meta b{ display:block; color:var(--ink); font-weight:600; margin-bottom:4px; }
+
+        .menu-controls{ display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:56px; align-items:center;}
+        .filters{ display:flex; gap:10px; flex-wrap:wrap; }
+        .filter-btn{ padding:10px 20px; border:1px solid var(--line-strong); background:transparent; color:var(--ink-dim); font-size:12px; letter-spacing:.08em; text-transform:uppercase; border-radius:30px; transition:all .3s var(--ease); }
+        .filter-btn.active,.filter-btn:hover{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+        .search-wrap{ position:relative; }
+        .search-wrap input{ background:var(--surface); border:1px solid var(--line-strong); color:var(--ink); padding:12px 44px 12px 18px; border-radius:30px; font-family:inherit; font-size:13px; width:230px; outline:none; transition:border-color .3s, width .3s; }
+        .search-wrap input:focus{ border-color:var(--gold); width:280px; }
+        .search-wrap svg{ position:absolute; right:16px; top:50%; transform:translateY(-50%); width:15px; height:15px; opacity:.5; }
+
+        .menu-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+        .dish-card{ background:var(--surface); border:1px solid var(--line); border-radius:4px; overflow:hidden; position:relative; transition:transform .15s ease, border-color .3s ease, box-shadow .3s ease; display:flex; flex-direction:column; }
+        .dish-card:hover{ border-color:var(--line-strong); box-shadow:var(--shadow); }
+        .dish-media{ position:relative; height:220px; overflow:hidden; background:var(--surface-strong); display:flex; align-items:center; justify-content:center; }
+        .dish-media img{ width:100%; height:100%; object-fit:cover; transition:transform .7s var(--ease); }
+        .dish-card:hover .dish-media img{ transform:scale(1.09); }
+        .dish-tags{ position:absolute; top:14px; left:14px; display:flex; gap:8px; }
+        .tag{ font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:5px 10px; border-radius:20px; backdrop-filter:blur(8px); font-weight:700; }
+        .tag-veg{ background:rgba(90,168,90,.25); color:#8FD98F; border:1px solid rgba(143,217,143,.5); }
+        .tag-nonveg{ background:rgba(201,80,60,.25); color:#F2A28E; border:1px solid rgba(242,162,142,.5); }
+        .dish-body{ padding:22px; flex:1; display:flex; flex-direction:column; }
+        .dish-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
+        .dish-top h4{ font-size:19px; font-weight:600; }
+        .dish-price{ font-family:'JetBrains Mono',monospace; color:var(--gold); font-size:15px; white-space:nowrap; }
+        .dish-desc{ color:var(--ink-dim); font-size:13.5px; line-height:1.6; margin-bottom:18px; flex:1; }
+        .dish-order{ display:flex; align-items:center; justify-content:flex-end; border-top:1px solid var(--line); padding-top:16px; }
+        .dish-order button{ background:none; border:none; color:var(--ink); font-size:12px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:8px; }
+        .dish-order button svg{ width:14px; height:14px; transition:transform .3s; }
+        .dish-order button:hover svg{ transform:translateX(4px); }
+        .no-results{ text-align:center; padding:60px 0; color:var(--ink-dim); display:none; }
+
+        .specials{ background:var(--bg-alt); overflow:hidden; }
+        .specials-swiper{ overflow:visible !important; padding:20px 0 60px; }
+        .special-card{ position:relative; height:440px; border-radius:6px; overflow:hidden; border:1px solid var(--line-strong); }
+        .special-card img{ width:100%; height:100%; object-fit:cover; }
+        .special-overlay{ position:absolute; inset:0; background:linear-gradient(0deg, rgba(10,9,8,.9) 0%, rgba(10,9,8,.05) 55%); display:flex; flex-direction:column; justify-content:flex-end; padding:34px; }
+        .special-overlay h3{ font-size:24px; color:#EDE6D6; margin-bottom:8px; }
+        .special-overlay p{ color:#cfc5b0; opacity:.85; font-size:13px; }
+        .swiper-button-next,.swiper-button-prev{ color:var(--gold) !important; }
+        .swiper-pagination-bullet{ background:var(--ink-dim) !important; opacity:.5;}
+        .swiper-pagination-bullet-active{ background:var(--gold) !important; opacity:1;}
+
+        .gallery-grid{ column-count:3; column-gap:20px; }
+        .gallery-item{ break-inside:avoid; margin-bottom:20px; border-radius:3px; overflow:hidden; position:relative; border:1px solid var(--line); }
+        .gallery-item img{ width:100%; display:block; transition:transform .6s var(--ease); }
+        .gallery-item:hover img{ transform:scale(1.06); }
+        .gallery-item .g-overlay{ position:absolute; inset:0; background:rgba(10,9,8,0); display:flex; align-items:center; justify-content:center; transition:background .4s; }
+        .gallery-item:hover .g-overlay{ background:rgba(10,9,8,.35); }
+
+        .why-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line); border:1px solid var(--line); }
+        .why-card{ background:var(--bg); padding:44px 36px; transition:background .4s; }
+        .why-card:hover{ background:var(--surface); }
+        .why-card .ic{ width:44px; height:44px; margin-bottom:26px; }
+        .why-card .ic svg{ width:100%; height:100%; stroke:var(--gold); fill:none; stroke-width:1.2; }
+        .why-card h4{ font-size:19px; margin-bottom:10px; font-weight:600; }
+        .why-card p{ color:var(--ink-dim); font-size:14px; line-height:1.7; }
+
+        .reviews{ background:var(--bg-alt); }
+        .review-card{ background:var(--surface); border:1px solid var(--line); padding:36px; border-radius:4px; height:100%; }
+        .stars{ display:flex; gap:4px; margin-bottom:20px; } .stars svg{ width:15px; height:15px; fill:var(--gold); }
+        .review-card p{ color:var(--ink-dim); line-height:1.8; font-size:15px; margin-bottom:26px; font-style:italic; }
+        .review-person{ display:flex; align-items:center; gap:14px; }
+        .review-person img{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
+        .review-person b{ display:block; font-size:14px; } .review-person span{ font-size:12px; color:var(--ink-dim); }
+
+        .book{ position:relative; background:var(--bg-alt); }
+        .book-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:70px; }
+        .book-info h2{ font-size:clamp(30px,4vw,46px); margin-bottom:20px; }
+        .book-info p{ color:var(--ink-dim); line-height:1.8; margin-bottom:34px; max-width:400px;}
+        .book-hours{ border-top:1px solid var(--line); padding-top:24px; }
+        .book-hours div{ display:flex; justify-content:space-between; padding:10px 0; font-size:14px; border-bottom:1px solid var(--line); color:var(--ink-dim); }
+        .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:26px; }
+        .field{ position:relative; }
+        .field.full{ grid-column:1/-1; }
+        .field input,.field textarea{ width:100%; background:transparent; border:none; border-bottom:1px solid var(--line-strong); padding:14px 2px 12px; color:var(--ink); font-family:inherit; font-size:15px; outline:none; transition:border-color .3s; }
+        .field textarea{ resize:none; min-height:70px; }
+        .field label{ position:absolute; left:2px; top:14px; color:var(--ink-dim); font-size:15px; pointer-events:none; transition:all .25s var(--ease); }
+        .field input:focus ~ label, .field input:not(:placeholder-shown) ~ label, .field textarea:focus ~ label, .field textarea:not(:placeholder-shown) ~ label{ top:-14px; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); }
+        .field .bar{ position:absolute; bottom:0; left:0; height:1px; width:0; background:var(--gold); transition:width .35s var(--ease); }
+        .field input:focus ~ .bar, .field textarea:focus ~ .bar{ width:100%; }
+        .field .err{ font-size:11px; color:#E07A5F; margin-top:6px; display:none; }
+        .field.invalid input, .field.invalid textarea{ border-color:#E07A5F; }
+        .field.invalid .err{ display:block; }
+        .form-submit{ margin-top:36px; width:100%; justify-content:center; }
+        .form-success{ display:none; padding:20px; border:1px solid var(--gold); color:var(--gold); font-size:13px; letter-spacing:.05em; margin-top:20px; text-align:center;}
+        .form-success.show{ display:block; }
+
+        .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:stretch; }
+        .contact-list{ display:flex; flex-direction:column; gap:0; }
+        .c-item{ display:flex; gap:20px; padding:24px 0; border-bottom:1px solid var(--line); align-items:flex-start; }
+        .c-item .ic{ width:20px; height:20px; margin-top:3px; flex-shrink:0; } .c-item .ic svg{ width:100%; height:100%; stroke:var(--gold); fill:none; }
+        .c-item b{ display:block; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:6px; }
+        .c-item span,.c-item a{ font-size:16px; }
+        .map-wrap{ border-radius:4px; overflow:hidden; border:1px solid var(--line-strong); min-height:340px; }
+        .map-wrap iframe{ width:100%; height:100%; min-height:340px; border:0; }
+        html[data-theme="dark"] .map-wrap iframe{ filter:grayscale(.6) invert(.9) contrast(.9); }
+
+        footer{ background:#0A0908; color:#EDE6D6; padding:100px 0 0; position:relative; z-index:2; }
+        .footer-top{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:60px; padding-bottom:70px; border-bottom:1px solid rgba(237,230,214,.12); }
+        .footer-brand p{ color:#A79C89; font-size:14px; line-height:1.8; max-width:280px; }
+        .footer-col h5{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A79C89; margin-bottom:22px; }
+        .footer-col a{ display:block; color:#EDE6D6; font-size:14px; margin-bottom:14px; opacity:.85; transition:opacity .3s, transform .3s; }
+        .footer-col a:hover{ opacity:1; transform:translateX(4px); color:var(--gold); }
+        .footer-social{ display:flex; gap:12px; margin-top:8px; }
+        .footer-bottom{ display:flex; justify-content:space-between; padding:26px 0; font-size:12px; color:#7d7365; flex-wrap:wrap; gap:10px;}
+
+        .float-stack{ position:fixed; right:26px; bottom:26px; z-index:400; display:flex; flex-direction:column; gap:14px; align-items:flex-end; }
+        .fab{ width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); border:1px solid var(--line-strong); transition:transform .3s var(--ease); position:relative; }
+        .fab:hover{ transform:translateY(-4px) scale(1.05); }
+        .fab svg{ width:22px; height:22px; }
+        .fab-cart{ background:linear-gradient(140deg,var(--copper),var(--gold)); }
+        .fab-cart svg{ stroke:#0A0908; fill:none; }
+        .cart-badge{ position:absolute; top:-4px; right:-4px; background:var(--ember); color:white; font-size:0.65rem; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .fab-top{ background:var(--bg-raise); opacity:0; pointer-events:none; transform:translateY(10px); }
+        .fab-top.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
+        .fab-top svg{ stroke:var(--ink); fill:none; }
+
+        #lightbox{ position:fixed; inset:0; background:rgba(6,5,4,.94); z-index:2000; display:none; align-items:center; justify-content:center; padding:40px; }
+        #lightbox.open{ display:flex; }
+        #lightbox img{ max-width:90vw; max-height:85vh; border:1px solid rgba(237,230,214,.2); }
+        #lightbox .lb-close{ position:absolute; top:30px; right:40px; width:44px; height:44px; border-radius:50%; border:1px solid rgba(237,230,214,.3); display:flex; align-items:center; justify-content:center; background:none; }
+        #lightbox .lb-close svg{ width:18px; height:18px; stroke:#fff; }
+
+        .order-modal-overlay{ position:fixed; inset:0; z-index:20000; background:rgba(9,9,11,0.85); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; padding:20px; }
+        .order-modal-overlay.open{ opacity:1; pointer-events:all; }
+        .order-modal{ background:var(--bg-raise); border:1px solid var(--line-strong); border-radius:8px; max-width:440px; width:100%; padding:2rem; max-height:90vh; overflow-y:auto; }
+        .order-modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1.4rem; }
+        .order-modal-close{ background:none; border:none; color:var(--ink-dim); font-size:1.4rem; }
+        .order-item-row{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
+        .order-item-name{ flex:1; font-size:0.9rem; }
+        .qty-btn{ width:26px; height:26px; border-radius:50%; background:var(--surface); border:1px solid var(--line-strong); color:var(--ink); font-size:0.9rem; }
+        .order-modal-input{ width:100%; background:var(--surface); border:1px solid var(--line-strong); border-radius:6px; padding:12px 14px; color:var(--ink); margin-bottom:12px; font-family:'Manrope',sans-serif; }
+        .order-modal-input:focus{ outline:none; border-color:var(--gold); }
+
+        @media (max-width: 1080px){
+          nav.menu-links, .nav-actions .btn-ghost{ display:none; }
+          .burger{ display:flex; }
+          .about-grid, .book-grid, .contact-grid{ grid-template-columns:1fr; }
+          .menu-grid{ grid-template-columns:repeat(2,1fr); }
+          .why-grid{ grid-template-columns:repeat(1,1fr); }
+          .footer-top{ grid-template-columns:1fr 1fr; }
+          .stat-row{ grid-template-columns:repeat(3,1fr); }
+          .gallery-grid{ column-count:2; }
+        }
+        @media (max-width: 640px){
+          .container{ padding:0 20px; } section{ padding:100px 0; }
+          .menu-grid{ grid-template-columns:1fr; } .form-grid{ grid-template-columns:1fr; }
+          .footer-top{ grid-template-columns:1fr; } .hero-title{ font-size:12vw; }
+          .gallery-grid{ column-count:1; }
+        }
+    </style>
 </head>
 <body>
-<h2> Welcome to restaurant-minimal</h2>
+
+<canvas id="emberCanvas"></canvas>
+
+<header id="siteHeader">
+    <div class="container nav-row">
+        <a href="#home" class="brand">
+            <img th:if="${business.logo != null}" th:src="${business.logo}" alt="logo">
+            <svg th:unless="${business.logo != null}" class="brand-flame" viewBox="0 0 40 40"><path d="M20 4c4 8-4 10-2 18 1 5 6 7 10 4-2 10-14 12-20 6-6-6-4-16 2-20-2 6 2 8 4 4 2-4-1-8 6-12z"/></svg>
+            <span th:text="${business.businessName}">Business Name</span>
+        </a>
+        <nav class="menu-links">
+            <a href="#home">Home</a>
+            <a href="#menu-section" th:text="${config.dashboardSectionLabel}">Menu</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#about">About</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <a class="icon-btn" th:if="${business.whatsapp != null}" th:href="'https://wa.me/91' + ${business.whatsapp}" target="_blank" aria-label="WhatsApp">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12a8 8 0 1 1-3.9-6.9L20 4l-1 3.9A8 8 0 0 1 20 12z"/></svg>
+            </a>
+<!--            <a href="#book" class="btn btn-ghost">Book Table</a> -->
+            <button class="btn btn-solid" onclick="openOrder()"><span>Order Now</span></button>
+            <button class="icon-btn burger" onclick="document.querySelector('.menu-links').classList.toggle('show')" aria-label="Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="hero" style="padding:0;">
+    <div class="hero-bg"
+         th:style="${business.coverImage != null}
+                  ? 'background-image:url(' + ${business.coverImage} + ')'
+                  : 'background-image:url(https://images.unsplash.com/photo-1544025162-d76694265947?w=1600&q=80)'"></div>
+    <div class="hero-inner container">
+        <div class="hero-eyebrow" th:if="${business.tagline != null}" th:text="${business.tagline}">TAGLINE</div>
+        <h1 class="hero-title" th:text="${business.businessName}">Business Name</h1>
+        <p class="hero-desc" th:if="${business.description != null}" th:text="${business.description}">Description here.</p>
+        <div class="hero-cta">
+            <button class="btn btn-solid" onclick="openOrder()"><span>Order Now</span></button>
+            <a href="#book" class="btn btn-ghost">Reserve a Table</a>
+        </div>
+    </div>
+    <div class="scroll-ind"><span>Scroll</span><div class="line"></div></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about">
+    <div class="container about-grid">
+        <div class="about-imgwrap" data-aos="fade-right">
+            <img th:if="${business.coverImage != null}" th:src="${business.coverImage}" alt="About">
+            <img th:unless="${business.coverImage != null}" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80" alt="About">
+            <div class="about-badge"><b>5★</b><span>Customer Rated</span></div>
+        </div>
+        <div class="about-text" data-aos="fade-left">
+            <div class="eyebrow">Our Story</div>
+            <h2 class="section-title" style="margin-bottom:26px;" th:text="'About ' + ${business.businessName}">About Us</h2>
+            <p th:if="${business.description != null}" th:text="${business.description}">Description here.</p>
+
+            <div class="stat-row">
+                <div class="stat"><b th:text="${#lists.size(categoryData)}">0</b><span th:text="${config.dashboardSectionLabel}">Items</span></div>
+                <div class="stat"><b th:text="${business.category}">Category</b><span>Category</span></div>
+                <div class="stat"><b>5★</b><span>Rating</span></div>
+            </div>
+
+            <div class="about-meta">
+                <div th:if="${business.businessHours != null}"><b>Hours</b><span th:text="${business.businessHours}">Hours</span></div>
+                <div th:if="${business.phone != null}"><b>Phone</b><a th:href="'tel:' + ${business.phone}" th:text="${business.phone}">Phone</a></div>
+                <div th:if="${business.email != null}"><b>Email</b><a th:href="'mailto:' + ${business.email}" th:text="${business.email}">Email</a></div>
+                <div th:if="${business.address != null}"><b>Address</b><span th:text="${business.address}">Address</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MENU -->
+<section id="menu-section">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">The Menu</div>
+                <h2 class="section-title" th:text="'Explore Our ' + ${config.dashboardSectionLabel}">Menu</h2>
+            </div>
+            <p class="section-sub">Everything below reflects what's currently on offer.</p>
+        </div>
+
+        <div class="menu-controls">
+            <div class="filters" id="filterBar" th:if="${typeKey != null and !#lists.isEmpty(typeOptions)}">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" th:each="opt : ${typeOptions}" th:data-filter="${opt}" th:text="${opt}">Veg</button>
+            </div>
+            <div class="search-wrap">
+                <input type="text" id="menuSearch" placeholder="Search the menu…">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            </div>
+        </div>
+
+        <div class="menu-grid" id="menuMount">
+            <div class="dish-card filter-item"
+                 th:each="item : ${categoryData}"
+                 th:data-type="${typeKey != null ? item.get(typeKey) : ''}">
+                <div class="dish-media">
+                    <div class="dish-tags">
+            <span class="tag" th:if="${typeKey != null and item.get(typeKey) != null}"
+                  th:classappend="${item.get(typeKey) == 'Veg' ? 'tag-veg' : 'tag-nonveg'}"
+                  th:text="${item.get(typeKey)}">Veg</span>
+                    </div>
+                    <img th:if="${imageKey != null and item.get(imageKey) != null}" th:src="${item.get(imageKey)}" th:alt="${nameKey != null ? item.get(nameKey) : 'item'}" loading="lazy">
+                    <span th:unless="${imageKey != null and item.get(imageKey) != null}" style="color:var(--ink-dim); font-size:2rem;">🍽️</span>
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name" th:text="${nameKey != null ? item.get(nameKey) : 'Item'}">Item Name</h4>
+                        <span class="dish-price" th:if="${priceKey != null and item.get(priceKey) != null}" th:text="'₹' + ${item.get(priceKey)}">₹0</span>
+                    </div>
+                    <p class="dish-desc item-desc" th:if="${descriptionKey != null and item.get(descriptionKey) != null}" th:text="${item.get(descriptionKey)}">Description</p>
+                    <div class="dish-order">
+                        <button type="button"
+                                th:attr="onclick=|addToCart('${item.get(nameKey)}', ${priceKey != null and item.get(priceKey) != null ? item.get(priceKey) : 0})|">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="no-results" id="noResults">No dishes match your search just yet — try another keyword.</p>
+    </div>
+</section>
+
+<!-- SPECIALS -->
+<section class="specials" th:if="${!#lists.isEmpty(specialItems)}">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Chef's Selection</div>
+                <h2 class="section-title">Today's Specials</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="swiper specials-swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" th:each="item : ${specialItems}">
+                    <div class="special-card">
+                        <img th:if="${imageKey != null and item.get(imageKey) != null}" th:src="${item.get(imageKey)}" th:alt="${nameKey != null ? item.get(nameKey) : 'item'}">
+                        <div class="special-overlay">
+                            <h3 th:text="${nameKey != null ? item.get(nameKey) : 'Item'}">Item Name</h3>
+                            <p>
+                                <span th:if="${priceKey != null and item.get(priceKey) != null}" th:text="'₹' + ${item.get(priceKey)} + ' · '">₹0 ·</span>
+                                <span th:if="${descriptionKey != null and item.get(descriptionKey) != null}" th:text="${item.get(descriptionKey)}">Description</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Gallery</div>
+                <h2 class="section-title">Moments from the room.</h2>
+            </div>
+        </div>
+        <div class="gallery-grid" id="galleryMount">
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80" alt="Ambience" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=700&q=80" alt="Interior" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=700&q=80" alt="Setup" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=700&q=80" alt="Detail" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?w=700&q=80" alt="Space" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80" alt="Corner" loading="lazy"><div class="g-overlay"></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- WHY US -->
+<section style="padding-top:0;">
+    <div class="container">
+        <div class="section-head">
+            <div><div class="eyebrow">Why Us</div><h2 class="section-title" th:text="'The ' + ${business.businessName} + ' Standard'">Our Standard</h2></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="why-grid">
+            <div class="why-card" data-aos="fade-up">
+                <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2s6 5.5 6 11a6 6 0 1 1-12 0c0-2 1-3.5 2-5 .3 1.5 1 2 1.5 1.5C8 7 9 4 12 2z"/></svg></div>
+                <h4>Quality First</h4><p>Every detail crafted with care, from ingredients to presentation.</p>
+            </div>
+            <div class="why-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 2h12v6a6 6 0 0 1-12 0V2z"/></svg></div>
+                <h4>Expert Team</h4><p>Skilled professionals dedicated to an exceptional experience.</p>
+            </div>
+            <div class="why-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div>
+                <h4>Trusted Standards</h4><p>Consistent quality and hygiene you can always rely on.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" class="reviews">
+    <div class="container">
+        <div class="section-head"><div><div class="eyebrow">Guest Words</div><h2 class="section-title">What the table says.</h2></div></div>
+        <div class="menu-grid" style="grid-template-columns:repeat(3,1fr);">
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"Excellent experience from start to finish. Highly recommended to everyone!"</p>
+                <div class="review-person"><img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Reviewer"><div><b>Happy Customer</b></div></div>
+            </div>
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"Professional service, great ambience, and everything was just perfect."</p>
+                <div class="review-person"><img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Reviewer"><div><b>Happy Customer</b></div></div>
+            </div>
+            <div class="review-card">
+                <div class="stars">★★★★★</div>
+                <p>"Will definitely be coming back. Couldn't have asked for better."</p>
+                <div class="review-person"><img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Reviewer"><div><b>Happy Customer</b></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BOOK TABLE -->
+<!--<section id="book" class="book">
+    <div class="container book-grid">
+        <div class="book-info" data-aos="fade-right">
+            <div class="eyebrow">Reservations</div>
+            <h2>Reserve your table.</h2>
+            <p>Tables are held for 15 minutes past your slot. For larger groups, message us directly.</p>
+            <div class="book-hours" th:if="${business.businessHours != null}">
+                <div><span>Hours</span><b th:text="${business.businessHours}">Hours</b></div>
+            </div>
+        </div>
+        <form class="book-form" id="bookForm" novalidate data-aos="fade-left">
+            <div class="form-grid">
+                <div class="field"><input type="text" id="fName" placeholder=" " required><label>Full Name</label><div class="bar"></div><span class="err">Please enter your name.</span></div>
+                <div class="field"><input type="tel" id="fPhone" placeholder=" " required><label>Phone Number</label><div class="bar"></div><span class="err">Enter a valid 10-digit number.</span></div>
+                <div class="field"><input type="number" id="fGuests" min="1" max="20" placeholder=" " required><label>Guests</label><div class="bar"></div><span class="err">How many guests?</span></div>
+                <div class="field"><input type="date" id="fDate" placeholder=" " required><label>Date</label><div class="bar"></div><span class="err">Choose a date.</span></div>
+                <div class="field"><input type="time" id="fTime" placeholder=" " required><label>Time</label><div class="bar"></div><span class="err">Choose a time.</span></div>
+                <div class="field full"><textarea id="fMsg" placeholder=" "></textarea><label>Special Requests</label><div class="bar"></div></div>
+            </div>
+            <button type="submit" class="btn btn-solid form-submit"><span>Confirm Reservation</span></button>
+            <div class="form-success" id="formSuccess">Your table request has been sent via WhatsApp.</div>
+        </form>
+    </div>
+</section>-->
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="container">
+        <div class="section-head"><div><div class="eyebrow">Find Us</div><h2 class="section-title">Get in touch.</h2></div></div>
+        <div class="contact-grid">
+            <div class="contact-list" data-aos="fade-right">
+                <div class="c-item" th:if="${business.phone != null}">
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3"/></svg></div>
+                    <div><b>Phone</b><a th:href="'tel:' + ${business.phone}" th:text="${business.phone}">Phone</a></div>
+                </div>
+                <div class="c-item" th:if="${business.email != null}">
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg></div>
+                    <div><b>Email</b><a th:href="'mailto:' + ${business.email}" th:text="${business.email}">Email</a></div>
+                </div>
+                <div class="c-item" th:if="${business.whatsapp != null}">
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3.9-6.9"/></svg></div>
+                    <div><b>WhatsApp</b><a th:href="'https://wa.me/91' + ${business.whatsapp}" target="_blank">Message us directly</a></div>
+                </div>
+                <div class="c-item" th:if="${business.address != null}">
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11.5A8 8 0 0 0 4 10.5C4 17.5 12 22 12 22z"/></svg></div>
+                    <div><b>Address</b><span th:text="${business.address}">Address</span></div>
+                </div>
+                <div class="c-item" th:if="${business.instagramUrl != null}">
+                    <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
+                    <div><b>Instagram</b><a th:href="${business.instagramUrl}" target="_blank">Follow us</a></div>
+                </div>
+            </div>
+            <div class="map-wrap" data-aos="fade-left" th:if="${business.address != null}">
+                <iframe th:src="'https://maps.google.com/maps?q=' + ${#uris.escapeQueryParam(business.address)} + '&output=embed'" loading="lazy" title="location map"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container footer-top">
+        <div class="footer-brand">
+            <a href="#home" class="brand" style="color:#EDE6D6; margin-bottom:18px;">
+                <svg class="brand-flame" viewBox="0 0 40 40"><path d="M20 4c4 8-4 10-2 18 1 5 6 7 10 4-2 10-14 12-20 6-6-6-4-16 2-20-2 6 2 8 4 4 2-4-1-8 6-12z"/></svg>
+                <span th:text="${business.businessName}">Business Name</span>
+            </a>
+            <p th:if="${business.description != null}" th:text="${business.description}">Description</p>
+            <div class="footer-social" th:if="${business.instagramUrl != null or business.facebookUrl != null}">
+                <a th:if="${business.instagramUrl != null}" th:href="${business.instagramUrl}" class="icon-btn" target="_blank"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/></svg></a>
+                <a th:if="${business.facebookUrl != null}" th:href="${business.facebookUrl}" class="icon-btn" target="_blank">f</a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h5>Explore</h5>
+            <a href="#menu-section" th:text="${config.dashboardSectionLabel}">Menu</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="footer-col" th:if="${business.businessHours != null}">
+            <h5>Hours</h5>
+            <a th:text="${business.businessHours}">Hours</a>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span th:text="'© 2026 ' + ${business.businessName} + '. All rights reserved.'">© 2026</span>
+    </div>
+</footer>
+
+<div class="float-stack">
+    <a class="fab fab-top" id="fabTop" href="#home" aria-label="Scroll to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </a>
+    <button class="fab fab-cart" onclick="openOrder()" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+        <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+    </button>
+</div>
+
+<div id="lightbox">
+    <button class="lb-close" id="lbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <img id="lbImage" src="" alt="preview">
+</div>
+
+<!-- ORDER MODAL -->
+<div class="order-modal-overlay" id="orderModal" onclick="closeOrderOnBg(event)">
+    <div class="order-modal">
+        <div class="order-modal-header">
+            <h4 style="font-family:'Fraunces',serif;">Your Order</h4>
+            <button class="order-modal-close" onclick="closeOrder()">✕</button>
+        </div>
+        <div id="orderItemsList"><p style="color:var(--ink-dim); font-size:0.85rem; text-align:center; padding:1rem 0;">Your cart is empty.</p></div>
+        <input type="text" id="custName" class="order-modal-input" placeholder="Your Name">
+        <input type="tel" id="custPhone" class="order-modal-input" placeholder="Mobile Number">
+        <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+            <span style="color:var(--ink-dim); font-size:0.85rem;">Total</span>
+            <strong id="orderTotal" style="color:var(--gold); font-size:1.2rem;">₹0</strong>
+        </div>
+        <button class="btn btn-solid" style="width:100%; justify-content:center;" onclick="placeOrder()"><span>Proceed to WhatsApp →</span></button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const whatsappNumber = /*[[${business.whatsapp != null ? '91' + business.whatsapp : ''}]]*/ "";
+    /*]]>*/
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        AOS.init({ duration: 900, once: true });
+        initEmberCanvas();
+
+        const headerEl = document.getElementById("siteHeader");
+        const fabTop = document.getElementById("fabTop");
+        window.addEventListener("scroll", () => {
+            const y = window.scrollY;
+            headerEl.classList.toggle("scrolled", y > 60);
+            fabTop.classList.toggle("show", y > 500);
+        });
+
+        new Swiper(".specials-swiper", {
+            slidesPerView: 1.15, spaceBetween: 26, grabCursor: true,
+            breakpoints: { 700: { slidesPerView: 2.2 }, 1100: { slidesPerView: 3 } },
+            navigation: { nextEl: ".specials-swiper .swiper-button-next", prevEl: ".specials-swiper .swiper-button-prev" },
+            pagination: { el: ".specials-swiper .swiper-pagination", clickable: true }
+        });
+
+        initGalleryLightbox();
+        initMenuFilter();
+        initBookForm();
+    });
+
+    // ===== EMBER PARTICLE CANVAS =====
+    function initEmberCanvas() {
+        const ec = document.getElementById("emberCanvas");
+        const ectx = ec.getContext("2d");
+        let embers = [];
+        function sizeCanvas() { ec.width = window.innerWidth; ec.height = window.innerHeight; }
+        sizeCanvas();
+        window.addEventListener("resize", sizeCanvas);
+        function spawn() {
+            embers.push({ x: Math.random()*ec.width, y: ec.height+10, r: Math.random()*2+.6, speed: Math.random()*.6+.25, drift: (Math.random()-.5)*.6, life: 1, hue: Math.random()>.5?"201,162,39":"232,93,44" });
+        }
+        function tick() {
+            ectx.clearRect(0,0,ec.width,ec.height);
+            if (embers.length < 60 && Math.random() > .5) spawn();
+            embers.forEach(p => { p.y -= p.speed; p.x += p.drift; p.life -= 0.0032;
+                ectx.beginPath(); ectx.fillStyle = `rgba(${p.hue},${Math.max(p.life,0)*0.85})`; ectx.arc(p.x,p.y,p.r,0,Math.PI*2); ectx.fill(); });
+            embers = embers.filter(p => p.life > 0 && p.y > -20);
+            requestAnimationFrame(tick);
+        }
+        tick();
+    }
+
+    // ===== GALLERY LIGHTBOX =====
+    function initGalleryLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        const lbImage = document.getElementById("lbImage");
+        document.getElementById("galleryMount").addEventListener("click", e => {
+            const item = e.target.closest(".gallery-item");
+            if (!item) return;
+            lbImage.src = item.querySelector("img").src;
+            lightbox.classList.add("open");
+        });
+        document.getElementById("lbClose").addEventListener("click", () => lightbox.classList.remove("open"));
+        lightbox.addEventListener("click", e => { if (e.target === lightbox) lightbox.classList.remove("open"); });
+    }
+
+    // ===== MENU SEARCH + FILTER (server-rendered DOM) =====
+    function initMenuFilter() {
+        const searchInput = document.getElementById("menuSearch");
+        const filterBar = document.getElementById("filterBar");
+        const noResults = document.getElementById("noResults");
+
+        function processFilter() {
+            const query = searchInput.value.toLowerCase().trim();
+            const activeBtn = filterBar ? filterBar.querySelector(".filter-btn.active") : null;
+            const activeFilter = activeBtn ? activeBtn.getAttribute("data-filter") : "all";
+            let visibleCount = 0;
+
+            document.querySelectorAll(".filter-item").forEach(card => {
+                const nameEl = card.querySelector(".item-name");
+                const descEl = card.querySelector(".item-desc");
+                const name = nameEl ? nameEl.innerText.toLowerCase() : "";
+                const desc = descEl ? descEl.innerText.toLowerCase() : "";
+                const type = card.getAttribute("data-type");
+
+                const matchesSearch = name.includes(query) || desc.includes(query);
+                const matchesFilter = activeFilter === "all" || type === activeFilter;
+                const show = matchesSearch && matchesFilter;
+                card.style.display = show ? "flex" : "none";
+                if (show) visibleCount++;
+            });
+
+            noResults.style.display = visibleCount === 0 ? "block" : "none";
+        }
+
+        if (searchInput) searchInput.addEventListener("input", processFilter);
+        if (filterBar) {
+            filterBar.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.addEventListener("click", e => {
+                    filterBar.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                    e.target.classList.add("active");
+                    processFilter();
+                });
+            });
+        }
+    }
+
+    // ===== CART / CHECKOUT =====
+    let cart = [];
+
+    function addToCart(name, price) {
+        const numericPrice = Number(price) || 0;
+        const existing = cart.find(i => i.name === name);
+        if (existing) existing.qty++;
+        else cart.push({ name, price: numericPrice, qty: 1 });
+        updateCartBadge();
+        renderCart();
+    }
+
+    function updateCartBadge() {
+        const badge = document.getElementById("cartBadge");
+        const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+        if (totalQty > 0) { badge.style.display = "flex"; badge.textContent = totalQty; }
+        else badge.style.display = "none";
+    }
+
+    function renderCart() {
+        const container = document.getElementById("orderItemsList");
+        if (cart.length === 0) {
+            container.innerHTML = '<p style="color:var(--ink-dim); font-size:0.85rem; text-align:center; padding:1rem 0;">Your cart is empty.</p>';
+            document.getElementById("orderTotal").textContent = "₹0";
+            return;
+        }
+        container.innerHTML = cart.map(item => `
+            <div class="order-item-row">
+                <span class="order-item-name">${item.name}</span>
+                <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
+                <span style="min-width:20px; text-align:center;">${item.qty}</span>
+                <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+                <span style="min-width:60px; text-align:right; color:var(--gold);">₹${item.price * item.qty}</span>
+            </div>`).join("");
+        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        document.getElementById("orderTotal").textContent = `₹${total}`;
+    }
+
+    function changeQty(name, delta) {
+        const idx = cart.findIndex(i => i.name === name);
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
+        updateCartBadge();
+        renderCart();
+    }
+
+    function openOrder() { document.getElementById("orderModal").classList.add("open"); }
+    function closeOrder() { document.getElementById("orderModal").classList.remove("open"); }
+    function closeOrderOnBg(e) { if (e.target === document.getElementById("orderModal")) closeOrder(); }
+
+    function placeOrder() {
+        if (cart.length === 0) { alert("Please add items first!"); return; }
+        const name = document.getElementById("custName").value.trim();
+        const phone = document.getElementById("custPhone").value.trim();
+        if (!name) { alert("Please enter your name!"); return; }
+        if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
+
+        let message = "Hello! I would like to place an order:\n\n";
+        message += `Name: ${name}\nMobile: ${phone}\n\n`;
+        cart.forEach(item => { message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`; });
+        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        message += `\nTotal: ₹${total}`;
+
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
+
+        cart = [];
+        document.getElementById("custName").value = "";
+        document.getElementById("custPhone").value = "";
+        updateCartBadge();
+        renderCart();
+        closeOrder();
+    }
+
+    // ===== BOOKING FORM (sends via WhatsApp too, consistent with order flow) =====
+    function initBookForm() {
+        const bookForm = document.getElementById("bookForm");
+        bookForm.addEventListener("submit", e => {
+            e.preventDefault();
+            let valid = true;
+            const rules = [
+                { id: "fName", test: v => v.trim().length > 1 },
+                { id: "fPhone", test: v => /^[6-9]\d{9}$/.test(v.trim()) },
+                { id: "fGuests", test: v => +v >= 1 && +v <= 20 },
+                { id: "fDate", test: v => v.length > 0 },
+                { id: "fTime", test: v => v.length > 0 }
+            ];
+            rules.forEach(rule => {
+                const input = document.getElementById(rule.id);
+                const field = input.closest(".field");
+                const ok = rule.test(input.value);
+                field.classList.toggle("invalid", !ok);
+                if (!ok) valid = false;
+            });
+
+            if (valid) {
+                const name = document.getElementById("fName").value;
+                const phone = document.getElementById("fPhone").value;
+                const guests = document.getElementById("fGuests").value;
+                const date = document.getElementById("fDate").value;
+                const time = document.getElementById("fTime").value;
+                const msg = document.getElementById("fMsg").value;
+
+                let message = `Hello! I would like to reserve a table:\n\n`;
+                message += `Name: ${name}\nPhone: ${phone}\nGuests: ${guests}\nDate: ${date}\nTime: ${time}\n`;
+                if (msg) message += `Note: ${msg}\n`;
+
+                if (whatsappNumber) {
+                    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
+                }
+
+                document.getElementById("formSuccess").classList.add("show");
+                bookForm.reset();
+                setTimeout(() => document.getElementById("formSuccess").classList.remove("show"), 6000);
+            }
+        });
+    }
+    /*]]>*/
+</script>
 </body>
 </html>

@@ -12,4 +12,9 @@ public class CategoryRowRequest {
 
     @NotNull
     private Map<String, String> fields;
+
+    private Boolean active;
+    private Boolean featured;
+
+
 }

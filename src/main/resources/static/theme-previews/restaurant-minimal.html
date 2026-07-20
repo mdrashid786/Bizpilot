@@ -1,1211 +1,1460 @@
-:L'Étoile Noir - Dynamic Premium Dining:index.html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- SEO & Open Graph Meta Tags -->
-    <title>L'Étoile Noir - Dynamic Premium Dining</title>
-    <meta name="description" content="Experience avant-garde culinary engineering. An immersive ultra-luxury gastronomic journey powered by data-driven culinary artistry.">
-    <meta property="og:title" content="L'Étoile Noir - Dynamic Premium Dining">
-    <meta property="og:description" content="Experience avant-garde culinary engineering.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1200&q=80">
+    <title>Velvet Ember — Fire &amp; Finesse Grill House</title>
+    <meta name="description" content="Velvet Ember is a live-fire grill house in Haryana serving wood-charred plates, slow-cooked signatures and a copper-lit bar. Reserve your table.">
+    <meta property="og:title" content="Velvet Ember — Fire &amp; Finesse Grill House">
+    <meta property="og:description" content="A live-fire dining room built around smoke, char and slow-cooked craft.">
+    <meta property="og:type" content="restaurant.restaurant">
     <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://velvetember.example/">
 
-    <!-- Fonts & Frameworks -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,ital@9..144,300..900,0..1&family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Restaurant",
+            "name": "Velvet Ember",
+            "servesCuisine": ["Live-fire Grill", "Modern European", "Bar"],
+            "priceRange": "₹₹₹₹",
+            "telephone": "+91-98765-43210"
+        }
+    </script>
 
     <style>
-        :root {
-            --bg-color: #09090B;
-            --card-bg: rgba(255, 255, 255, 0.04);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --primary: #FF6B00;
-            --secondary: #FFD166;
-            --accent: #00E5FF;
-            --success: #22C55E;
-            --text: #FFFFFF;
-            --text-muted: #B3B3B3;
-            --font-heading: 'Plus Jakarta Sans', sans-serif;
-            --font-body: 'Poppins', sans-serif;
-            --glass-blur: blur(16px);
+        /* ============================= TOKENS ============================= */
+        :root{
+          --gold:#C9A227;
+          --copper:#B5651D;
+          --ember:#E85D2C;
+          --ease:cubic-bezier(.16,.84,.44,1);
+          --container:1320px;
         }
+        html[data-theme="dark"]{
+          --bg:#0A0908;
+          --bg-alt:#131110;
+          --bg-raise:#1B1815;
+          --surface:rgba(237,230,214,0.045);
+          --surface-strong:rgba(237,230,214,0.09);
+          --ink:#EDE6D6;
+          --ink-dim:#A79C89;
+          --line:rgba(237,230,214,0.12);
+          --line-strong:rgba(237,230,214,0.22);
+          --shadow:0 30px 80px -20px rgba(0,0,0,.7);
+          --glass-blur:blur(18px);
+          --scrim:rgba(10,9,8,.55);
+        }
+        html[data-theme="light"]{
+          --bg:#F2ECDE;
+          --bg-alt:#EAE1CD;
+          --bg-raise:#FFFDF8;
+          --surface:rgba(27,23,18,0.045);
+          --surface-strong:rgba(27,23,18,0.08);
+          --ink:#1B1712;
+          --ink-dim:#6B6153;
+          --line:rgba(27,23,18,0.12);
+          --line-strong:rgba(27,23,18,0.22);
+          --shadow:0 30px 80px -25px rgba(27,23,18,.35);
+          --glass-blur:blur(18px);
+          --scrim:rgba(242,236,222,.6);
+        }
+        *{box-sizing:border-box; margin:0; padding:0;}
+        html{scroll-behavior:auto;}
+        body{
+          background:var(--bg);
+          color:var(--ink);
+          font-family:'Manrope',sans-serif;
+          overflow-x:hidden;
+          cursor:none;
+          transition:background .6s var(--ease), color .6s var(--ease);
+        }
+        @media (hover:none), (pointer:coarse){ body{cursor:auto;} .cursor,.cursor-dot{display:none !important;} }
+        img{max-width:100%; display:block;}
+        a{color:inherit; text-decoration:none;}
+        button{font-family:inherit; cursor:pointer;}
+        .container{max-width:var(--container); margin:0 auto; padding:0 32px;}
+        h1,h2,h3,h4{font-family:'Fraunces',serif; font-weight:600; line-height:1.05; letter-spacing:-.01em;}
+        .eyebrow{
+          font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.28em; text-transform:uppercase;
+          color:var(--copper); display:flex; align-items:center; gap:12px; margin-bottom:18px;
+        }
+        .eyebrow::before{content:''; width:28px; height:1px; background:var(--copper);}
+        ::selection{ background:var(--ember); color:#0A0908; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        /* scrollbar */
+        ::-webkit-scrollbar{width:9px;}
+        ::-webkit-scrollbar-track{background:var(--bg);}
+        ::-webkit-scrollbar-thumb{background:var(--copper); border-radius:10px;}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text);
-            font-family: var(--font-body);
-            overflow-x: hidden;
-            position: relative;
+        /* ============================= LOADER ============================= */
+        #loader{
+          position:fixed; inset:0; z-index:9999; background:#0A0908; color:#EDE6D6;
+          display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px;
+          transition:opacity .9s var(--ease), visibility .9s var(--ease);
         }
+        #loader.hide{opacity:0; visibility:hidden; pointer-events:none;}
+        .loader-mark{ font-family:'Fraunces',serif; font-size:15vw; max-font-size:120px; font-weight:300; letter-spacing:.02em; position:relative;}
+        .loader-mark svg{ width:min(46vw,340px); height:auto; }
+        .loader-mark path{ stroke:#C9A227; stroke-width:1.4; fill:none; stroke-dasharray:900; stroke-dashoffset:900; animation:draw 2.1s var(--ease) forwards; }
+        @keyframes draw{ to{stroke-dashoffset:0;} }
+        .loader-bar{width:220px; height:1px; background:rgba(237,230,214,.15); position:relative; overflow:hidden;}
+        .loader-bar span{position:absolute; left:0; top:0; height:100%; width:0%; background:linear-gradient(90deg,var(--copper),var(--gold)); animation:load 2.6s var(--ease) forwards;}
+        @keyframes load{ to{width:100%;} }
+        .loader-txt{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.35em; color:#A79C89; text-transform:uppercase;}
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: var(--font-heading);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
+        /* ============================= CURSOR ============================= */
+        .cursor,.cursor-dot{ position:fixed; top:0; left:0; pointer-events:none; z-index:9998; border-radius:50%; transform:translate(-50%,-50%); }
+        .cursor{ width:38px; height:38px; border:1px solid var(--copper); transition:width .25s var(--ease),height .25s var(--ease),border-color .25s var(--ease),background .25s var(--ease); }
+        .cursor.active{ width:64px; height:64px; background:rgba(201,162,39,.12); border-color:var(--gold); }
+        .cursor-dot{ width:6px; height:6px; background:var(--ember); }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-color);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, var(--primary), var(--accent));
-            border-radius: 4px;
-        }
+        /* ============================= EMBER CANVAS ============================= */
+        #emberCanvas{ position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.55; }
+        #heroCanvas{ position:absolute; inset:0; width:100%; height:100%; z-index:1; }
 
-        /* Global Structural Utilities */
-        .glass-panel {
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        /* ============================= HEADER ============================= */
+        header{
+          position:fixed; top:0; left:0; right:0; z-index:500;
+          padding:22px 0; transition:padding .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease);
+          border-bottom:1px solid transparent;
         }
+        header.scrolled{
+          padding:12px 0; background:var(--scrim); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+          border-bottom:1px solid var(--line);
+        }
+        .nav-row{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
+        .brand{ display:flex; align-items:center; gap:12px; font-family:'Fraunces',serif; font-size:21px; letter-spacing:.02em; }
+        .brand svg{ width:30px; height:30px; }
+        .brand-flame path{ stroke:var(--gold); stroke-width:1.3; fill:none; }
+        nav.menu-links{ display:flex; gap:34px; align-items:center; }
+        nav.menu-links a{
+          font-size:13px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; position:relative; padding:4px 0; color:var(--ink);
+        }
+        nav.menu-links a::after{
+          content:''; position:absolute; left:0; bottom:0; width:0%; height:1px; background:var(--gold); transition:width .35s var(--ease);
+        }
+        nav.menu-links a:hover::after{ width:100%; }
+        .nav-actions{ display:flex; align-items:center; gap:14px; }
+        .btn{
+          display:inline-flex; align-items:center; gap:8px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+          padding:13px 24px; border-radius:2px; border:1px solid var(--line-strong); position:relative; overflow:hidden; white-space:nowrap;
+        }
+        .btn-solid{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+        .btn-solid span{position:relative; z-index:2;}
+        .btn-solid::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,var(--copper),var(--gold)); transform:translateX(-101%); transition:transform .45s var(--ease); z-index:1;}
+        .btn-solid:hover::before{ transform:translateX(0); }
+        .btn-solid:hover{ color:#0A0908; }
+        .btn-ghost{ background:transparent; color:var(--ink); }
+        .btn-ghost:hover{ border-color:var(--gold); color:var(--gold); }
+        .icon-btn{
+          width:40px; height:40px; border-radius:50%; border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center;
+          background:var(--surface); transition:border-color .3s, transform .3s;
+        }
+        .icon-btn:hover{ border-color:var(--gold); transform:rotate(12deg); }
+        .icon-btn svg{ width:17px; height:17px; }
+        .burger{ display:none; }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #FFFFFF 0%, var(--text-muted) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* theme toggle */
+        .theme-toggle{ width:52px; height:28px; border-radius:20px; border:1px solid var(--line-strong); background:var(--surface); position:relative; padding:0; }
+        .theme-toggle .knob{ position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%; background:linear-gradient(140deg,var(--copper),var(--gold)); transition:transform .45s var(--ease); }
+        html[data-theme="light"] .theme-toggle .knob{ transform:translateX(24px); }
 
-        .gradient-accent-text {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* ============================= HERO ============================= */
+        .hero{ position:relative; min-height:100vh; display:flex; align-items:flex-end; overflow:hidden; }
+        .hero-bg{ position:absolute; inset:0; z-index:0; }
+        .hero-bg img{ width:100%; height:100%; object-fit:cover; opacity:.55; filter:saturate(1.05) contrast(1.05); }
+        .hero-bg::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,9,8,.15) 0%, rgba(10,9,8,.55) 55%, var(--bg) 100%); }
+        html[data-theme="light"] .hero-bg::after{ background:linear-gradient(180deg, rgba(242,236,222,.15) 0%, rgba(242,236,222,.6) 55%, var(--bg) 100%); }
+        .hero-inner{ position:relative; z-index:3; width:100%; padding:180px 0 90px; }
+        .hero-grid{ display:grid; grid-template-columns:1fr auto; gap:40px; align-items:end; }
+        .hero-eyebrow{ font-family:'JetBrains Mono',monospace; letter-spacing:.3em; font-size:12px; text-transform:uppercase; color:var(--gold); margin-bottom:22px; overflow:hidden; }
+        .hero-title{ font-size:clamp(52px,9vw,132px); line-height:.92; font-weight:500; }
+        .hero-title .line{ overflow:hidden; }
+        .hero-title .line span{ display:inline-block; transform:translateY(110%); }
+        .hero-title em{ font-style:italic; font-weight:300; color:var(--gold); }
+        .hero-desc{ max-width:420px; color:var(--ink-dim); font-size:16px; line-height:1.7; margin-top:26px; }
+        .hero-side{ writing-mode:vertical-rl; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--ink-dim); display:flex; align-items:center; gap:14px; padding-bottom:6px;}
+        .hero-side::before{ content:''; width:1px; height:60px; background:var(--line-strong); }
+        .hero-cta{ display:flex; gap:16px; margin-top:44px; flex-wrap:wrap; }
+        .scroll-ind{ position:absolute; left:50%; bottom:34px; transform:translateX(-50%); z-index:3; display:flex; flex-direction:column; align-items:center; gap:10px; }
+        .scroll-ind .line{ width:1px; height:46px; background:var(--line-strong); position:relative; overflow:hidden; }
+        .scroll-ind .line::after{ content:''; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--gold); animation:scrolldrop 2.2s ease-in-out infinite; }
+        @keyframes scrolldrop{ 0%{top:-100%;} 60%{top:100%;} 100%{top:100%;} }
+        .scroll-ind span{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.3em; color:var(--ink-dim); text-transform:uppercase;}
 
-        .section-padding {
-            padding: 120px 0;
-        }
+        .float-food{ position:absolute; z-index:2; border-radius:50%; overflow:hidden; box-shadow:0 30px 60px -15px rgba(0,0,0,.6); border:1px solid var(--line-strong); pointer-events:none; }
+        .float-food img{ width:100%; height:100%; object-fit:cover; }
+        .ff1{ width:150px; height:150px; top:22%; right:8%; }
+        .ff2{ width:110px; height:110px; top:55%; right:22%; }
+        .ff3{ width:90px; height:90px; top:14%; right:32%; }
 
-        /* Custom Custom Cursor */
-        #custom-cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--accent);
-            border-radius: 50%;
-            position: fixed;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 99999;
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
-        }
+        /* ============================= SECTION GENERIC ============================= */
+        section{ position:relative; padding:150px 0; z-index:2; background:var(--bg); }
+        .divider{ display:flex; justify-content:center; padding:0 0 0; margin-top:-1px;}
+        .divider svg{ width:180px; height:38px; opacity:.7; }
+        .divider path{ stroke:var(--copper); stroke-width:1.4; fill:none; stroke-dasharray:400; stroke-dashoffset:400; }
+        .divider.inview path{ animation:draw 1.6s var(--ease) forwards; }
 
-        /* Preloader */
-        #loader-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #000;
-            z-index: 100000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            transition: opacity 0.6s ease;
-        }
+        .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:40px; margin-bottom:70px; flex-wrap:wrap; }
+        .section-title{ font-size:clamp(36px,4.4vw,58px); }
+        .section-sub{ max-width:380px; color:var(--ink-dim); font-size:15px; line-height:1.7; }
 
-        .loader-glow {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-top-color: var(--primary);
-            animation: spin 1s linear infinite;
-            position: relative;
+        /* ============================= ABOUT ============================= */
+        .about{ background:var(--bg-alt); }
+        .about-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:80px; align-items:center; }
+        .about-imgwrap{ position:relative; }
+        .about-imgwrap img{ border-radius:2px; width:100%; height:560px; object-fit:cover; }
+        .about-badge{
+          position:absolute; bottom:-30px; left:-30px; background:var(--bg-raise); border:1px solid var(--line-strong); padding:26px 30px;
+          box-shadow:var(--shadow); max-width:230px;
         }
-        .loader-glow::before {
-            content: '';
-            position: absolute;
-            top: 5px; left: 5px; right: 5px; bottom: 5px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-top-color: var(--accent);
-            animation: spin 2s linear infinite;
-        }
+        .about-badge b{ font-family:'Fraunces',serif; font-size:34px; color:var(--gold); display:block; }
+        .about-badge span{ font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim); }
+        .about-text p{ color:var(--ink-dim); line-height:1.85; font-size:16px; margin-bottom:20px; }
+        .stat-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin:44px 0; }
+        .stat b{ font-family:'Fraunces',serif; font-size:38px; color:var(--ink); display:block; }
+        .stat span{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-dim); }
+        .about-meta{ display:grid; grid-template-columns:1fr 1fr; gap:18px; border-top:1px solid var(--line); padding-top:30px; }
+        .about-meta div{ font-size:14px; color:var(--ink-dim); }
+        .about-meta b{ display:block; color:var(--ink); font-weight:600; margin-bottom:4px; }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* ============================= MENU ============================= */
+        .menu-controls{ display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:56px; align-items:center;}
+        .filters{ display:flex; gap:10px; flex-wrap:wrap; }
+        .filter-btn{
+          padding:10px 20px; border:1px solid var(--line-strong); background:transparent; color:var(--ink-dim); font-size:12px;
+          letter-spacing:.08em; text-transform:uppercase; border-radius:30px; transition:all .3s var(--ease);
         }
+        .filter-btn.active,.filter-btn:hover{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+        .search-wrap{ position:relative; }
+        .search-wrap input{
+          background:var(--surface); border:1px solid var(--line-strong); color:var(--ink); padding:12px 44px 12px 18px; border-radius:30px;
+          font-family:inherit; font-size:13px; width:230px; outline:none; transition:border-color .3s, width .3s;
+        }
+        .search-wrap input:focus{ border-color:var(--gold); width:280px; }
+        .search-wrap svg{ position:absolute; right:16px; top:50%; transform:translateY(-50%); width:15px; height:15px; opacity:.5; }
 
-        /* Three.js Canvas Container */
-        #three-canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
+        .menu-category{ margin-bottom:80px; }
+        .menu-category-head{ display:flex; align-items:baseline; gap:18px; margin-bottom:34px; }
+        .menu-category-head .num{ font-family:'JetBrains Mono',monospace; color:var(--copper); font-size:13px; }
+        .menu-category-head h3{ font-size:28px; }
+        .menu-category-head .rule{ flex:1; height:1px; background:var(--line); }
+        .menu-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+        .dish-card{
+          background:var(--surface); border:1px solid var(--line); border-radius:4px; overflow:hidden; position:relative;
+          transition:transform .15s ease, border-color .3s ease, box-shadow .3s ease; transform-style:preserve-3d;
         }
+        .dish-card:hover{ border-color:var(--line-strong); box-shadow:var(--shadow); }
+        .dish-media{ position:relative; height:230px; overflow:hidden; }
+        .dish-media img{ width:100%; height:100%; object-fit:cover; transition:transform .7s var(--ease); }
+        .dish-card:hover .dish-media img{ transform:scale(1.09); }
+        .dish-tags{ position:absolute; top:14px; left:14px; display:flex; gap:8px; }
+        .tag{ font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:5px 10px; border-radius:20px; backdrop-filter:blur(8px); font-weight:700; }
+        .tag-veg{ background:rgba(90,168,90,.25); color:#8FD98F; border:1px solid rgba(143,217,143,.5); }
+        .tag-nonveg{ background:rgba(201,80,60,.25); color:#F2A28E; border:1px solid rgba(242,162,142,.5); }
+        .tag-pop{ background:rgba(201,162,39,.25); color:var(--gold); border:1px solid rgba(201,162,39,.5); }
+        .fav-btn{
+          position:absolute; top:14px; right:14px; width:34px; height:34px; border-radius:50%; background:rgba(10,9,8,.4); backdrop-filter:blur(8px);
+          border:1px solid rgba(237,230,214,.25); display:flex; align-items:center; justify-content:center; transition:all .3s;
+        }
+        .fav-btn svg{ width:15px; height:15px; stroke:#fff; fill:none; transition:all .3s; }
+        .fav-btn.active svg{ fill:var(--ember); stroke:var(--ember); }
+        .dish-body{ padding:22px 22px 24px; }
+        .dish-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
+        .dish-top h4{ font-size:19px; font-weight:600; }
+        .dish-price{ font-family:'JetBrains Mono',monospace; color:var(--gold); font-size:15px; white-space:nowrap; }
+        .dish-desc{ color:var(--ink-dim); font-size:13.5px; line-height:1.6; margin-bottom:18px; min-height:42px; }
+        .dish-order{ display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); padding-top:16px; }
+        .dish-order button{ background:none; border:none; color:var(--ink); font-size:12px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:8px; }
+        .dish-order button svg{ width:14px; height:14px; transition:transform .3s; }
+        .dish-order button:hover svg{ transform:translateX(4px); }
+        .no-results{ text-align:center; padding:60px 0; color:var(--ink-dim); display:none; }
 
-        /* Scroll Progress Bar */
-        .progress-bar-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            z-index: 10005;
+        /* ============================= SPECIALS SWIPER ============================= */
+        .specials{ background:var(--bg-alt); overflow:hidden; }
+        .specials-swiper{ overflow:visible !important; padding:20px 0 60px; }
+        .special-card{
+          position:relative; height:480px; border-radius:6px; overflow:hidden; border:1px solid var(--line-strong);
+          transition:transform .5s var(--ease);
         }
-        #scroll-progress {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
+        .swiper-slide-active .special-card{ transform:scale(1.0); }
+        .special-card img{ width:100%; height:100%; object-fit:cover; }
+        .special-overlay{ position:absolute; inset:0; background:linear-gradient(0deg, rgba(10,9,8,.9) 0%, rgba(10,9,8,.05) 55%); display:flex; flex-direction:column; justify-content:flex-end; padding:34px; }
+        .special-overlay .eyebrow{ color:var(--gold); }
+        .special-overlay h3{ font-size:26px; color:#EDE6D6; margin-bottom:8px; }
+        .special-overlay p{ color:#cfc5b0; opacity:.8; font-size:13px; }
+        .swiper-button-next,.swiper-button-prev{ color:var(--gold) !important; }
+        .swiper-pagination-bullet{ background:var(--ink-dim) !important; opacity:.5;}
+        .swiper-pagination-bullet-active{ background:var(--gold) !important; opacity:1;}
 
-        /* Header / Navbar Styles */
-        .navbar {
-            padding: 24px 0;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 1000;
-        }
-        .navbar.scrolled {
-            padding: 16px 0;
-            background: rgba(9, 9, 11, 0.75) !important;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-bottom: 1px solid var(--card-border);
-        }
-        .nav-link {
-            color: var(--text-muted) !important;
-            font-weight: 500;
-            font-size: 0.95rem;
-            margin: 0 14px;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: var(--text) !important;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
+        /* ============================= CHEF ============================= */
+        .chef-grid{ display:grid; grid-template-columns:.8fr 1.2fr; gap:80px; align-items:center; }
+        .chef-imgwrap{ position:relative; border-radius:2px; overflow:hidden; }
+        .chef-imgwrap img{ width:100%; height:560px; object-fit:cover; filter:grayscale(.15); }
+        .chef-sig{ position:absolute; bottom:24px; left:24px; font-family:'Fraunces',serif; font-style:italic; font-size:24px; color:#fff; text-shadow:0 4px 20px rgba(0,0,0,.6);}
+        .chef-info .role{ font-family:'JetBrains Mono',monospace; letter-spacing:.2em; text-transform:uppercase; font-size:12px; color:var(--copper); margin-bottom:14px; }
+        .chef-info h3{ font-size:44px; margin-bottom:22px; }
+        .chef-info p{ color:var(--ink-dim); line-height:1.85; margin-bottom:26px; font-size:16px; }
+        .chef-stats{ display:flex; gap:40px; margin:30px 0; }
+        .chef-stats div b{ font-family:'Fraunces',serif; font-size:32px; display:block; color:var(--gold); }
+        .chef-stats div span{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim); }
+        .chef-social{ display:flex; gap:12px; margin-top:20px;}
 
-        /* Premium Buttons */
-        .btn-luxury {
-            background: linear-gradient(135deg, var(--primary) 0%, #ff8c00 100%);
-            color: var(--text);
-            border: none;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(255, 107, 0, 0.25);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        /* ============================= VIDEO ============================= */
+        .video-wrap{ position:relative; border-radius:6px; overflow:hidden; border:1px solid var(--line-strong); }
+        .video-wrap video{ width:100%; height:640px; object-fit:cover; display:block; }
+        .video-wrap::after{ content:''; position:absolute; inset:0; background:rgba(10,9,8,.25); pointer-events:none; }
+        .play-btn{
+          position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:96px; height:96px; border-radius:50%;
+          background:rgba(237,230,214,.12); backdrop-filter:blur(10px); border:1px solid rgba(237,230,214,.4); display:flex;
+          align-items:center; justify-content:center; z-index:2;
         }
-        .btn-luxury:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(255, 107, 0, 0.42);
-            color: #fff;
-        }
-        .btn-luxury-outline {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--card-border);
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            backdrop-filter: var(--glass-blur);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-luxury-outline:hover {
-            border-color: var(--accent);
-            background: rgba(0, 229, 255, 0.05);
-            color: var(--accent);
-            transform: translateY(-3px);
-        }
+        .play-btn::before{ content:''; position:absolute; inset:-14px; border-radius:50%; border:1px solid rgba(237,230,214,.3); animation:pulse 2.4s ease-out infinite; }
+        @keyframes pulse{ 0%{transform:scale(.9); opacity:1;} 100%{transform:scale(1.5); opacity:0;} }
+        .play-btn svg{ width:26px; height:26px; fill:#fff; margin-left:4px; }
 
-        /* Hero Section */
-        #hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            padding-top: 120px;
-        }
-        .hero-title {
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            line-height: 1.1;
-            font-weight: 700;
-        }
-        .hero-img-wrapper {
-            position: relative;
-            z-index: 2;
-        }
-        .hero-main-img {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            box-shadow: 0 24px 70px rgba(0,0,0,0.5), 0 0 50px rgba(255,107,0,0.15);
-            animation: morphing 15s ease-in-out infinite alternate;
-        }
-        @keyframes morphing {
-            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-            50% { border-radius: 50% 50% 30% 70% / 50% 60% 40% 50%; }
-            100% { border-radius: 60% 40% 60% 40% / 40% 50% 50% 65%; }
-        }
+        /* ============================= GALLERY ============================= */
+        .gallery-grid{ column-count:3; column-gap:20px; }
+        .gallery-item{ break-inside:avoid; margin-bottom:20px; border-radius:3px; overflow:hidden; position:relative; border:1px solid var(--line); }
+        .gallery-item img{ width:100%; display:block; transition:transform .6s var(--ease), filter .6s; }
+        .gallery-item:hover img{ transform:scale(1.06); }
+        .gallery-item .g-overlay{ position:absolute; inset:0; background:rgba(10,9,8,0); display:flex; align-items:center; justify-content:center; transition:background .4s; }
+        .gallery-item:hover .g-overlay{ background:rgba(10,9,8,.35); }
+        .gallery-item .g-icon{ opacity:0; transform:scale(.7); transition:all .4s; width:38px; height:38px; border:1px solid #fff; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+        .gallery-item:hover .g-icon{ opacity:1; transform:scale(1); }
+        .gallery-item .g-icon svg{ width:16px; height:16px; stroke:#fff; }
 
-        /* Counter Elements */
-        .counter-item h2 {
-            font-size: 3rem;
-            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        #lightbox{ position:fixed; inset:0; background:rgba(6,5,4,.94); z-index:2000; display:none; align-items:center; justify-content:center; padding:40px; }
+        #lightbox.open{ display:flex; }
+        #lightbox img{ max-width:90vw; max-height:85vh; border:1px solid rgba(237,230,214,.2); }
+        #lightbox .lb-close{ position:absolute; top:30px; right:40px; width:44px; height:44px; border-radius:50%; border:1px solid rgba(237,230,214,.3); display:flex; align-items:center; justify-content:center; }
+        #lightbox .lb-close svg{ width:18px; height:18px; stroke:#fff; }
 
-        /* Menu Section Cards */
-        .menu-filter-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-muted);
-            padding: 10px 24px;
-            border-radius: 30px;
-            margin: 5px;
-            transition: all 0.3s;
-        }
-        .menu-filter-btn.active, .menu-filter-btn:hover {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 8px 20px rgba(255,107,0,0.2);
-        }
-        .menu-card {
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            transition: border-color 0.3s, transform 0.3s;
-        }
-        .menu-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(255,107,0,0.12);
-        }
-        .menu-card-img-wrap {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            transform: translateZ(20px);
-        }
-        .menu-card-img-wrap img {
-            width: 100%;
-            height: 240px;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .menu-card:hover .menu-card-img-wrap img {
-            transform: scale(1.08);
-        }
-        .food-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            backdrop-filter: blur(8px);
-            z-index: 5;
-        }
-        .badge-veg { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
-        .badge-nonveg { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        /* ============================= WHY ============================= */
+        .why-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line); border:1px solid var(--line); }
+        .why-card{ background:var(--bg); padding:44px 36px; transition:background .4s; }
+        .why-card:hover{ background:var(--surface); }
+        .why-card .ic{ width:44px; height:44px; margin-bottom:26px; }
+        .why-card .ic svg{ width:100%; height:100%; stroke:var(--gold); fill:none; stroke-width:1.2; }
+        .why-card h4{ font-size:19px; margin-bottom:10px; font-weight:600; }
+        .why-card p{ color:var(--ink-dim); font-size:14px; line-height:1.7; }
 
-        /* Carousel Configuration */
-        .swiper-container {
-            width: 100%;
-            padding: 50px 0 !important;
-        }
-        .special-card {
-            max-width: 420px;
-            margin: 0 auto;
-        }
+        /* ============================= REVIEWS ============================= */
+        .reviews{ background:var(--bg-alt); }
+        .review-card{ background:var(--surface); border:1px solid var(--line); padding:36px; border-radius:4px; height:100%; }
+        .stars{ display:flex; gap:4px; margin-bottom:20px; }
+        .stars svg{ width:15px; height:15px; fill:var(--gold); }
+        .review-card p{ color:var(--ink-dim); line-height:1.8; font-size:15px; margin-bottom:26px; font-style:italic; }
+        .review-person{ display:flex; align-items:center; gap:14px; }
+        .review-person img{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
+        .review-person b{ display:block; font-size:14px; }
+        .review-person span{ font-size:12px; color:var(--ink-dim); }
 
-        /* Gallery System */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            grid-gap: 24px;
-            grid-auto-rows: 260px;
+        /* ============================= BOOK TABLE ============================= */
+        .book{ position:relative; background:var(--bg-alt); }
+        .book-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:70px; }
+        .book-info h2{ font-size:clamp(34px,4vw,50px); margin-bottom:20px; }
+        .book-info p{ color:var(--ink-dim); line-height:1.8; margin-bottom:34px; max-width:400px;}
+        .book-hours{ border-top:1px solid var(--line); padding-top:24px; }
+        .book-hours div{ display:flex; justify-content:space-between; padding:10px 0; font-size:14px; border-bottom:1px solid var(--line); color:var(--ink-dim); }
+        .book-hours div b{ color:var(--ink); font-weight:600;}
+        .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:26px; }
+        .field{ position:relative; grid-column:span 1; }
+        .field.full{ grid-column:1/-1; }
+        .field input,.field select,.field textarea{
+          width:100%; background:transparent; border:none; border-bottom:1px solid var(--line-strong); padding:14px 2px 12px; color:var(--ink);
+          font-family:inherit; font-size:15px; outline:none; transition:border-color .3s;
         }
-        .gallery-item {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            cursor: pointer;
+        .field textarea{ resize:none; min-height:70px; }
+        .field label{
+          position:absolute; left:2px; top:14px; color:var(--ink-dim); font-size:15px; pointer-events:none; transition:all .25s var(--ease);
         }
-        .gallery-item:nth-child(2n) { grid-row: span 2; }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
+        .field input:focus ~ label, .field input:not(:placeholder-shown) ~ label,
+        .field select ~ label, .field textarea:focus ~ label, .field textarea:not(:placeholder-shown) ~ label{
+          top:-14px; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold);
         }
-        .gallery-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(9,9,11,0.9), transparent);
-            opacity: 0;
-            display: flex;
-            align-items: flex-end;
-            padding: 24px;
-            transition: opacity 0.4s;
-        }
-        .gallery-item:hover .gallery-overlay { opacity: 1; }
-        .gallery-item:hover img { transform: scale(1.05); }
+        .field .bar{ position:absolute; bottom:0; left:0; height:1px; width:0; background:var(--gold); transition:width .35s var(--ease); }
+        .field input:focus ~ .bar, .field textarea:focus ~ .bar{ width:100%; }
+        .field .err{ font-size:11px; color:#E07A5F; margin-top:6px; display:none; }
+        .field.invalid input, .field.invalid textarea{ border-color:#E07A5F; }
+        .field.invalid .err{ display:block; }
+        .form-submit{ margin-top:36px; width:100%; justify-content:center; }
+        .form-success{ display:none; padding:20px; border:1px solid var(--gold); color:var(--gold); font-size:13px; letter-spacing:.05em; margin-top:20px; text-align:center;}
+        .form-success.show{ display:block; }
 
-        /* Floating Widgets */
-        .floating-action-btn {
-            position: fixed;
-            bottom: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            font-size: 1.5rem;
-            z-index: 999;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-            transition: transform 0.3s, opacity 0.3s, visibility 0.3s;
-            text-decoration: none;
-        }
-        .floating-action-btn:hover { transform: scale(1.1) translateY(-5px); color: #fff; }
-        .whatsapp-float { right: 30px; background: #25D366; box-shadow: 0 8px 24px rgba(37,211,102,0.3); }
-        .scroll-top-float { right: 105px; background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: var(--glass-blur); opacity: 0; visibility: hidden; }
-        .scroll-top-float.show { opacity: 1; visibility: visible; }
+        /* ============================= CONTACT ============================= */
+        .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:stretch; }
+        .contact-list{ display:flex; flex-direction:column; gap:0; }
+        .c-item{ display:flex; gap:20px; padding:24px 0; border-bottom:1px solid var(--line); align-items:flex-start; }
+        .c-item .ic{ width:20px; height:20px; margin-top:3px; flex-shrink:0; }
+        .c-item .ic svg{ width:100%; height:100%; stroke:var(--gold); fill:none; }
+        .c-item b{ display:block; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:6px; }
+        .c-item span,.c-item a{ font-size:16px; }
+        .map-wrap{ border-radius:4px; overflow:hidden; border:1px solid var(--line-strong); min-height:340px; }
+        .map-wrap iframe{ width:100%; height:100%; min-height:340px; border:0; filter:grayscale(.4) invert(0); }
+        html[data-theme="dark"] .map-wrap iframe{ filter:grayscale(.6) invert(.9) contrast(.9); }
 
-        /* Form Controls */
-        .luxury-input-group {
-            position: relative;
-            margin-bottom: 32px;
+        /* ============================= FOOTER ============================= */
+        footer{ background:#0A0908; color:#EDE6D6; padding:100px 0 0; position:relative; z-index:2; }
+        .footer-top{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:60px; padding-bottom:70px; border-bottom:1px solid rgba(237,230,214,.12); }
+        .footer-brand .brand{ margin-bottom:18px; }
+        .footer-brand p{ color:#A79C89; font-size:14px; line-height:1.8; max-width:280px; }
+        .footer-col h5{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A79C89; margin-bottom:22px; }
+        .footer-col a{ display:block; color:#EDE6D6; font-size:14px; margin-bottom:14px; opacity:.85; transition:opacity .3s, transform .3s; }
+        .footer-col a:hover{ opacity:1; transform:translateX(4px); color:var(--gold); }
+        .newsletter-form{ display:flex; border-bottom:1px solid rgba(237,230,214,.3); padding-bottom:10px; margin-top:10px; }
+        .newsletter-form input{ flex:1; background:transparent; border:none; color:#EDE6D6; outline:none; font-size:14px; }
+        .newsletter-form button{ background:none; border:none; color:var(--gold); }
+        .newsletter-form button svg{ width:18px; height:18px; }
+        .footer-bottom{ display:flex; justify-content:space-between; padding:26px 0; font-size:12px; color:#7d7365; flex-wrap:wrap; gap:10px;}
+        .footer-bottom a{ color:#7d7365; }
+        .footer-bottom a:hover{ color:var(--gold); }
+
+        /* ============================= FLOATING BUTTONS ============================= */
+        .float-stack{ position:fixed; right:26px; bottom:26px; z-index:400; display:flex; flex-direction:column; gap:14px; align-items:flex-end; }
+        .fab{
+          width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);
+          border:1px solid var(--line-strong); transition:transform .3s var(--ease); position:relative;
         }
-        .luxury-input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--card-border);
-            padding: 12px 4px;
-            color: #fff;
-            font-family: var(--font-body);
-            transition: border-color 0.3s;
+        .fab:hover{ transform:translateY(-4px) scale(1.05); }
+        .fab svg{ width:22px; height:22px; }
+        .fab-wa{ background:#25D366; }
+        .fab-wa svg{ fill:#fff; stroke:none; }
+        .fab-book{ background:linear-gradient(140deg,var(--copper),var(--gold)); }
+        .fab-book svg{ stroke:#0A0908; fill:none; }
+        .fab-top{ background:var(--bg-raise); opacity:0; pointer-events:none; transform:translateY(10px); }
+        .fab-top.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
+        .fab-top svg{ stroke:var(--ink); fill:none; }
+
+        /* ============================= REVEAL/UTIL ============================= */
+        [data-split]{ overflow:hidden; }
+        .reveal-up{ opacity:0; transform:translateY(50px); }
+
+        /* ============================= RESPONSIVE ============================= */
+        @media (max-width: 1080px){
+          nav.menu-links, .nav-actions .btn-ghost, .hero-side{ display:none; }
+          .burger{ display:flex; }
+          .about-grid, .chef-grid, .book-grid, .contact-grid{ grid-template-columns:1fr; }
+          .menu-grid{ grid-template-columns:repeat(2,1fr); }
+          .why-grid{ grid-template-columns:repeat(1,1fr); }
+          .footer-top{ grid-template-columns:1fr 1fr; }
+          .stat-row{ grid-template-columns:repeat(2,1fr); }
+          .gallery-grid{ column-count:2; }
         }
-        .luxury-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        .luxury-label {
-            position: absolute;
-            left: 4px;
-            top: 12px;
-            color: var(--text-muted);
-            pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .luxury-input:focus ~ .luxury-label,
-        .luxury-input:not(:placeholder-shown) ~ .luxury-label {
-            top: -16px;
-            font-size: 0.8rem;
-            color: var(--primary);
+        @media (max-width: 640px){
+          .container{ padding:0 20px; }
+          section{ padding:100px 0; }
+          .menu-grid{ grid-template-columns:1fr; }
+          .form-grid{ grid-template-columns:1fr; }
+          .footer-top{ grid-template-columns:1fr; }
+          .hero-title{ font-size:15vw; }
+          .gallery-grid{ column-count:1; }
+          .float-food{ display:none; }
+          body{ cursor:auto; }
+          .cursor,.cursor-dot{ display:none; }
         }
     </style>
 </head>
 <body>
 
-<div id="main-application-content">
-    <!-- Interactive Elements Hierarchy -->
-    <div id="custom-cursor" class="d-none d-lg-block"></div>
-    <div class="progress-bar-container"><div id="scroll-progress"></div></div>
-    <div id="three-canvas-container"></div>
-
-    <!-- Preloader System -->
-    <div id="loader-wrapper">
-        <div class="loader-glow mb-4"></div>
-        <h4 class="font-heading tracking-widest text-uppercase" style="font-size:0.8rem; letter-spacing:4px; color: var(--text-muted);">Configuring Gastronomy</h4>
+<!-- ============================= LOADER ============================= -->
+<div id="loader">
+    <div class="loader-mark">
+        <svg viewBox="0 0 300 90" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 70 C 30 20, 50 20, 60 50 C 70 80, 90 30, 100 60" />
+        </svg>
     </div>
-
-    <!-- Sticky Transparent Luxury Header Matrix -->
-    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-transparent">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#hero">
-                <img id="runtime-logo" src="" alt="Restaurant Logo" class="me-2" style="height: 42px; width: 42px; object-fit: cover; border-radius: 50%;">
-                <span id="runtime-brand-name" class="font-heading fw-bold tracking-tight"></span>
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMatrix">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navMatrix">
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="#hero">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#menu">Menu</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                </ul>
-                <div class="d-flex align-items-center gap-3">
-                    <a id="nav-wa-btn" href="#" target="_blank" class="btn btn-luxury-outline d-none d-sm-inline-block"><i class="fab fa-whatsapp me-2 text-success"></i>Order Now</a>
-                    <a href="#book" class="btn btn-luxury">Book Table</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Dynamic Hero Engine -->
-    <section id="hero">
-        <div class="container">
-            <div class="row align-items-center min-vh-100 g-5">
-                <div class="col-lg-6 text-center text-lg-start" data-aos="fade-up">
-                    <span id="runtime-tagline" class="badge bg-dark border border-secondary text-uppercase py-2 px-3 mb-4 tracking-widest text-warning" style="letter-spacing: 2px;"></span>
-                    <h1 id="runtime-hero-headline" class="hero-title text-white mb-4"></h1>
-                    <p id="runtime-hero-desc" class="text-muted lead mb-5 base-para-style" style="max-width: 540px; font-weight: 300;"></p>
-                    <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-4">
-                        <a id="hero-wa-btn" href="#" target="_blank" class="btn btn-luxury px-5 py-3"><i class="fab fa-whatsapp me-2"></i>Order on WhatsApp</a>
-                        <a href="#menu" class="btn btn-luxury-outline px-5 py-3">View Digital Menu</a>
-                    </div>
-                </div>
-                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="hero-img-wrapper text-center">
-                        <img id="runtime-cover-img" src="" alt="Culinary Signature Showcase" class="hero-main-img img-fluid">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About, Parameters & Corporate Hours Section -->
-    <section id="about" class="section-padding position-relative">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-5" data-aos="fade-right">
-                    <div class="glass-panel p-5 position-relative overflow-hidden">
-                        <h3 class="mb-4 text-white">Chronicle & Heritage</h3>
-                        <p id="runtime-about-desc" class="text-muted mb-4" style="line-height:1.8;"></p>
-
-                        <div id="hours-container" class="mt-4 pt-4 border-top border-secondary">
-                            <h5 class="text-white mb-3"><i class="far fa-clock text-warning me-2"></i>Hours of Operation</h5>
-                            <p id="runtime-hours-data" class="text-muted mb-0 small" style="white-space: pre-line;"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-7">
-                    <div class="row g-4 text-center">
-                        <div class="col-sm-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="glass-panel p-4 counter-item">
-                                <h2 class="fw-bold mb-2 counter" data-target="18">0</h2>
-                                <p class="text-muted uppercase tracking-wider small mb-0">Years of Avant-Garde Experience</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="glass-panel p-4 counter-item">
-                                <h2 class="fw-bold mb-2 counter" data-target="85">0</h2>
-                                <p class="text-muted uppercase tracking-wider small mb-0">Happy Customers K+</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" data-aos="fade-up" data-aos-delay="300">
-                            <div class="glass-panel p-4 counter-item">
-                                <h2 class="fw-bold mb-2 counter" data-target="120">0</h2>
-                                <p class="text-muted uppercase tracking-wider small mb-0">Orders Delivered K+</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" data-aos="fade-up" data-aos-delay="400">
-                            <div class="glass-panel p-4 counter-item">
-                                <h2 class="fw-bold mb-2" style="background: linear-gradient(135deg, #fff 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">4.9 <i class="fas fa-star text-warning fs-4 ms-1"></i></h2>
-                                <p class="text-muted uppercase tracking-wider small mb-0">Global Culinary Rating</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dynamic Menu Section Engine -->
-    <section id="menu" class="section-padding">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-primary text-uppercase tracking-widest small fw-bold" style="letter-spacing:3px;">Curated Engineering</span>
-                <h2 class="display-5 text-white mt-2">The Culinary Blueprint</h2>
-                <p class="text-muted mx-auto mt-3" style="max-width:500px;">Filter and explore our dynamically updating micro-menu modules.</p>
-            </div>
-
-            <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-5" data-aos="fade-up">
-                <button class="menu-filter-btn active" data-filter="all">All Disciplines</button>
-                <button class="menu-filter-btn" data-filter="Veg">Veg</button>
-                <button class="menu-filter-btn" data-filter="Non Veg">Non Veg</button>
-
-                <div class="ms-md-4 mt-3 mt-md-0 position-relative" style="width: 280px;">
-                    <input type="text" id="menu-search" class="glass-panel px-4 py-2 w-100 text-white rounded-pill text-center border-0" placeholder="Search dish matrix..." style="background: rgba(255,255,255,0.06);">
-                </div>
-            </div>
-
-            <div class="row g-4" id="dynamic-menu-grid">
-                <!-- Dynamic Generation Output Injection Matrix -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Special Dishes Showcase (Carousel Layer) -->
-    <section id="specials" class="section-padding bg-black bg-opacity-30">
-        <div class="container">
-            <div class="text-center mb-4" data-aos="fade-up">
-                <h2 class="display-6 text-white">Chef's Signature Artifacts</h2>
-            </div>
-
-            <div class="swiper swiper-container" data-aos="zoom-in">
-                <div class="swiper-wrapper" id="dynamic-specials-swiper">
-                    <!-- Dynamic Swiper Slides Node Injector -->
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Executive Chef System Matrix -->
-    <section id="chef" class="section-padding">
-        <div class="container">
-            <div class="glass-panel p-5 position-relative overflow-hidden" data-aos="fade-up">
-                <div class="row align-items-center g-5">
-                    <div class="col-md-4 text-center">
-                        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=600&q=80" alt="Master Chef" class="img-fluid rounded-4 shadow-lg" style="max-height: 350px; object-fit: cover;">
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-accent text-uppercase small tracking-widest fw-bold d-block mb-2">Culinary Director</span>
-                        <h2 class="text-white mb-2">Chef Jean-Luc Thorne</h2>
-                        <p class="text-muted small mb-4">24+ Years of Structural Gastronomy</p>
-                        <p class="text-muted base-para-style mb-0">"Food is atomic architecture. We isolate molecular attributes to compile absolute luxury flavors onto structural canvasses. Welcome to execution excellence."</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Luxury Masonry Media Gallery -->
-    <section id="gallery" class="section-padding">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="display-6 text-white">Visual Artifact Archive</h2>
-            </div>
-
-            <div class="gallery-grid" id="runtime-gallery-injected">
-                <!-- Gallery elements built dynamically -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Brand Pillars & Differentiators Matrix -->
-    <section id="pillars" class="section-padding bg-black bg-opacity-20">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="glass-panel p-5 h-100 table-tilt">
-                        <div class="fs-1 text-primary mb-4"><i class="fas fa-leaf"></i></div>
-                        <h4 class="text-white mb-3">Pristine Architecture</h4>
-                        <p class="text-muted small mb-0">100% molecularly validated, sustainably trace-sourced organic component assemblies.</p>
-                    </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="glass-panel p-5 h-100 table-tilt">
-                        <div class="fs-1 text-accent mb-4"><i class="fas fa-shipping-fast"></i></div>
-                        <h4 class="text-white mb-3">Thermal-Locked Logistics</h4>
-                        <p class="text-muted small mb-0">Hyper-optimized localized transport systems preserving exact computational dish temperature matrix.</p>
-                    </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="glass-panel p-5 h-100 table-tilt">
-                        <div class="fs-1 text-warning mb-4"><i class="fas fa-hand-sparkles"></i></div>
-                        <h4 class="text-white mb-3">Hygienic Isolation</h4>
-                        <p class="text-muted small mb-0">Class-100 cleanroom kitchen protocols ensuring pristine culinary creation processing.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Real-time Guest Testimonial Swiper -->
-    <section id="reviews" class="section-padding">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="display-6 text-white">Verified Intelligence Ratings</h2>
-            </div>
-            <div class="swiper review-swiper" data-aos="zoom-in">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide text-center p-5 glass-panel max-w-lg mx-auto">
-                        <p class="lead text-white font-italic mb-4">"The absolute zenith of contemporary elite dining. The texture management maps clean design execution paradigms."</p>
-                        <h5 class="text-accent mb-0">Lord Alistair C.</h5>
-                        <span class="text-muted small">Gastronomic Collector</span>
-                    </div>
-                    <div class="swiper-slide text-center p-5 glass-panel max-w-lg mx-auto">
-                        <p class="lead text-white font-italic mb-4">"Unparalleled sensory design system. Every single element acts as a complex visual and culinary node."</p>
-                        <h5 class="text-accent mb-0">Seraphina Vance</h5>
-                        <span class="text-muted small">UI/UX Creative Lead</span>
-                    </div>
-                </div>
-                <div class="mt-4 text-center"><div class="swiper-pagination position-relative"></div></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- High-Tier Table Reservation Infrastructure -->
-    <section id="book" class="section-padding position-relative">
-        <div class="container" style="max-width: 800px;">
-            <div class="glass-panel p-5" data-aos="zoom-in">
-                <div class="text-center mb-5">
-                    <h2 class="text-white">Secure Spatial Reservation</h2>
-                    <p class="text-muted small">Real-time dynamic verification slot queuing engine</p>
-                </div>
-                <form id="reservation-form">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="luxury-input-group">
-                                <input type="text" id="res-name" class="luxury-input" placeholder=" " required>
-                                <label class="luxury-label">Identity Designation</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="luxury-input-group">
-                                <input type="tel" id="res-phone" class="luxury-input" placeholder=" " required>
-                                <label class="luxury-label">Telemetry Number</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="luxury-input-group">
-                                <input type="number" id="res-guests" class="luxury-input" placeholder=" " min="1" max="20" required>
-                                <label class="luxury-label">Guest Manifest Count</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="luxury-input-group">
-                                <input type="date" id="res-date" class="luxury-input" placeholder=" " required>
-                                <label class="luxury-label"></label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="luxury-input-group">
-                                <input type="time" id="res-time" class="luxury-input" placeholder=" " required>
-                                <label class="luxury-label"></label>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="luxury-input-group">
-                                <input type="text" id="res-msg" class="luxury-input" placeholder=" ">
-                                <label class="luxury-label">Specific Special Matrices / Allergies</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-luxury px-5 py-3">Transmit Cryptographic Reservation</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Comprehensive Contact, Mapping & Context Integration -->
-    <section id="contact" class="section-padding bg-black bg-opacity-40">
-        <div class="container">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-5" data-aos="fade-right">
-                    <h2 class="text-white mb-4">Command Center</h2>
-                    <p class="text-muted mb-5">Connect via absolute verified endpoints or access direct satellite routing parameters below.</p>
-
-                    <div class="d-flex flex-column gap-4">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="fs-4 text-primary text-center" style="width:40px;"><i class="fas fa-map-marker-alt"></i></div>
-                            <div>
-                                <h6 class="text-white mb-0">Physical Node</h6>
-                                <span id="runtime-contact-address" class="text-muted small"></span>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="fs-4 text-accent text-center" style="width:40px;"><i class="fas fa-phone-alt"></i></div>
-                            <div>
-                                <h6 class="text-white mb-0">Voice Line</h6>
-                                <a id="runtime-contact-phone-link" href="#" class="text-muted small text-decoration-none"></a>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="fs-4 text-warning text-center" style="width:40px;"><i class="fas fa-envelope"></i></div>
-                            <div>
-                                <h6 class="text-white mb-0">Secure Mail Box</h6>
-                                <span id="runtime-contact-email" class="text-muted small"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="social-container" class="d-flex gap-3 mt-5">
-                        <a id="link-fb" href="#" target="_blank" class="glass-panel text-white d-flex align-items-center justify-content-center" style="width:45px; height:45px; border-radius:50%;"><i class="fab fa-facebook-f"></i></a>
-                        <a id="link-ig" href="#" target="_blank" class="glass-panel text-white d-flex align-items-center justify-content-center" style="width:45px; height:45px; border-radius:50%;"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-7" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="glass-panel p-2 overflow-hidden rounded-4" style="height: 400px;">
-                        <iframe id="runtime-map-iframe" src="" class="w-100 h-100 border-0 rounded-3" allowfullscreen="" loading="lazy"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Monolithic Production Grade Footer Matrix -->
-    <footer class="py-5 border-top border-secondary style-footer">
-        <div class="container">
-            <div class="row g-4 justify-content-between align-items-center">
-                <div class="col-md-4 text-center text-md-start">
-                    <h4 class="text-white m-0 font-heading fw-bold" id="footer-brand-name"></h4>
-                    <p class="text-muted small mt-2">Next-Generation Autonomous Gastronomic Operations Grid.</p>
-                </div>
-                <div class="col-md-4 text-center">
-                    <span class="text-muted small">&copy; 2026 Core Engine Systems. System Optimization Completed.</span>
-                </div>
-                <div class="col-md-3 text-center text-md-end">
-                    <div class="d-flex justify-content-center justify-content-md-end gap-3 small">
-                        <a href="#" class="text-muted text-decoration-none">Privacy Directive</a>
-                        <a href="#" class="text-muted text-decoration-none">Protocol Terms</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Adaptive Interactive Action Nodes -->
-    <a id="global-wa-float" href="#" target="_blank" class="floating-action-btn whatsapp-float"><i class="fab fa-whatsapp"></i></a>
-    <a href="#hero" class="floating-action-btn scroll-top-float id-scroll-trigger"><i class="fas fa-arrow-up"></i></a>
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-txt">Velvet Ember — Kindling the room</div>
 </div>
 
-<!-- Core Runtime Dependancy Layer Engines -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+<!-- ============================= CURSOR ============================= -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- ============================= EMBER CANVAS ============================= -->
+<canvas id="emberCanvas"></canvas>
+
+<!-- ============================= HEADER ============================= -->
+<header id="siteHeader">
+    <div class="container nav-row">
+        <a href="#home" class="brand">
+            <svg class="brand-flame" viewBox="0 0 40 40"><path d="M20 4c4 8-4 10-2 18 1 5 6 7 10 4-2 10-14 12-20 6-6-6-4-16 2-20-2 6 2 8 4 4 2-4-1-8 6-12z"/></svg>
+            Velvet Ember
+        </a>
+        <nav class="menu-links">
+            <a href="#home">Home</a>
+            <a href="#menu">Menu</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#about">About</a>
+            <a href="#chef">Chef</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><span class="knob"></span></button>
+            <a class="icon-btn" href="https://wa.me/919876543210" target="_blank" aria-label="WhatsApp">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12a8 8 0 1 1-3.9-6.9L20 4l-1 3.9A8 8 0 0 1 20 12z"/><path d="M9 10c.5 2 2 3.5 4 4l1-1.3c.2-.3.6-.4.9-.2l1.7 1c.3.2.4.6.2.9-.7 1.2-2.1 1.8-3.4 1.4-2.7-.8-5-3.1-5.8-5.8-.4-1.3.2-2.7 1.4-3.4.3-.2.7-.1.9.2l1 1.7c.2.3.1.7-.2.9L9 10z"/></svg>
+            </a>
+            <a href="#book" class="btn btn-ghost">Book Table</a>
+            <a href="#menu" class="btn btn-solid"><span>Order Now</span></a>
+            <button class="icon-btn burger" id="burgerBtn" aria-label="Menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- ============================= HERO ============================= -->
+<section id="home" class="hero" style="padding:0;">
+    <div class="hero-bg">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=1600&q=80" alt="Live fire grill dish at Velvet Ember">
+    </div>
+    <canvas id="heroCanvas"></canvas>
+
+    <div class="float-food ff1"><img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&q=80" alt="Charred steak"></div>
+    <div class="float-food ff2"><img src="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=300&q=80" alt="Craft cocktail"></div>
+    <div class="float-food ff3"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&q=80" alt="Dessert plate"></div>
+
+    <div class="hero-inner container">
+        <div class="hero-grid">
+            <div>
+                <div class="hero-eyebrow" data-split>EST. HARYANA — LIVE-FIRE DINING ROOM</div>
+                <h1 class="hero-title">
+                    <div class="line"><span>Fire, held</span></div>
+                    <div class="line"><span><em>with</em> restraint.</span></div>
+                </h1>
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="600">Every plate at Velvet Ember passes through open flame before it reaches you — char, smoke and slow reduction, plated with a quiet hand. A grill house built for long evenings.</p>
+                <div class="hero-cta" data-aos="fade-up" data-aos-delay="750">
+                    <a href="#menu" class="btn btn-solid"><span>View Menu</span></a>
+                    <a href="#book" class="btn btn-ghost">Reserve a Table</a>
+                    <button class="btn btn-ghost" id="watchStoryBtn">Watch Story</button>
+                </div>
+            </div>
+            <div class="hero-side">EST. 2016 — WOOD, COAL &amp; COPPER</div>
+        </div>
+    </div>
+
+    <div class="scroll-ind">
+        <span>Scroll</span>
+        <div class="line"></div>
+    </div>
+</section>
+
+<!-- Divider -->
+<div class="divider" data-divider><svg viewBox="0 0 180 38"><path d="M0 19c20-25 35 25 55 0s35-25 55 0 35-25 70 0"/></svg></div>
+
+<!-- ============================= ABOUT ============================= -->
+<section id="about" class="about">
+    <div class="container about-grid">
+        <div class="about-imgwrap" data-aos="fade-right">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80" alt="Velvet Ember dining room interior">
+            <div class="about-badge">
+                <b id="yearsCount">0</b>
+                <span>Years of Live-Fire Craft</span>
+            </div>
+        </div>
+        <div class="about-text" data-aos="fade-left">
+            <div class="eyebrow">Our Story</div>
+            <h2 class="section-title" style="margin-bottom:26px;">A room built<br>around the flame.</h2>
+            <p>Velvet Ember opened as a single hearth and a short menu. Today the kitchen still runs on wood and coal — no shortcuts, no gas line hiding behind the grill. Everything that leaves the pass has touched fire.</p>
+            <p>We work with growers within a day's drive, age our own meat, and pour a bar list built to match smoke rather than fight it.</p>
+
+            <div class="stat-row">
+                <div class="stat"><b class="count" data-count="9">0</b><span>Years Open</span></div>
+                <div class="stat"><b class="count" data-count="48000">0</b><span>Guests Hosted</span></div>
+                <div class="stat"><b class="count" data-count="120000">0</b><span>Plates Fired</span></div>
+                <div class="stat"><b class="count" data-count="14">0</b><span>Awards Won</span></div>
+            </div>
+
+            <div class="about-meta">
+                <div><b>Hours</b>Tue – Sun, 5:00 PM – 12:00 AM</div>
+                <div><b>Phone</b><a href="tel:+919876543210">+91 98765 43210</a></div>
+                <div><b>Email</b><a href="mailto:hello@velvetember.in">hello@velvetember.in</a></div>
+                <div><b>Address</b>Sector 14, Civil Lines, Bhiwani, Haryana</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider" data-divider><svg viewBox="0 0 180 38"><path d="M0 19c20-25 35 25 55 0s35-25 55 0 35-25 70 0"/></svg></div>
+
+<!-- ============================= MENU ============================= -->
+<section id="menu">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">The Menu</div>
+                <h2 class="section-title">Fired &amp; finished<br>to order.</h2>
+            </div>
+            <p class="section-sub">Every dish below is pulled live from our kitchen board — add a new item to the pass and it appears here automatically, no rebuild required.</p>
+        </div>
+
+        <div class="menu-controls">
+            <div class="filters" id="filterBar">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="veg">Veg</button>
+                <button class="filter-btn" data-filter="nonveg">Non-Veg</button>
+                <button class="filter-btn" data-filter="popular">Popular</button>
+                <button class="filter-btn" data-filter="latest">Latest</button>
+                <button class="filter-btn" data-filter="price-low">Price: Low</button>
+                <button class="filter-btn" data-filter="price-high">Price: High</button>
+            </div>
+            <div class="search-wrap">
+                <input type="text" id="menuSearch" placeholder="Search the menu…">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            </div>
+        </div>
+
+        <div id="menuMount"></div>
+        <p class="no-results" id="noResults">No dishes match your search just yet — try another keyword.</p>
+    </div>
+</section>
+
+<!-- ============================= SPECIALS ============================= -->
+<section class="specials">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Chef's Selection</div>
+                <h2 class="section-title">Tonight's specials.</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="swiper specials-swiper">
+            <div class="swiper-wrapper" id="specialsMount"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<div class="divider" data-divider><svg viewBox="0 0 180 38"><path d="M0 19c20-25 35 25 55 0s35-25 55 0 35-25 70 0"/></svg></div>
+
+<!-- ============================= CHEF ============================= -->
+<section id="chef">
+    <div class="container chef-grid">
+        <div class="chef-imgwrap" data-aos="fade-right">
+            <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=800&q=80" alt="Executive Chef of Velvet Ember">
+            <div class="chef-sig">— A. Malhotra</div>
+        </div>
+        <div class="chef-info" data-aos="fade-left">
+            <div class="role">Executive Chef</div>
+            <h3>Arjun Malhotra</h3>
+            <p>Seventeen years behind the grill, trained in Lyon and Copenhagen before bringing an open-fire philosophy home to Haryana. Arjun believes a plate should smell like where it was cooked.</p>
+            <div class="chef-stats">
+                <div><b>17</b><span>Years Cooking</span></div>
+                <div><b>6</b><span>Awards</span></div>
+                <div><b>3</b><span>Cities Trained</span></div>
+            </div>
+            <p style="font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:var(--ink);">Signature Dish — Coal-Roasted Bone Marrow, Charred Sourdough</p>
+            <div class="chef-social">
+                <a class="icon-btn" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+                <a class="icon-btn" href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4h-2a4 4 0 0 0-4 4v3H7v4h2v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3z"/></svg></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================= VIDEO ============================= -->
+<section style="padding-top:0;">
+    <div class="container">
+        <div class="video-wrap">
+            <video id="storyVideo" muted loop playsinline poster="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80">
+                <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+            </video>
+            <button class="play-btn" id="playBtn" aria-label="Play story">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+        </div>
+    </div>
+</section>
+
+<div class="divider" data-divider><svg viewBox="0 0 180 38"><path d="M0 19c20-25 35 25 55 0s35-25 55 0 35-25 70 0"/></svg></div>
+
+<!-- ============================= GALLERY ============================= -->
+<section id="gallery">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Gallery</div>
+                <h2 class="section-title">Moments from the room.</h2>
+            </div>
+        </div>
+        <div class="gallery-grid" id="galleryMount"></div>
+    </div>
+</section>
+
+<!-- ============================= WHY CHOOSE US ============================= -->
+<section style="padding-top:0;">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Why Velvet Ember</div>
+                <h2 class="section-title">The details we don't skip.</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="why-grid">
+            <div class="why-card" data-aos="fade-up">
+                <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2s6 5.5 6 11a6 6 0 1 1-12 0c0-2 1-3.5 2-5 .3 1.5 1 2 1.5 1.5C8 7 9 4 12 2z"/></svg></div>
+                <h4>Fresh, Fired Daily</h4>
+                <p>Nothing is pre-cooked. Every order starts on the coal when it's placed.</p>
+            </div>
+            <div class="why-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11.5A8 8 0 0 0 4 10.5C4 17.5 12 22 12 22z"/></svg></div>
+                <h4>Organic Sourcing</h4>
+                <p>Produce and meat sourced from growers within a day's drive of the kitchen.</p>
+            </div>
+            <div class="why-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 2h12v6a6 6 0 0 1-12 0V2z"/><path d="M6 20h12M12 14v6"/></svg></div>
+                <h4>Trained Fire Chefs</h4>
+                <p>Every cook on the line trains a full year on open-flame technique before service.</p>
+            </div>
+            <div class="why-card" data-aos="fade-up">
+                <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12l4-4 4 4 4-8 6 12"/></svg></div>
+                <h4>Fast, Careful Delivery</h4>
+                <p>Insulated fire-safe packaging keeps char and temperature intact to your door.</p>
+            </div>
+            <div class="why-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-6h6v6"/></svg></div>
+                <h4>Luxury Dining Room</h4>
+                <p>Copper light, low music, and tables set with room to actually talk.</p>
+            </div>
+            <div class="why-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div>
+                <h4>Honest Pricing</h4>
+                <p>One menu, one price for everyone — no surge, no hidden service tiers.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================= REVIEWS ============================= -->
+<section id="reviews" class="reviews">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Guest Words</div>
+                <h2 class="section-title">What the table says.</h2>
+            </div>
+        </div>
+        <div class="swiper reviews-swiper">
+            <div class="swiper-wrapper" id="reviewsMount"></div>
+            <div class="swiper-pagination" style="position:static; margin-top:34px;"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================= BOOK TABLE ============================= -->
+<section id="book" class="book">
+    <div class="container book-grid">
+        <div class="book-info" data-aos="fade-right">
+            <div class="eyebrow">Reservations</div>
+            <h2>Save the coal<br>for you.</h2>
+            <p>Tables are held for 15 minutes past your slot. For parties above eight, write to us directly and we'll set a private course.</p>
+            <div class="book-hours">
+                <div><span>Tue — Thu</span><b>5:00 PM – 11:00 PM</b></div>
+                <div><span>Fri — Sat</span><b>5:00 PM – 12:30 AM</b></div>
+                <div><span>Sunday</span><b>1:00 PM – 11:00 PM</b></div>
+                <div><span>Monday</span><b>Closed</b></div>
+            </div>
+        </div>
+        <form class="book-form" id="bookForm" novalidate data-aos="fade-left">
+            <div class="form-grid">
+                <div class="field">
+                    <input type="text" id="fName" placeholder=" " required>
+                    <label>Full Name</label><div class="bar"></div>
+                    <span class="err">Please enter your name.</span>
+                </div>
+                <div class="field">
+                    <input type="tel" id="fPhone" placeholder=" " required>
+                    <label>Phone Number</label><div class="bar"></div>
+                    <span class="err">Enter a valid 10-digit number.</span>
+                </div>
+                <div class="field">
+                    <input type="number" id="fGuests" min="1" max="20" placeholder=" " required>
+                    <label>Guests</label><div class="bar"></div>
+                    <span class="err">How many guests?</span>
+                </div>
+                <div class="field">
+                    <input type="date" id="fDate" placeholder=" " required>
+                    <label>Date</label><div class="bar"></div>
+                    <span class="err">Choose a date.</span>
+                </div>
+                <div class="field">
+                    <input type="time" id="fTime" placeholder=" " required>
+                    <label>Time</label><div class="bar"></div>
+                    <span class="err">Choose a time.</span>
+                </div>
+                <div class="field">
+                    <input type="email" id="fEmail" placeholder=" ">
+                    <label>Email (optional)</label><div class="bar"></div>
+                </div>
+                <div class="field full">
+                    <textarea id="fMsg" placeholder=" "></textarea>
+                    <label>Special Requests</label><div class="bar"></div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-solid form-submit"><span>Confirm Reservation</span></button>
+            <div class="form-success" id="formSuccess">Your table is held. A confirmation will reach you by phone shortly.</div>
+        </form>
+    </div>
+</section>
+
+<!-- ============================= CONTACT ============================= -->
+<section id="contact">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Find Us</div>
+                <h2 class="section-title">Come sit by the fire.</h2>
+            </div>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-list" data-aos="fade-right">
+                <div class="c-item">
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .6 3a2 2 0 0 1-.5 2L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2-.5c1 .3 2 .5 3 .6a2 2 0 0 1 1.7 2z"/></svg></div>
+                    <div><b>Phone</b><a href="tel:+919876543210">+91 98765 43210</a></div>
+                </div>
+                <div class="c-item">
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg></div>
+                    <div><b>Email</b><a href="mailto:hello@velvetember.in">hello@velvetember.in</a></div>
+                </div>
+                <div class="c-item">
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3.9-6.9"/></svg></div>
+                    <div><b>WhatsApp</b><a href="https://wa.me/919876543210" target="_blank">Message us directly</a></div>
+                </div>
+                <div class="c-item">
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11.5A8 8 0 0 0 4 10.5C4 17.5 12 22 12 22z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+                    <div><b>Address</b><span>Sector 14, Civil Lines, Bhiwani, Haryana 127021</span></div>
+                </div>
+                <div class="c-item">
+                    <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
+                    <div><b>Instagram</b><a href="#" target="_blank">@velvetember.grill</a></div>
+                </div>
+            </div>
+            <div class="map-wrap" data-aos="fade-left">
+                <iframe src="https://www.google.com/maps?q=Bhiwani,Haryana&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Velvet Ember location map"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================= FOOTER ============================= -->
+<footer>
+    <div class="container footer-top">
+        <div class="footer-brand">
+            <a href="#home" class="brand" style="color:#EDE6D6;">
+                <svg class="brand-flame" viewBox="0 0 40 40"><path d="M20 4c4 8-4 10-2 18 1 5 6 7 10 4-2 10-14 12-20 6-6-6-4-16 2-20-2 6 2 8 4 4 2-4-1-8 6-12z"/></svg>
+                Velvet Ember
+            </a>
+            <p>A live-fire grill house in Bhiwani, Haryana — smoke, char and a slow evening.</p>
+        </div>
+        <div class="footer-col">
+            <h5>Explore</h5>
+            <a href="#menu">Menu</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#chef">Our Chef</a>
+            <a href="#reviews">Reviews</a>
+        </div>
+        <div class="footer-col">
+            <h5>Hours</h5>
+            <a href="#">Tue – Thu · 5PM – 11PM</a>
+            <a href="#">Fri – Sat · 5PM – 12:30AM</a>
+            <a href="#">Sunday · 1PM – 11PM</a>
+            <a href="#">Monday · Closed</a>
+        </div>
+        <div class="footer-col">
+            <h5>Newsletter</h5>
+            <p style="color:#A79C89; font-size:13px; margin-bottom:6px;">First seating of every new tasting menu, in your inbox.</p>
+            <form class="newsletter-form" id="newsletterForm">
+                <input type="email" placeholder="Your email" required>
+                <button type="submit" aria-label="Subscribe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            </form>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span>© 2026 Velvet Ember. All rights reserved.</span>
+        <span><a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a></span>
+    </div>
+</footer>
+
+<!-- ============================= FLOATING BUTTONS ============================= -->
+<div class="float-stack">
+    <a class="fab fab-top" id="fabTop" href="#home" aria-label="Scroll to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </a>
+    <a class="fab fab-book" href="#book" aria-label="Book a table">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
+    </a>
+    <a class="fab fab-wa" href="https://wa.me/919876543210" target="_blank" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.4 5.1L2 22l5.1-1.3C8.6 21.5 10.3 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm5.1 14.2c-.2.6-1.2 1.2-1.7 1.2-.4 0-.9.1-3-.8-2.5-1.1-4.1-3.7-4.2-3.9-.1-.2-1-1.3-1-2.5s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.7.8 1.8.1.2.1.3 0 .5-.1.2-.1.3-.3.5-.1.2-.3.4-.4.5-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.5 1.5.2.1.4.1.5-.1.2-.2.6-.7.8-1 .2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.5.3.1.2.1 1-.1 1.6z"/></svg>
+    </a>
+</div>
+
+<!-- ============================= LIGHTBOX ============================= -->
+<div id="lightbox">
+    <button class="lb-close" id="lbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <img id="lbImage" src="" alt="Gallery preview">
+</div>
+
+<!-- ============================= LIBS ============================= -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 
 <script>
-    // =========================================================================
-    // DATA MODEL INGESTION (BusinessEntity & BusinessCategoryDataEntity Mapping)
-    // =========================================================================
+    /* =========================================================================
+       BUSINESS DATA  (BusinessEntity + BusinessCategoryDataEntity mock source)
+       In production these are fetched from the backend; the render layer below
+       treats them as the single source of truth so new items need zero code.
+       ========================================================================= */
     const BusinessEntity = {
-        name: "L'Étoile Noir",
-        slug: "letoile-noir",
-        description: "An avant-garde private matrix executing algorithmic high-luxury dining paradigms. Every single formulation constitutes calculated architectural precision crafted to redefine the standard human palate interface completely.",
-        phone: "+919876543210",
-        email: "operations@letoilenoir.luxury",
-        whatsApp: "+919876543210",
-        address: "Level 84, Celestial Spire, Financial Nexus, Mumbai, India",
-        googleMap: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.7972224751433!2d72.82348537600868!3d18.94030648215505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7d1e7d7d2c3e9%3A0xc3cf9c989ec903!2sNariman%20Point%2C%20Mumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1710000000000!3m2!1sen!2sin",
-        logo: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=150&q=80",
-        coverImage: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&q=80",
-        theme: "dark-gradient-glass",
-        published: true, // Overriding any incoming parameters to guarantee live render
-        tagline: "Algorithmic Fine Dining",
-        businessHours: "Mon - Fri: 18:00 - 02:00\nSat - Sun: 16:00 - 04:00",
-        instagramUrl: "https://instagram.com",
-        facebookUrl: "https://facebook.com"
+      name: "Velvet Ember",
+      slug: "velvet-ember",
+      tagline: "Fire, held with restraint.",
+      description: "A live-fire grill house in Bhiwani, Haryana.",
+      phone: "+91 98765 43210",
+      email: "hello@velvetember.in",
+      whatsapp: "919876543210",
+      address: "Sector 14, Civil Lines, Bhiwani, Haryana 127021",
+      googleMap: "https://www.google.com/maps?q=Bhiwani,Haryana&output=embed",
+      logo: null,
+      coverImage: "https://images.unsplash.com/photo-1544025162-d76694265947?w=1600&q=80",
+      theme: "dark",
+      published: true,
+      category: "Luxury Grill & Bar",
+      businessHours: { "Tue-Thu": "5:00 PM – 11:00 PM", "Fri-Sat": "5:00 PM – 12:30 AM", "Sun": "1:00 PM – 11:00 PM", "Mon": "Closed" },
+      instagramUrl: "#",
+      facebookUrl: "#"
     };
 
     const BusinessCategoryDataEntity = [
-        { rowId: "1", itemName: "Compressed Wagyu Cuboid", itemPrice: "140", itemImage: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80", itemDescription: "Aged Japanese A5 beef matrix injected with rich truffle oil emulsion alongside micro-charred gold leaf accents.", foodType: "Non Veg" },
-        { rowId: "2", itemName: "Hydroponic Garden Lattice", itemPrice: "75", itemImage: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80", itemDescription: "Deconstructed dynamic garden greens structured over cryo-frozen compressed pear fluid cells.", foodType: "Veg" },
-        { rowId: "3", itemName: "Quantum Smoked Atlantic Cod", itemPrice: "115", itemImage: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80", itemDescription: "Line-caught wild deep Atlantic structural cod surface blast-seared, misted with operational hickory aerosol.", foodType: "Non Veg" },
-        { rowId: "4", itemName: "Tectonic Mushroom Medley", itemPrice: "90", itemImage: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80", itemDescription: "Rare subterranean cloud-forest truffles combined meticulously with wild, high-altitude button configurations.", foodType: "Veg" },
-        { rowId: "5", itemName: "Hyperbaric Saffron Caviar Tart", itemPrice: "180", itemImage: "https://images.unsplash.com/photo-1534080391025-a77af6eb226c?auto=format&fit=crop&w=600&q=80", itemDescription: "Pressure-cured Caspian Sea roe encapsulated perfectly within highly refined Kashmiri saffron pastry shells.", foodType: "Non Veg" },
-        { rowId: "6", itemName: "Cryogenic Matcha Foam", itemPrice: "65", itemImage: "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80", itemDescription: "Liquid nitrogen solid-state premium Uji green tea micro-foam surrounded by organic micro-citrus dust.", foodType: "Veg" }
+      // Starters — rowId groups the course together
+      { rowId:"starters", itemName:"Coal-Roasted Bone Marrow", itemPrice:520, itemImage:"https://images.unsplash.com/photo-1432139509613-5c4255815697?w=700&q=80", itemDescription:"Charred sourdough, parsley gremolata, smoked salt.", foodType:"nonveg", popular:true, latest:false },
+      { rowId:"starters", itemName:"Smoked Burrata", itemPrice:460, itemImage:"https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=700&q=80", itemDescription:"Charred tomato, basil oil, hearth-fired flatbread.", foodType:"veg", popular:false, latest:true },
+      { rowId:"starters", itemName:"Tandoor Prawns", itemPrice:640, itemImage:"https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=700&q=80", itemDescription:"Kashmiri chili glaze, lime, charred curry leaf.", foodType:"nonveg", popular:true, latest:false },
+
+      // Signature Grills
+      { rowId:"grills", itemName:"36-Hour Short Rib", itemPrice:980, itemImage:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=700&q=80", itemDescription:"Coal-finished, red wine jus, roasted bone broth glaze.", foodType:"nonveg", popular:true, latest:false },
+      { rowId:"grills", itemName:"Whole Charred Cauliflower", itemPrice:560, itemImage:"https://images.unsplash.com/photo-1601315379734-6ad19d6e0e14?w=700&q=80", itemDescription:"Almond romesco, smoked chili oil, herb dust.", foodType:"veg", popular:false, latest:true },
+      { rowId:"grills", itemName:"Fire-Roasted Salmon", itemPrice:840, itemImage:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=700&q=80", itemDescription:"Miso glaze, charred citrus, ember-roasted greens.", foodType:"nonveg", popular:true, latest:false },
+      { rowId:"grills", itemName:"Dry-Aged Ribeye", itemPrice:1450, itemImage:"https://images.unsplash.com/photo-1600891964092-4316c288032e?w=700&q=80", itemDescription:"28-day aged, bone marrow butter, charred shallot.", foodType:"nonveg", popular:true, latest:false },
+
+      // Handmade Pasta
+      { rowId:"pasta", itemName:"Smoked Mushroom Tagliatelle", itemPrice:520, itemImage:"https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=700&q=80", itemDescription:"Wild mushrooms, brown butter, aged parmesan.", foodType:"veg", popular:false, latest:false },
+      { rowId:"pasta", itemName:"Charred Prawn Linguine", itemPrice:680, itemImage:"https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=700&q=80", itemDescription:"Smoked tomato, chili, coal-kissed prawns.", foodType:"nonveg", popular:true, latest:true },
+
+      // Craft Cocktails
+      { rowId:"bar", itemName:"Smoked Old Fashioned", itemPrice:620, itemImage:"https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=700&q=80", itemDescription:"Applewood smoke, bourbon, charred orange.", foodType:"veg", popular:true, latest:false },
+      { rowId:"bar", itemName:"Ember Negroni", itemPrice:590, itemImage:"https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=700&q=80", itemDescription:"Gin, campari, vermouth, coal-fat wash.", foodType:"veg", popular:false, latest:true },
+
+      // Desserts
+      { rowId:"desserts", itemName:"Burnt Basque Cheesecake", itemPrice:420, itemImage:"https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=700&q=80", itemDescription:"Deep-charred crust, whipped mascarpone.", foodType:"veg", popular:true, latest:false },
+      { rowId:"desserts", itemName:"Smoked Chocolate Fondant", itemPrice:390, itemImage:"https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=700&q=80", itemDescription:"Molten center, hazelnut praline, torched cream.", foodType:"veg", popular:false, latest:false }
     ];
 
-    // =========================================================================
-    // STATE CORE ARCHITECTURE & DATA BINDING ENGINES
-    // =========================================================================
-    document.addEventListener("DOMContentLoaded", () => {
-        // Bind Core Telemetry Elements directly
-        document.getElementById("runtime-brand-name").innerText = BusinessEntity.name;
-        document.getElementById("footer-brand-name").innerText = BusinessEntity.name;
-        document.getElementById("runtime-tagline").innerText = BusinessEntity.tagline || "HAUTE CUISINE MATRIX";
-        document.getElementById("runtime-hero-headline").innerHTML = `Transforming Flavors Into <span class="gradient-accent-text">Structural Art</span>`;
-        document.getElementById("runtime-hero-desc").innerText = BusinessEntity.description;
-        document.getElementById("runtime-about-desc").innerText = BusinessEntity.description;
+    const CATEGORY_LABELS = { starters:"Starters", grills:"Signature Grills", pasta:"Handmade Pasta", bar:"Craft Cocktails", desserts:"Desserts" };
 
-        // Image Engine Fail-safes
-        document.getElementById("runtime-logo").src = BusinessEntity.logo || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=150&q=80";
-        document.getElementById("runtime-cover-img").src = BusinessEntity.coverImage || "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&q=80";
+    /* =========================================================================
+       LOADER
+       ========================================================================= */
+    window.addEventListener("load", ()=>{
+      setTimeout(()=>{
+        document.getElementById("loader").classList.add("hide");
+        document.body.style.overflow = "auto";
+        runIntro();
+      }, 2400);
+    });
+    document.body.style.overflow = "hidden";
 
-        // Contact Infrastructure Verification Logic
-        document.getElementById("runtime-contact-address").innerText = BusinessEntity.address;
-        document.getElementById("runtime-contact-phone-link").innerText = BusinessEntity.phone;
-        document.getElementById("runtime-contact-phone-link").href = `tel:${BusinessEntity.phone}`;
-        document.getElementById("runtime-contact-email").innerText = BusinessEntity.email;
-
-        if(BusinessEntity.googleMap) {
-            document.getElementById("runtime-map-iframe").src = BusinessEntity.googleMap;
-        }
-
-        // Dynamic Business Hours Check Logic
-        if(BusinessEntity.businessHours) {
-            document.getElementById("runtime-hours-data").innerText = BusinessEntity.businessHours;
-        } else {
-            document.getElementById("hours-container").style.display = "none";
-        }
-
-        // Interactive Social Links Logical Binding Array
-        if(BusinessEntity.facebookUrl) document.getElementById("link-fb").href = BusinessEntity.facebookUrl; else document.getElementById("link-fb").style.display="none";
-        if(BusinessEntity.instagramUrl) document.getElementById("link-ig").href = BusinessEntity.instagramUrl; else document.getElementById("link-ig").style.display="none";
-
-        // Universal WhatsApp Action Matrix String Compilation
-        const waGlobalString = `https://wa.me/${BusinessEntity.whatsApp.replace(/[^0-9]/g, '')}?text=System%20Access%3A%20Requesting%20Premium%20Menu%20Reservation%20Pipeline.`;
-        document.getElementById("nav-wa-btn").href = waGlobalString;
-        document.getElementById("hero-wa-btn").href = waGlobalString;
-        document.getElementById("global-wa-float").href = waGlobalString;
-
-        // Render Modules Execution Sequences
-        compileMenuGrid(BusinessCategoryDataEntity);
-        compileSpecialsCarousel(BusinessCategoryDataEntity);
-        compileMediaGallery(BusinessCategoryDataEntity);
-
-        // Initialization of Interactive Script Framework Modals
-        initAutomationLibraries();
-        initThreeEnginePhysics();
+    /* =========================================================================
+       THEME TOGGLE
+       ========================================================================= */
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem("ve-theme") || "dark";
+    root.setAttribute("data-theme", savedTheme);
+    document.getElementById("themeToggle").addEventListener("click", ()=>{
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      gsap.to("body", { duration:.01 }); // ensures transition class kicks in
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("ve-theme", next);
     });
 
-    // =========================================================================
-    // DYNAMIC RENDERING COMPILER FUNCTIONS
-    // =========================================================================
-    function compileMenuGrid(items) {
-        const gridContainer = document.getElementById("dynamic-menu-grid");
-        gridContainer.innerHTML = "";
+    /* =========================================================================
+       CUSTOM CURSOR
+       ========================================================================= */
+    const cursor = document.getElementById("cursor");
+    const cursorDot = document.getElementById("cursorDot");
+    let mx=0,my=0,cx=0,cy=0;
+    window.addEventListener("mousemove", e=>{
+      mx=e.clientX; my=e.clientY;
+      cursorDot.style.left=mx+"px"; cursorDot.style.top=my+"px";
+    });
+    (function loopCursor(){
+      cx += (mx-cx)*0.16; cy += (my-cy)*0.16;
+      cursor.style.left=cx+"px"; cursor.style.top=cy+"px";
+      requestAnimationFrame(loopCursor);
+    })();
+    document.querySelectorAll("a,button,.dish-card,.gallery-item,input,textarea,.filter-btn").forEach(el=>{
+      el.addEventListener("mouseenter", ()=>cursor.classList.add("active"));
+      el.addEventListener("mouseleave", ()=>cursor.classList.remove("active"));
+    });
+    document.addEventListener("mousedown", ()=>{
+      const ripple = document.createElement("div");
+      ripple.style.cssText = `position:fixed;left:${mx}px;top:${my}px;width:8px;height:8px;border-radius:50%;border:1px solid var(--gold);transform:translate(-50%,-50%);pointer-events:none;z-index:9998;`;
+      document.body.appendChild(ripple);
+      gsap.to(ripple,{ width:70, height:70, opacity:0, duration:.6, ease:"power2.out", onComplete:()=>ripple.remove() });
+    });
 
-        items.forEach(item => {
-            const badgeClass = item.foodType === "Veg" ? "badge-veg" : "badge-nonveg";
-            const waItemString = `https://wa.me/${BusinessEntity.whatsApp.replace(/[^0-9]/g, '')}?text=Order%20Manifest%3A%20${encodeURIComponent(item.itemName)}`;
+    /* =========================================================================
+       LENIS SMOOTH SCROLL
+       ========================================================================= */
+    let lenis;
+    try{
+      lenis = new Lenis({ duration:1.1, easing:t=>1-Math.pow(1-t,3) });
+      function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+      requestAnimationFrame(raf);
+      lenis.on("scroll", ()=>ScrollTrigger.update());
+    }catch(e){}
 
-            const cardHTML = `
-                <div class="col-md-6 col-lg-4 menu-item-node" data-type="${item.foodType}" data-name="${item.itemName.toLowerCase()}">
-                    <div class="glass-panel p-3 h-100 menu-card" data-tilt data-tilt-max="10" data-tilt-speed="400">
-                        <div class="menu-card-img-wrap">
-                            <img src="${item.itemImage}" alt="${item.itemName}" loading="lazy">
-                            <span class="food-badge ${badgeClass}">${item.foodType}</span>
-                        </div>
-                        <div class="mt-4 px-2">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h5 class="text-white mb-0 text-truncate" style="max-width:70%;">${item.itemName}</h5>
-                                <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-bold">$${item.itemPrice}</span>
-                            </div>
-                            <p class="text-muted small mb-4" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px;">${item.itemDescription}</p>
-                            <div class="d-flex gap-2">
-                                <a href="${waItemString}" target="_blank" class="btn btn-luxury-outline w-100 py-2 btn-sm"><i class="fab fa-whatsapp me-2"></i>Order</a>
-                                <button class="btn btn-luxury w-100 py-2 btn-sm reserve-dish-action" data-dish="${item.itemName}">Secure</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            gridContainer.insertAdjacentHTML("beforeend", cardHTML);
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* =========================================================================
+       HEADER SCROLL STATE + BACK TO TOP
+       ========================================================================= */
+    const headerEl = document.getElementById("siteHeader");
+    const fabTop = document.getElementById("fabTop");
+    window.addEventListener("scroll", ()=>{
+      const y = window.scrollY;
+      headerEl.classList.toggle("scrolled", y > 60);
+      fabTop.classList.toggle("show", y > 700);
+    });
+
+    /* =========================================================================
+       EMBER PARTICLE CANVAS (signature ambient motion)
+       ========================================================================= */
+    const ec = document.getElementById("emberCanvas");
+    const ectx = ec.getContext("2d");
+    let embers = [];
+    function sizeEmberCanvas(){ ec.width = window.innerWidth; ec.height = window.innerHeight; }
+    sizeEmberCanvas();
+    window.addEventListener("resize", sizeEmberCanvas);
+    function spawnEmber(){
+      embers.push({
+        x: Math.random()*ec.width,
+        y: ec.height + 10,
+        r: Math.random()*2 + .6,
+        speed: Math.random()*.6 + .25,
+        drift: (Math.random()-.5)*.6,
+        life: 1,
+        hue: Math.random() > .5 ? "201,162,39" : "232,93,44"
+      });
+    }
+    function tickEmbers(){
+      ectx.clearRect(0,0,ec.width,ec.height);
+      if (embers.length < 70 && Math.random() > .5) spawnEmber();
+      embers.forEach(p=>{
+        p.y -= p.speed; p.x += p.drift; p.life -= 0.0032;
+        ectx.beginPath();
+        ectx.fillStyle = `rgba(${p.hue},${Math.max(p.life,0)*0.85})`;
+        ectx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ectx.fill();
+      });
+      embers = embers.filter(p=>p.life > 0 && p.y > -20);
+      requestAnimationFrame(tickEmbers);
+    }
+    tickEmbers();
+
+    /* =========================================================================
+       THREE.JS — HERO AMBIENT 3D FIELD
+       ========================================================================= */
+    (function heroThree(){
+      const canvas = document.getElementById("heroCanvas");
+      if(!window.THREE || !canvas) return;
+      const heroSection = document.querySelector(".hero");
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, heroSection.clientWidth/heroSection.clientHeight, .1, 100);
+      camera.position.z = 9;
+
+      const group = new THREE.Group();
+      scene.add(group);
+
+      const geoms = [
+        new THREE.TorusGeometry(0.7, 0.22, 16, 60),
+        new THREE.IcosahedronGeometry(0.65, 0),
+        new THREE.OctahedronGeometry(0.6, 0)
+      ];
+      const mat = (hex)=> new THREE.MeshStandardMaterial({ color:hex, metalness:0.7, roughness:0.25, emissive:hex, emissiveIntensity:0.12 });
+      const colors = [0xC9A227, 0xB5651D, 0xE85D2C];
+      const meshes = [];
+      for(let i=0;i<7;i++){
+        const g = geoms[i % geoms.length];
+        const m = new THREE.Mesh(g, mat(colors[i % colors.length]));
+        m.position.set((Math.random()-0.5)*8, (Math.random()-0.5)*5, (Math.random()-0.5)*4 - 1);
+        m.userData.speed = 0.15 + Math.random()*0.25;
+        m.userData.axis = new THREE.Vector3(Math.random(),Math.random(),Math.random()).normalize();
+        group.add(m); meshes.push(m);
+      }
+
+      const light1 = new THREE.PointLight(0xE85D2C, 3, 20); light1.position.set(3,2,4); scene.add(light1);
+      const light2 = new THREE.PointLight(0xC9A227, 2, 20); light2.position.set(-4,-2,3); scene.add(light2);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+
+      let targetX=0, targetY=0;
+      window.addEventListener("mousemove", e=>{
+        targetX = (e.clientX/window.innerWidth - 0.5);
+        targetY = (e.clientY/window.innerHeight - 0.5);
+      });
+
+      function resizeThree(){
+        const w = heroSection.clientWidth, h = heroSection.clientHeight;
+        renderer.setSize(w,h);
+        camera.aspect = w/h; camera.updateProjectionMatrix();
+      }
+      resizeThree();
+      window.addEventListener("resize", resizeThree);
+
+      function animateThree(){
+        meshes.forEach(m=>{
+          m.rotateOnAxis(m.userData.axis, m.userData.speed*0.01);
         });
-        VanillaTilt.init(document.querySelectorAll("[data-tilt]"));
+        group.rotation.y += (targetX*0.6 - group.rotation.y*0.02)*0.02;
+        group.rotation.x += (targetY*0.3 - group.rotation.x*0.02)*0.02;
+        camera.position.x += (targetX*1.2 - camera.position.x)*0.03;
+        camera.position.y += (-targetY*1.2 - camera.position.y)*0.03;
+        camera.lookAt(0,0,0);
+        renderer.render(scene, camera);
+        requestAnimationFrame(animateThree);
+      }
+      animateThree();
+    })();
+
+    /* =========================================================================
+       HERO INTRO TIMELINE (split text reveal)
+       ========================================================================= */
+    function runIntro(){
+      const tl = gsap.timeline({ defaults:{ ease:"power4.out" } });
+      tl.to(".hero-eyebrow", { duration:.8, opacity:1 }, 0)
+        .to(".hero-title .line span", { y:"0%", duration:1.1, stagger:.12 }, 0.15)
+        .from(".hero-side", { opacity:0, duration:1 }, 0.6)
+        .from(".scroll-ind", { opacity:0, duration:1 }, 1.2)
+        .from(".float-food", { opacity:0, y:40, scale:.8, duration:1, stagger:.15, ease:"back.out(1.4)" }, 0.9);
     }
 
-    function compileSpecialsCarousel(items) {
-        const wrapper = document.getElementById("dynamic-specials-swiper");
-        items.slice(0, 4).forEach(item => {
-            const slideHTML = `
-                <div class="swiper-slide">
-                    <div class="glass-panel p-4 text-center special-card" data-tilt>
-                        <img src="${item.itemImage}" alt="${item.itemName}" class="img-fluid rounded-4 mb-3" style="height:220px; width:100%; object-fit:cover;">
-                        <h4 class="text-white">${item.itemName}</h4>
-                        <p class="text-warning fw-bold">$${item.itemPrice}</p>
-                        <p class="text-muted small px-3">${item.itemDescription}</p>
-                    </div>
-                </div>
-            `;
-            wrapper.insertAdjacentHTML("beforeend", slideHTML);
-        });
+    /* float food idle motion */
+    gsap.to(".ff1", { y:-18, duration:3.4, yoyo:true, repeat:-1, ease:"sine.inOut" });
+    gsap.to(".ff2", { y:16, duration:4, yoyo:true, repeat:-1, ease:"sine.inOut", delay:.4 });
+    gsap.to(".ff3", { y:-12, duration:3, yoyo:true, repeat:-1, ease:"sine.inOut", delay:.8 });
+
+    /* =========================================================================
+       SCROLL REVEALS
+       ========================================================================= */
+    gsap.utils.toArray("section .section-head, .about-text, .about-imgwrap, .chef-info, .chef-imgwrap, .book-info, .book-form, .contact-list, .map-wrap").forEach(el=>{
+      gsap.from(el, {
+        scrollTrigger:{ trigger:el, start:"top 82%" },
+        y:60, opacity:0, duration:1, ease:"power3.out"
+      });
+    });
+    document.querySelectorAll("[data-divider]").forEach(d=>{
+      ScrollTrigger.create({ trigger:d, start:"top 90%", onEnter:()=>d.classList.add("inview") });
+    });
+
+    /* =========================================================================
+       MENU RENDER (dynamic from BusinessCategoryDataEntity)
+       ========================================================================= */
+    const mount = document.getElementById("menuMount");
+    const noResults = document.getElementById("noResults");
+    let activeFilter = "all";
+    let searchTerm = "";
+
+    function foodBadge(type){
+      return type === "veg"
+        ? `<span class="tag tag-veg">● Veg</span>`
+        : `<span class="tag tag-nonveg">● Non-Veg</span>`;
     }
 
-    function compileMediaGallery(items) {
-        const gallery = document.getElementById("runtime-gallery-injected");
-        const structuralImages = [
-            ...items.map(i => i.itemImage),
-            "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80",
-            "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=600&q=80"
-        ];
-
-        structuralImages.forEach((imgUrl, idx) => {
-            const block = `
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="${idx*50}">
-                    <img src="${imgUrl}" alt="Visual Artifact Element ${idx}" loading="lazy">
-                    <div class="gallery-overlay">
-                        <h6 class="text-white mb-0">Perspective Matrix #${idx+101}</h6>
-                    </div>
-                </div>
-            `;
-            gallery.insertAdjacentHTML("beforeend", block);
-        });
+    function dishMatches(item){
+      const q = searchTerm.trim().toLowerCase();
+      if(q && !(item.itemName.toLowerCase().includes(q) || item.itemDescription.toLowerCase().includes(q))) return false;
+      if(activeFilter === "veg") return item.foodType === "veg";
+      if(activeFilter === "nonveg") return item.foodType === "nonveg";
+      if(activeFilter === "popular") return item.popular;
+      if(activeFilter === "latest") return item.latest;
+      return true;
     }
 
-    // =========================================================================
-    // AUTOMATED CORE SYSTEM INTERACTIVE ANIMATION & FILTER MATRIX LOGIC
-    // =========================================================================
-    function initAutomationLibraries() {
-        // Handle Preloader Out-animation directly
-        window.addEventListener("load", () => {
-            const loader = document.getElementById("loader-wrapper");
-            if (loader) {
-                loader.style.opacity = "0";
-                setTimeout(() => {
-                    loader.style.display = "none";
-                }, 600);
-            }
-        });
-
-        // Ensure loader falls back gracefully even if load event fired earlier
-        setTimeout(() => {
-            const loader = document.getElementById("loader-wrapper");
-            if (loader && loader.style.display !== "none") {
-                loader.style.opacity = "0";
-                setTimeout(() => { loader.style.display = "none"; }, 600);
-            }
-        }, 1500);
-
-        // Init Dynamic System Scroll Animation Anchors
-        AOS.init({ duration: 1000, easing: 'ease-out-cubic', once: true });
-
-        // Init Swiper Matrix Engines
-        new Swiper('.swiper-container', {
-            effect: 'coverflow',
-            grabCursor: true,
-            centeredSlides: true,
-            slidesPerView: 'auto',
-            coverflowEffect: { rotate: 20, stretch: 0, depth: 200, modifier: 1, slideShadows: false },
-            pagination: { el: '.swiper-pagination', clickable: true },
-            autoplay: { delay: 4000 }
-        });
-
-        new Swiper('.review-swiper', {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            pagination: { el: '.swiper-pagination', clickable: true },
-            autoplay: { delay: 5000, disableOnInteraction: false }
-        });
-
-        // Custom Dynamic Cursor Matrix Physics Mapping
-        const cursor = document.getElementById("custom-cursor");
-        document.addEventListener("mousemove", (e) => {
-            cursor.style.left = e.clientX + "px";
-            cursor.style.top = e.clientY + "px";
-        });
-        document.querySelectorAll("a, button, .menu-card, .gallery-item").forEach(el => {
-            el.addEventListener("mouseenter", () => { cursor.style.width = "45px"; cursor.style.height = "45px"; cursor.style.backgroundColor = "rgba(0, 229, 255, 0.1)"; });
-            el.addEventListener("mouseleave", () => { cursor.style.width = "20px"; cursor.style.height = "20px"; cursor.style.backgroundColor = "transparent"; });
-        });
-
-        // Sticky Navbar Matrix & Scroll Tracking Systems
-        const nav = document.querySelector(".navbar");
-        const topFloat = document.querySelector(".scroll-top-float");
-        window.addEventListener("scroll", () => {
-            const scrolledLength = window.scrollY;
-            const totalLength = document.documentElement.scrollHeight - window.innerHeight;
-
-            // Track Progress Line Matrix
-            document.getElementById("scroll-progress").style.width = `${(scrolledLength / totalLength) * 100}%`;
-
-            if (scrolledLength > 60) {
-                nav.classList.add("scrolled");
-                topFloat.classList.add("show");
-            } else {
-                nav.classList.remove("scrolled");
-                topFloat.classList.remove("show");
-            }
-        });
-
-        // Smooth Intersection Navigation Engine
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const element = document.querySelector(this.getAttribute('href'));
-                if(element) element.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Reactive Functional Filtering Infrastructure Array Logic
-        const filterButtons = document.querySelectorAll(".menu-filter-btn");
-        const elements = document.getElementsByClassName("menu-item-node");
-
-        filterButtons.forEach(btn => {
-            btn.addEventListener("click", function() {
-                filterButtons.forEach(b => b.classList.remove("active"));
-                this.classList.add("active");
-                const targetFilter = this.getAttribute("data-filter");
-
-                Array.from(elements).forEach(item => {
-                    if(targetFilter === "all" || item.getAttribute("data-type") === targetFilter) {
-                        item.style.display = "block";
-                        gsap.fromTo(item, {scale: 0.9, opacity: 0}, {scale: 1, opacity: 1, duration: 0.4});
-                    } else {
-                        item.style.display = "none";
-                    }
-                });
-            });
-        });
-
-        // Dynamic Searching Optimization Engine
-        document.getElementById("menu-search").addEventListener("input", function() {
-            const searchString = this.value.toLowerCase().trim();
-            Array.from(elements).forEach(item => {
-                const itemName = item.getAttribute("data-name");
-                if(itemName.includes(searchString)) {
-                    item.style.display = "block";
-                } else {
-                    item.style.display = "none";
-                }
-            });
-        });
-
-        // Intercept Dish Actions and Inject Directly to Reservation Module
-        document.addEventListener("click", function(e) {
-            if(e.target && e.target.classList.contains("reserve-dish-action")) {
-                const dishName = e.target.getAttribute("data-dish");
-                document.getElementById("res-msg").value = `Priority Preparation Request Matrix: [${dishName}]`;
-                document.getElementById("book").scrollIntoView({ behavior: "smooth" });
-                document.getElementById("res-msg").focus();
-            }
-        });
-
-        // Form Submissions Terminal Logic Handler
-        document.getElementById("reservation-form").addEventListener("submit", function(e) {
-            e.preventDefault();
-            alert("Telemetry Stream Transmitted. Our operational concierge will verify your space matrix allocation coordinates shortly.");
-            this.reset();
-        });
-
-        // Dynamic Stats Auto Incrementor System
-        const counterNodes = document.querySelectorAll(".counter");
-        counterNodes.forEach(c => {
-            const tgt = +c.getAttribute("data-target");
-            gsap.to(c, {
-                innerText: tgt,
-                duration: 3,
-                snap: { innerText: 1 },
-                scrollTrigger: {
-                    trigger: c,
-                    start: "top 85%"
-                }
-            });
-        });
+    function sortItems(list){
+      if(activeFilter === "price-low") return [...list].sort((a,b)=>a.itemPrice-b.itemPrice);
+      if(activeFilter === "price-high") return [...list].sort((a,b)=>b.itemPrice-a.itemPrice);
+      return list;
     }
 
-    // =========================================================================
-    // THREE.JS SPACE BACKGROUND COMPUTATIONAL MATRIX ENGINE
-    // =========================================================================
-    function initThreeEnginePhysics() {
-        const container = document.getElementById("three-canvas-container");
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    function renderMenu(){
+      // group by rowId, preserving category order of first appearance
+      const groups = {};
+      const order = [];
+      BusinessCategoryDataEntity.forEach(item=>{
+        if(!groups[item.rowId]){ groups[item.rowId] = []; order.push(item.rowId); }
+        groups[item.rowId].push(item);
+      });
 
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
+      let html = "";
+      let totalVisible = 0;
+      let catIndex = 0;
 
-        // Construct Floating Cosmic Array Nodes
-        const particleGeometry = new THREE.BufferGeometry();
-        const particlesCount = 240;
-        const positionArray = new Float32Array(particlesCount * 3);
+      order.forEach(rowId=>{
+        const items = sortItems(groups[rowId].filter(dishMatches));
+        if(items.length === 0) return;
+        catIndex++;
+        totalVisible += items.length;
+        html += `
+          <div class="menu-category" data-aos="fade-up">
+            <div class="menu-category-head">
+              <span class="num">${String(catIndex).padStart(2,"0")}</span>
+              <h3>${CATEGORY_LABELS[rowId] || rowId}</h3>
+              <div class="rule"></div>
+            </div>
+            <div class="menu-grid">
+              ${items.map(renderCard).join("")}
+            </div>
+          </div>`;
+      });
 
-        for (let i = 0; i < particlesCount * 3; i++) {
-            positionArray[i] = (Math.random() - 0.5) * 12;
+      mount.innerHTML = html;
+      noResults.style.display = totalVisible === 0 ? "block" : "none";
+      attachCardEvents();
+      if(window.AOS) AOS.refreshHard();
+    }
+
+    function renderCard(item){
+      const badges = [foodBadge(item.foodType)];
+      if(item.popular) badges.push(`<span class="tag tag-pop">★ Popular</span>`);
+      return `
+        <div class="dish-card" data-tilt>
+          <div class="dish-media">
+            <img src="${item.itemImage}" alt="${item.itemName}" loading="lazy">
+            <div class="dish-tags">${badges.join("")}</div>
+            <button class="fav-btn" aria-label="Save dish">
+              <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9C.7 8.4 2.4 5 5.8 5c2 0 3.4 1 4.2 2.3C10.8 6 12.2 5 14.2 5c3.4 0 5.1 3.4 3.3 7-2.5 4.4-9.5 9-9.5 9z"/></svg>
+            </button>
+          </div>
+          <div class="dish-body">
+            <div class="dish-top">
+              <h4>${item.itemName}</h4>
+              <span class="dish-price">₹${item.itemPrice}</span>
+            </div>
+            <p class="dish-desc">${item.itemDescription}</p>
+            <div class="dish-order">
+              <span style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim);">${CATEGORY_LABELS[item.rowId]||""}</span>
+              <button type="button">Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function attachCardEvents(){
+      document.querySelectorAll(".fav-btn").forEach(btn=>{
+        btn.addEventListener("click", e=>{ e.stopPropagation(); btn.classList.toggle("active"); });
+      });
+      document.querySelectorAll("[data-tilt]").forEach(card=>{
+        card.addEventListener("mousemove", e=>{
+          const r = card.getBoundingClientRect();
+          const px = (e.clientX - r.left)/r.width - 0.5;
+          const py = (e.clientY - r.top)/r.height - 0.5;
+          card.style.transform = `perspective(800px) rotateY(${px*7}deg) rotateX(${-py*7}deg) translateY(-4px)`;
+        });
+        card.addEventListener("mouseleave", ()=>{ card.style.transform = "perspective(800px) rotateY(0) rotateX(0) translateY(0)"; });
+      });
+    }
+
+    document.getElementById("filterBar").addEventListener("click", e=>{
+      const btn = e.target.closest(".filter-btn");
+      if(!btn) return;
+      document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.dataset.filter;
+      renderMenu();
+    });
+    document.getElementById("menuSearch").addEventListener("input", e=>{
+      searchTerm = e.target.value;
+      renderMenu();
+    });
+    renderMenu();
+
+    /* =========================================================================
+       SPECIALS SWIPER (popular dishes)
+       ========================================================================= */
+    const specialsData = BusinessCategoryDataEntity.filter(i=>i.popular);
+    document.getElementById("specialsMount").innerHTML = specialsData.map(item=>`
+      <div class="swiper-slide">
+        <div class="special-card">
+          <img src="${item.itemImage}" alt="${item.itemName}">
+          <div class="special-overlay">
+            <div class="eyebrow">${CATEGORY_LABELS[item.rowId]}</div>
+            <h3>${item.itemName}</h3>
+            <p>₹${item.itemPrice} · ${item.itemDescription}</p>
+          </div>
+        </div>
+      </div>`).join("");
+
+    new Swiper(".specials-swiper", {
+      slidesPerView:1.15, spaceBetween:26, centeredSlides:false, grabCursor:true,
+      breakpoints:{ 700:{ slidesPerView:2.2 }, 1100:{ slidesPerView:3.1 } },
+      navigation:{ nextEl:".specials-swiper .swiper-button-next", prevEl:".specials-swiper .swiper-button-prev" },
+      pagination:{ el:".specials-swiper .swiper-pagination", clickable:true }
+    });
+
+    /* =========================================================================
+       GALLERY (masonry + lightbox)
+       ========================================================================= */
+    const galleryImages = [
+      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80",
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=700&q=80",
+      "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=700&q=80",
+      "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=700&q=80",
+      "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=700&q=80",
+      "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=700&q=80",
+      "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80",
+      "https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=700&q=80"
+    ];
+    document.getElementById("galleryMount").innerHTML = galleryImages.map(src=>`
+      <div class="gallery-item">
+        <img src="${src}" alt="Velvet Ember gallery photo" loading="lazy">
+        <div class="g-overlay"><div class="g-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></svg></div></div>
+      </div>`).join("");
+
+    const lightbox = document.getElementById("lightbox");
+    const lbImage = document.getElementById("lbImage");
+    document.getElementById("galleryMount").addEventListener("click", e=>{
+      const item = e.target.closest(".gallery-item");
+      if(!item) return;
+      lbImage.src = item.querySelector("img").src;
+      lightbox.classList.add("open");
+    });
+    document.getElementById("lbClose").addEventListener("click", ()=>lightbox.classList.remove("open"));
+    lightbox.addEventListener("click", e=>{ if(e.target === lightbox) lightbox.classList.remove("open"); });
+
+    /* =========================================================================
+       REVIEWS SWIPER
+       ========================================================================= */
+    const reviews = [
+      { name:"Priya Sharma", loc:"Bhiwani", text:"The short rib alone is worth the drive. Smoke without being heavy-handed — every course had real restraint.", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80" },
+      { name:"Rohan Mehta", loc:"Rohtak", text:"Best cocktail bar in the region right now. The smoked old fashioned changed how I think about a Negroni.", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80" },
+      { name:"Ananya Kapoor", loc:"Hisar", text:"Booked for an anniversary, stayed for three hours. Service paced the night perfectly, never once rushed.", img:"https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&q=80" },
+      { name:"Vikram Singh", loc:"Bhiwani", text:"The whole charred cauliflower converted three committed carnivores at our table. Genuinely special kitchen.", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80" }
+    ];
+    document.getElementById("reviewsMount").innerHTML = reviews.map(r=>`
+      <div class="swiper-slide">
+        <div class="review-card">
+          <div class="stars">${"<svg viewBox='0 0 20 20'><path d='M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z'/></svg>".repeat(5)}</div>
+          <p>"${r.text}"</p>
+          <div class="review-person">
+            <img src="${r.img}" alt="${r.name}">
+            <div><b>${r.name}</b><span>${r.loc}</span></div>
+          </div>
+        </div>
+      </div>`).join("");
+
+    new Swiper(".reviews-swiper", {
+      slidesPerView:1.05, spaceBetween:24, loop:true, autoplay:{ delay:3600, disableOnInteraction:false }, grabCursor:true,
+      breakpoints:{ 700:{ slidesPerView:2 }, 1100:{ slidesPerView:3 } },
+      pagination:{ el:".reviews-swiper .swiper-pagination", clickable:true }
+    });
+
+    /* =========================================================================
+       ANIMATED COUNTERS
+       ========================================================================= */
+    document.querySelectorAll(".count").forEach(el=>{
+      const target = +el.dataset.count;
+      ScrollTrigger.create({
+        trigger: el, start:"top 88%", once:true,
+        onEnter:()=>{
+          gsap.to(el, {
+            innerText: target, duration:2, ease:"power2.out", snap:{ innerText:1 },
+            onUpdate:function(){ el.innerText = Math.floor(el.innerText).toLocaleString("en-IN"); }
+          });
         }
+      });
+    });
+    const yearsEl = document.getElementById("yearsCount");
+    ScrollTrigger.create({
+      trigger: yearsEl, start:"top 88%", once:true,
+      onEnter:()=>{ gsap.to(yearsEl,{ innerText:9, duration:1.6, snap:{innerText:1}, onUpdate:function(){ yearsEl.innerText = Math.floor(yearsEl.innerText); } }); }
+    });
 
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
-        const particleMaterial = new THREE.PointsMaterial({
-            size: 0.035,
-            color: 0x00E5FF,
-            transparent: true,
-            opacity: 0.4,
-            blending: THREE.AdditiveBlending
-        });
-
-        const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particleSystem);
-        camera.position.z = 4;
-
-        // Interactive Physics Trackers Matrix Variables
-        let interactionMouseX = 0;
-        let interactionMouseY = 0;
-
-        document.addEventListener('mousemove', (event) => {
-            interactionMouseX = (event.clientX / window.innerWidth) - 0.5;
-            interactionMouseY = (event.clientY / window.innerHeight) - 0.5;
-        });
-
-        // Realtime Render Loop
-        const frameClock = new THREE.Clock();
-
-        function executionTick() {
-            const timeElapsed = frameClock.getElapsedTime();
-
-            // Rotational Shifts
-            particleSystem.rotation.y = timeElapsed * 0.05;
-            particleSystem.rotation.x = timeElapsed * 0.02;
-
-            // Smooth Macro Parallax Adjustments
-            camera.position.x += (interactionMouseX * 0.5 - camera.position.x) * 0.05;
-            camera.position.y += (-interactionMouseY * 0.5 - camera.position.y) * 0.05;
-            camera.lookAt(scene.position);
-
-            renderer.render(scene, camera);
-            window.requestAnimationFrame(executionTick);
-        }
-
-        executionTick();
-
-        // Screen Dimension Inversion Recalculator Resizer Module
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        });
+    /* =========================================================================
+       VIDEO PLAY / WATCH STORY
+       ========================================================================= */
+    const storyVideo = document.getElementById("storyVideo");
+    const playBtn = document.getElementById("playBtn");
+    function toggleVideo(){
+      if(storyVideo.paused){ storyVideo.play(); playBtn.style.opacity = 0; }
+      else{ storyVideo.pause(); playBtn.style.opacity = 1; }
     }
+    playBtn.addEventListener("click", toggleVideo);
+    document.getElementById("watchStoryBtn").addEventListener("click", ()=>{
+      document.querySelector(".video-wrap").scrollIntoView({ behavior:"smooth", block:"center" });
+      setTimeout(toggleVideo, 700);
+    });
+
+    /* =========================================================================
+       BOOKING FORM VALIDATION
+       ========================================================================= */
+    const bookForm = document.getElementById("bookForm");
+    bookForm.addEventListener("submit", e=>{
+      e.preventDefault();
+      let valid = true;
+      const rules = [
+        { id:"fName", test:v=>v.trim().length > 1 },
+        { id:"fPhone", test:v=>/^[6-9]\d{9}$/.test(v.trim()) },
+        { id:"fGuests", test:v=>+v >= 1 && +v <= 20 },
+        { id:"fDate", test:v=>v.length > 0 },
+        { id:"fTime", test:v=>v.length > 0 }
+      ];
+      rules.forEach(rule=>{
+        const input = document.getElementById(rule.id);
+        const field = input.closest(".field");
+        const ok = rule.test(input.value);
+        field.classList.toggle("invalid", !ok);
+        if(!ok) valid = false;
+      });
+      if(valid){
+        document.getElementById("formSuccess").classList.add("show");
+        bookForm.reset();
+        setTimeout(()=>document.getElementById("formSuccess").classList.remove("show"), 6000);
+      }
+    });
+
+    /* newsletter (front-end only demo) */
+    document.getElementById("newsletterForm").addEventListener("submit", e=>{
+      e.preventDefault();
+      const input = e.target.querySelector("input");
+      input.value = "Subscribed ✓";
+      setTimeout(()=>{ input.value=""; input.placeholder="Your email"; }, 2200);
+    });
+
+    /* =========================================================================
+       SEO — inject dynamic title/description from BusinessEntity
+       ========================================================================= */
+    document.title = `${BusinessEntity.name} — ${BusinessEntity.tagline}`;
 </script>
 </body>
 </html>

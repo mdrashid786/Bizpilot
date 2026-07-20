@@ -31,4 +31,11 @@ public class BusinessCategoryDataEntity extends BaseEntity {
 
     @Column(name = "sort_order")
     private Integer sortOrder;
+
+    private Boolean active;
+
+    @Column(name = "featured", nullable = false)
+    @Builder.Default
+    private Boolean featured = false;
+
 }

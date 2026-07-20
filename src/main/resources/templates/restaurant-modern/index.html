@@ -79,7 +79,7 @@
         .img-luxury { border: 1px solid var(--card-border); transition: transform 0.5s; }
         .img-luxury:hover { transform: scale(1.02); }
 
-        .premium-search-input { background: rgba(255,255,255,0.03) !important; border: 1px solid var(--card-border) !important; color: white !important; padding: 15px 25px !important; border-radius: 30px !important; }
+        .premium-search-input {border: 1px solid var(--card-border) !important; color: black !important; padding: 15px 25px !important; border-radius: 30px !important; }
         .premium-search-input:focus { border-color: var(--neon-accent) !important; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2) !important; }
         .filter-pill { border-radius: 20px; padding: 8px 25px; font-size: 0.9rem; }
         .filter-pill.active { background: var(--primary-gradient); border-color: transparent; color: white; }
@@ -215,9 +215,9 @@
         <div class="container text-center hero-z-index">
             <h6 class="text-neon-accent tracking-wide mb-3" data-aos="fade-down" th:if="${business.tagline != null}" th:text="${business.tagline}">TAGLINE</h6>
             <h1 class="display-2 text-white fw-bold mb-3 font-luxury" data-aos="zoom-in" data-aos-delay="200" th:text="${business.businessName}">Business Name</h1>
-            <p class="lead text-light-muted max-w-600 mx-auto mb-5" data-aos="fade-up" data-aos-delay="400" th:if="${business.description != null}" th:text="${business.description}">
+           <!-- <p class="lead text-light-muted max-w-600 mx-auto mb-5" data-aos="fade-up" data-aos-delay="400" th:if="${business.description != null}" th:text="${business.description}">
                 Description here.
-            </p>
+            </p>-->
             <div class="d-flex justify-content-center gap-3 flex-wrap" data-aos="fade-up" data-aos-delay="600">
                 <button onclick="openOrder()" class="btn btn-primary-gradient btn-lg px-4 py-3"><i class="fas fa-shopping-bag me-2"></i>Order Now</button>
                 <a href="#menu-section" class="btn btn-outline-glass btn-lg px-4 py-3" th:text="'View ' + ${config.dashboardSectionLabel}">View Menu</a>
@@ -261,6 +261,25 @@
                     </div>
 
                     <div class="row g-3 counter-grid pt-3 border-top border-secondary-subtle">
+                        <div class="col-3 text-center">
+                            <h3 class="text-gold fw-bold mb-0 count-num" data-target="5">5</h3>
+                            <small class="text-light-muted">Years Exp</small>
+                        </div>
+                        <div class="col-3 text-center">
+                            <h3 class="text-neon-accent fw-bold mb-0 count-num" data-target="20">20</h3>
+                            <small class="text-light-muted">K+ Guests</small>
+                        </div>
+                        <div class="col-3 text-center">
+                            <h3 class="text-white fw-bold mb-0 count-num" data-target="50">50</h3>
+                            <small class="text-light-muted">K+ Orders</small>
+                        </div>
+                        <div class="col-3 text-center">
+                            <h3 class="text-gold fw-bold mb-0">4.9</h3>
+                            <small class="text-light-muted">Rating</small>
+                        </div>
+                    </div>
+
+                   <!-- <div class="row g-3 counter-grid pt-3 border-top border-secondary-subtle">
                         <div class="col-4 text-center">
                             <h3 class="text-gold fw-bold mb-0" th:text="${#lists.size(categoryData)}">0</h3>
                             <small class="text-light-muted" th:text="${config.dashboardSectionLabel}">Items</small>
@@ -273,7 +292,7 @@
                             <h3 class="text-white fw-bold mb-0">5★</h3>
                             <small class="text-light-muted">Rated</small>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>

@@ -1,0 +1,2 @@
+ALTER TABLE business_category_data
+ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE;

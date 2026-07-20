@@ -49,34 +49,7 @@ public class BusinessCategoryDataService {
         this.fileStorageService = fileStorageService;
     }
 
-//    private BusinessEntity getCurrentBusiness() {
-//
-//        Authentication authentication =
-//                SecurityContextHolder.getContext().getAuthentication();
-//
-//        String email = authentication.getName();
-//
-//        UserEntity owner =
-//                userRepository.findByEmail(email)
-//                        .orElseThrow();
-//
-//        return businessRepository.findByOwner(owner)
-//                .orElseThrow();
-//    }
 
-//    private void validateField(BusinessEntity business,
-//                               String fieldKey) {
-//
-//        boolean valid = categoryConfigService
-//                .isValidField(
-//                        business.getCategory(),
-//                        fieldKey);
-//
-//        if (!valid) {
-//
-//            throw new InvalidCategoryFieldException(fieldKey);
-//        }
-//    }
 
     public CategoryDataResponse save(CategoryDataRequest request) {
 
@@ -143,62 +116,7 @@ public class BusinessCategoryDataService {
         repository.delete(entity);
     }
 
-//    public CategoryRowResponse saveRow(CategoryRowRequest request) {
-//
-//        BusinessEntity business = getCurrentBusiness();
-//
-//        Integer sortOrder = getNextSortOrder(business);
-//
-//        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
-//
-//            validateField(business, field.getKey());
-//
-//            BusinessCategoryDataEntity entity =
-//                    BusinessCategoryDataEntity.builder()
-//                            .business(business)
-//                            .fieldKey(field.getKey())
-//                            .fieldValue(field.getValue())
-//                            .sortOrder(sortOrder)
-//                            .build();
-//
-//            repository.save(entity);
-//        }
-//
-//        return CategoryRowResponse.builder()
-//                .sortOrder(sortOrder)
-//                .fields(request.getFields())
-//                .build();
-//    }
-//
-//    public List<CategoryRowResponse> findRows() {
-//
-//        BusinessEntity business = getCurrentBusiness();
-//
-//        List<BusinessCategoryDataEntity> rows =
-//                repository.findByBusinessIdOrderBySortOrder(business.getId());
-//
-//        Map<Integer, Map<String, String>> grouped =
-//                new LinkedHashMap<>();
-//
-//        for (BusinessCategoryDataEntity row : rows) {
-//
-//            grouped.computeIfAbsent(
-//                    row.getSortOrder(),
-//                    k -> new LinkedHashMap<>());
-//
-//            grouped.get(row.getSortOrder())
-//                    .put(row.getFieldKey(), row.getFieldValue());
-//        }
-//
-//        return grouped.entrySet()
-//                .stream()
-//                .map(entry ->
-//                        CategoryRowResponse.builder()
-//                                .sortOrder(entry.getKey())
-//                                .fields(entry.getValue())
-//                                .build())
-//                .toList();
-//    }
+
 
 
     public CategoryRowResponse updateRow(
@@ -251,68 +169,68 @@ public class BusinessCategoryDataService {
     }
 
 
-    public CategoryRowResponse saveRow(CategoryRowRequest request) {
+//    public CategoryRowResponse saveRow(CategoryRowRequest request) {
+//
+//        BusinessEntity business = getCurrentBusiness();
+//
+//        for (String key : request.getFields().keySet()) {
+//            validateField(business, key);
+//        }
+//
+//        String rowId = UUID.randomUUID().toString();
+//        Integer sortOrder = getNextSortOrder(business);
+//
+//        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
+//            BusinessCategoryDataEntity entity =
+//                    BusinessCategoryDataEntity.builder()
+//                            .business(business)
+//                            .rowId(rowId)
+//                            .fieldKey(field.getKey())
+//                            .fieldValue(field.getValue())
+//                            .sortOrder(sortOrder)
+//                            .build();
+//            repository.save(entity);
+//        }
+//
+//        return CategoryRowResponse.builder()
+//                .rowId(rowId)
+//                .sortOrder(sortOrder)
+//                .fields(request.getFields())
+//                .build();
+//    }
 
-        BusinessEntity business = getCurrentBusiness();
-
-        for (String key : request.getFields().keySet()) {
-            validateField(business, key);
-        }
-
-        String rowId = UUID.randomUUID().toString();
-        Integer sortOrder = getNextSortOrder(business);
-
-        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
-            BusinessCategoryDataEntity entity =
-                    BusinessCategoryDataEntity.builder()
-                            .business(business)
-                            .rowId(rowId)
-                            .fieldKey(field.getKey())
-                            .fieldValue(field.getValue())
-                            .sortOrder(sortOrder)
-                            .build();
-            repository.save(entity);
-        }
-
-        return CategoryRowResponse.builder()
-                .rowId(rowId)
-                .sortOrder(sortOrder)
-                .fields(request.getFields())
-                .build();
-    }
-
-    public List<CategoryRowResponse> findRows() {
-
-        BusinessEntity business = getCurrentBusiness();
-
-        List<BusinessCategoryDataEntity> entities =
-                repository.findByBusinessIdOrderBySortOrderAscIdAsc(business.getId());
-
-        // rowId ke basis pe group karo, insertion order preserve karo
-        LinkedHashMap<String, List<BusinessCategoryDataEntity>> grouped = new LinkedHashMap<>();
-        for (BusinessCategoryDataEntity e : entities) {
-            grouped.computeIfAbsent(e.getRowId(), k -> new ArrayList<>()).add(e);
-        }
-
-        List<CategoryRowResponse> rows = new ArrayList<>();
-        for (Map.Entry<String, List<BusinessCategoryDataEntity>> entry : grouped.entrySet()) {
-            Map<String, String> fields = entry.getValue().stream()
-                    .collect(Collectors.toMap(
-                            BusinessCategoryDataEntity::getFieldKey,
-                            BusinessCategoryDataEntity::getFieldValue,
-                            (a, b) -> b,
-                            LinkedHashMap::new
-                    ));
-
-            rows.add(CategoryRowResponse.builder()
-                    .rowId(entry.getKey())
-                    .sortOrder(entry.getValue().get(0).getSortOrder())
-                    .fields(fields)
-                    .build());
-        }
-
-        return rows;
-    }
+//    public List<CategoryRowResponse> findRows() {
+//
+//        BusinessEntity business = getCurrentBusiness();
+//
+//        List<BusinessCategoryDataEntity> entities =
+//                repository.findByBusinessIdOrderBySortOrderAscIdAsc(business.getId());
+//
+//        // rowId ke basis pe group karo, insertion order preserve karo
+//        LinkedHashMap<String, List<BusinessCategoryDataEntity>> grouped = new LinkedHashMap<>();
+//        for (BusinessCategoryDataEntity e : entities) {
+//            grouped.computeIfAbsent(e.getRowId(), k -> new ArrayList<>()).add(e);
+//        }
+//
+//        List<CategoryRowResponse> rows = new ArrayList<>();
+//        for (Map.Entry<String, List<BusinessCategoryDataEntity>> entry : grouped.entrySet()) {
+//            Map<String, String> fields = entry.getValue().stream()
+//                    .collect(Collectors.toMap(
+//                            BusinessCategoryDataEntity::getFieldKey,
+//                            BusinessCategoryDataEntity::getFieldValue,
+//                            (a, b) -> b,
+//                            LinkedHashMap::new
+//                    ));
+//
+//            rows.add(CategoryRowResponse.builder()
+//                    .rowId(entry.getKey())
+//                    .sortOrder(entry.getValue().get(0).getSortOrder())
+//                    .fields(fields)
+//                    .build());
+//        }
+//
+//        return rows;
+//    }
 
     public CategoryConfigResponse getConfig() {
 
@@ -382,47 +300,47 @@ public class BusinessCategoryDataService {
         repository.deleteByBusinessIdAndRowId(business.getId(), rowId);
     }
 
-    @Transactional
-    public CategoryRowResponse updateRow(String rowId, CategoryRowRequest request) {
-
-        BusinessEntity business = getCurrentBusiness();
-
-        List<BusinessCategoryDataEntity> existing =
-                repository.findByBusinessIdAndRowId(business.getId(), rowId);
-
-        if (existing.isEmpty()) {
-            throw new RowNotFoundException(rowId);
-        }
-
-        Integer sortOrder = existing.get(0).getSortOrder();
-
-        for (String key : request.getFields().keySet()) {
-            validateField(business, key);
-        }
-
-        // Agar image field ki value change hui hai (naya path aaya), purani image delete karo
-        deleteReplacedImageFields(business, existing, request.getFields());
-
-        repository.deleteAll(existing);
-
-        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
-            BusinessCategoryDataEntity entity =
-                    BusinessCategoryDataEntity.builder()
-                            .business(business)
-                            .rowId(rowId)
-                            .fieldKey(field.getKey())
-                            .fieldValue(field.getValue())
-                            .sortOrder(sortOrder)
-                            .build();
-            repository.save(entity);
-        }
-
-        return CategoryRowResponse.builder()
-                .rowId(rowId)
-                .sortOrder(sortOrder)
-                .fields(request.getFields())
-                .build();
-    }
+//    @Transactional
+//    public CategoryRowResponse updateRow(String rowId, CategoryRowRequest request) {
+//
+//        BusinessEntity business = getCurrentBusiness();
+//
+//        List<BusinessCategoryDataEntity> existing =
+//                repository.findByBusinessIdAndRowId(business.getId(), rowId);
+//
+//        if (existing.isEmpty()) {
+//            throw new RowNotFoundException(rowId);
+//        }
+//
+//        Integer sortOrder = existing.get(0).getSortOrder();
+//
+//        for (String key : request.getFields().keySet()) {
+//            validateField(business, key);
+//        }
+//
+//        // Agar image field ki value change hui hai (naya path aaya), purani image delete karo
+//        deleteReplacedImageFields(business, existing, request.getFields());
+//
+//        repository.deleteAll(existing);
+//
+//        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
+//            BusinessCategoryDataEntity entity =
+//                    BusinessCategoryDataEntity.builder()
+//                            .business(business)
+//                            .rowId(rowId)
+//                            .fieldKey(field.getKey())
+//                            .fieldValue(field.getValue())
+//                            .sortOrder(sortOrder)
+//                            .build();
+//            repository.save(entity);
+//        }
+//
+//        return CategoryRowResponse.builder()
+//                .rowId(rowId)
+//                .sortOrder(sortOrder)
+//                .fields(request.getFields())
+//                .build();
+//    }
 
 // ---------- Helper: image cleanup ----------
 
@@ -460,5 +378,299 @@ public class BusinessCategoryDataService {
                 .filter(f -> "image".equals(f.getType()))
                 .map(CategoryField::getKey)
                 .collect(Collectors.toSet());
+    }
+
+
+//    public CategoryRowResponse saveRow(CategoryRowRequest request) {
+//
+//        BusinessEntity business = getCurrentBusiness();
+//
+//        for (String key : request.getFields().keySet()) {
+//            validateField(business, key);
+//        }
+//
+//        String rowId = UUID.randomUUID().toString();
+//        Integer sortOrder = getNextSortOrder(business);
+//        boolean isActive = request.getActive() == null || request.getActive();
+//
+//        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
+//            BusinessCategoryDataEntity entity =
+//                    BusinessCategoryDataEntity.builder()
+//                            .business(business)
+//                            .rowId(rowId)
+//                            .fieldKey(field.getKey())
+//                            .fieldValue(field.getValue())
+//                            .sortOrder(sortOrder)
+//                            .active(isActive)
+//                            .build();
+//            repository.save(entity);
+//        }
+//
+//        return CategoryRowResponse.builder()
+//                .rowId(rowId)
+//                .sortOrder(sortOrder)
+//                .fields(request.getFields())
+//                .active(isActive)
+//                .build();
+//    }
+
+    public CategoryRowResponse saveRow(CategoryRowRequest request) {
+
+        BusinessEntity business = getCurrentBusiness();
+
+        for (String key : request.getFields().keySet()) {
+            validateField(business, key);
+        }
+
+        String rowId = UUID.randomUUID().toString();
+        Integer sortOrder = getNextSortOrder(business);
+        boolean isActive = request.getActive() == null || request.getActive();
+        boolean isFeatured = Boolean.TRUE.equals(request.getFeatured());
+
+        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
+            BusinessCategoryDataEntity entity =
+                    BusinessCategoryDataEntity.builder()
+                            .business(business)
+                            .rowId(rowId)
+                            .fieldKey(field.getKey())
+                            .fieldValue(field.getValue())
+                            .sortOrder(sortOrder)
+                            .active(isActive)
+                            .featured(isFeatured)
+                            .build();
+            repository.save(entity);
+        }
+
+        return CategoryRowResponse.builder()
+                .rowId(rowId)
+                .sortOrder(sortOrder)
+                .fields(request.getFields())
+                .active(isActive)
+                .featured(isFeatured)
+                .build();
+    }
+
+//    public List<CategoryRowResponse> findRows() {
+//
+//        BusinessEntity business = getCurrentBusiness();
+//
+//        List<BusinessCategoryDataEntity> entities =
+//                repository.findByBusinessIdOrderBySortOrderAscIdAsc(business.getId());
+//
+//        LinkedHashMap<String, List<BusinessCategoryDataEntity>> grouped = new LinkedHashMap<>();
+//        for (BusinessCategoryDataEntity e : entities) {
+//            grouped.computeIfAbsent(e.getRowId(), k -> new ArrayList<>()).add(e);
+//        }
+//
+//        List<CategoryRowResponse> rows = new ArrayList<>();
+//        for (Map.Entry<String, List<BusinessCategoryDataEntity>> entry : grouped.entrySet()) {
+//            Map<String, String> fields = entry.getValue().stream()
+//                    .collect(Collectors.toMap(
+//                            BusinessCategoryDataEntity::getFieldKey,
+//                            BusinessCategoryDataEntity::getFieldValue,
+//                            (a, b) -> b,
+//                            LinkedHashMap::new
+//                    ));
+//
+//            rows.add(CategoryRowResponse.builder()
+//                    .rowId(entry.getKey())
+//                    .sortOrder(entry.getValue().get(0).getSortOrder())
+//                    .fields(fields)
+//                    .active(entry.getValue().get(0).getActive())
+//                    .build());
+//        }
+//
+//        return rows;
+//    }
+
+    public List<CategoryRowResponse> findRows() {
+
+        BusinessEntity business = getCurrentBusiness();
+
+        List<BusinessCategoryDataEntity> entities =
+                repository.findByBusinessIdOrderBySortOrderAscIdAsc(business.getId());
+
+        LinkedHashMap<String, List<BusinessCategoryDataEntity>> grouped = new LinkedHashMap<>();
+        for (BusinessCategoryDataEntity e : entities) {
+            grouped.computeIfAbsent(e.getRowId(), k -> new ArrayList<>()).add(e);
+        }
+
+        List<CategoryRowResponse> rows = new ArrayList<>();
+        for (Map.Entry<String, List<BusinessCategoryDataEntity>> entry : grouped.entrySet()) {
+            Map<String, String> fields = entry.getValue().stream()
+                    .collect(Collectors.toMap(
+                            BusinessCategoryDataEntity::getFieldKey,
+                            BusinessCategoryDataEntity::getFieldValue,
+                            (a, b) -> b,
+                            LinkedHashMap::new
+                    ));
+
+            rows.add(CategoryRowResponse.builder()
+                    .rowId(entry.getKey())
+                    .sortOrder(entry.getValue().get(0).getSortOrder())
+                    .fields(fields)
+                    .active(entry.getValue().get(0).getActive())
+                    .featured(entry.getValue().get(0).getFeatured())
+                    .build());
+        }
+
+        return rows;
+    }
+
+//    public CategoryRowResponse updateRow(String rowId, CategoryRowRequest request) {
+//
+//        BusinessEntity business = getCurrentBusiness();
+//
+//        List<BusinessCategoryDataEntity> existing =
+//                repository.findByBusinessIdAndRowId(business.getId(), rowId);
+//
+//        if (existing.isEmpty()) {
+//            throw new RowNotFoundException(rowId);
+//        }
+//
+//        Integer sortOrder = existing.get(0).getSortOrder();
+//        boolean isActive = request.getActive() == null ? existing.get(0).getActive() : request.getActive();
+//
+//        for (String key : request.getFields().keySet()) {
+//            validateField(business, key);
+//        }
+//
+//        repository.deleteAll(existing);
+//
+//        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
+//            BusinessCategoryDataEntity entity =
+//                    BusinessCategoryDataEntity.builder()
+//                            .business(business)
+//                            .rowId(rowId)
+//                            .fieldKey(field.getKey())
+//                            .fieldValue(field.getValue())
+//                            .sortOrder(sortOrder)
+//                            .active(isActive)
+//                            .build();
+//            repository.save(entity);
+//        }
+//
+//        return CategoryRowResponse.builder()
+//                .rowId(rowId)
+//                .sortOrder(sortOrder)
+//                .fields(request.getFields())
+//                .active(isActive)
+//                .build();
+//    }
+
+    @Transactional
+    public CategoryRowResponse updateRow(String rowId, CategoryRowRequest request) {
+
+        BusinessEntity business = getCurrentBusiness();
+
+        List<BusinessCategoryDataEntity> existing =
+                repository.findByBusinessIdAndRowId(business.getId(), rowId);
+
+        if (existing.isEmpty()) {
+            throw new RowNotFoundException(rowId);
+        }
+
+        Integer sortOrder = existing.get(0).getSortOrder();
+        boolean isActive = request.getActive() == null ? existing.get(0).getActive() : request.getActive();
+        boolean isFeatured = request.getFeatured() == null ? existing.get(0).getFeatured() : request.getFeatured();
+
+        for (String key : request.getFields().keySet()) {
+            validateField(business, key);
+        }
+
+        repository.deleteAll(existing);
+
+        for (Map.Entry<String, String> field : request.getFields().entrySet()) {
+            BusinessCategoryDataEntity entity =
+                    BusinessCategoryDataEntity.builder()
+                            .business(business)
+                            .rowId(rowId)
+                            .fieldKey(field.getKey())
+                            .fieldValue(field.getValue())
+                            .sortOrder(sortOrder)
+                            .active(isActive)
+                            .featured(isFeatured)
+                            .build();
+            repository.save(entity);
+        }
+
+        return CategoryRowResponse.builder()
+                .rowId(rowId)
+                .sortOrder(sortOrder)
+                .fields(request.getFields())
+                .active(isActive)
+                .featured(isFeatured)
+                .build();
+    }
+
+    @Transactional
+    public CategoryRowResponse toggleFeatured(String rowId) {
+
+        BusinessEntity business = getCurrentBusiness();
+
+        List<BusinessCategoryDataEntity> existing =
+                repository.findByBusinessIdAndRowId(business.getId(), rowId);
+
+        if (existing.isEmpty()) {
+            throw new RowNotFoundException(rowId);
+        }
+
+        boolean newFeaturedState = !existing.get(0).getFeatured();
+
+        for (BusinessCategoryDataEntity e : existing) {
+            e.setFeatured(newFeaturedState);
+        }
+        repository.saveAll(existing);
+
+        Map<String, String> fields = existing.stream()
+                .collect(Collectors.toMap(
+                        BusinessCategoryDataEntity::getFieldKey,
+                        BusinessCategoryDataEntity::getFieldValue,
+                        (a, b) -> b,
+                        LinkedHashMap::new
+                ));
+
+        return CategoryRowResponse.builder()
+                .rowId(rowId)
+                .sortOrder(existing.get(0).getSortOrder())
+                .fields(fields)
+                .active(existing.get(0).getActive())
+                .featured(newFeaturedState)
+                .build();
+    }
+
+    @Transactional
+    public CategoryRowResponse toggleActive(String rowId) {
+
+        BusinessEntity business = getCurrentBusiness();
+
+        List<BusinessCategoryDataEntity> existing =
+                repository.findByBusinessIdAndRowId(business.getId(), rowId);
+
+        if (existing.isEmpty()) {
+            throw new RowNotFoundException(rowId);
+        }
+
+        boolean newActiveState = !existing.get(0).getActive();
+
+        for (BusinessCategoryDataEntity e : existing) {
+            e.setActive(newActiveState);
+        }
+        repository.saveAll(existing);
+
+        Map<String, String> fields = existing.stream()
+                .collect(Collectors.toMap(
+                        BusinessCategoryDataEntity::getFieldKey,
+                        BusinessCategoryDataEntity::getFieldValue,
+                        (a, b) -> b,
+                        LinkedHashMap::new
+                ));
+
+        return CategoryRowResponse.builder()
+                .rowId(rowId)
+                .sortOrder(existing.get(0).getSortOrder())
+                .fields(fields)
+                .active(newActiveState)
+                .build();
     }
 }

@@ -80,21 +80,31 @@ public class WebsiteService {
     public String render(String slug, Model model) {
 
         BusinessEntity business = businessService.getBusinessBySlug(slug);
-
         CategoryConfig config = categoryConfigService.load(business.getCategory());
 
         List<BusinessCategoryDataEntity> rows =
                 categoryDataRepository.findByBusinessOrderBySortOrder(business);
 
         Map<Integer, Map<String, String>> grouped = new LinkedHashMap<>();
+        Set<Integer> featuredSortOrders = new HashSet<>();
+
         for (BusinessCategoryDataEntity row : rows) {
+
+            if (!Boolean.TRUE.equals(row.getActive())) {
+                continue; // inactive items website pe kabhi nahi
+            }
+
             grouped.computeIfAbsent(row.getSortOrder(), key -> new LinkedHashMap<>());
             grouped.get(row.getSortOrder()).put(row.getFieldKey(), row.getFieldValue());
+
+            if (Boolean.TRUE.equals(row.getFeatured())) {
+                featuredSortOrders.add(row.getSortOrder());
+            }
         }
 
         List<Map<String, String>> rowsList = new ArrayList<>(grouped.values());
 
-        // Generic field-key resolution — text fields do ho sakte hain (name + description)
+        // Generic field-key resolution
         List<String> textKeys = config.getFields().stream()
                 .filter(f -> "text".equals(f.getType()))
                 .map(CategoryField::getKey)
@@ -121,10 +131,11 @@ public class WebsiteService {
                 .map(CategoryField::getOptions)
                 .orElse(List.of());
 
-        // Special/featured items — pehli 2 items (kal agar "featured" flag chahiye ho to alag field add kar sakte ho)
-        List<Map<String, String>> specialItems = rowsList.size() > 2
-                ? rowsList.subList(0, 2)
-                : rowsList;
+        // 👇 ASLI FIX — owner ne jo explicitly "featured" mark kiya hai, sirf wahi
+        List<Map<String, String>> specialItems = grouped.entrySet().stream()
+                .filter(entry -> featuredSortOrders.contains(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .toList();
 
         model.addAttribute("business", business);
         model.addAttribute("config", config);

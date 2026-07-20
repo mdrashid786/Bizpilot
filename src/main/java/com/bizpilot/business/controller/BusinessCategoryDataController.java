@@ -76,4 +76,16 @@ public class BusinessCategoryDataController {
 
         return service.update(id, request);
     }
+
+    // BusinessCategoryDataController.java mein:
+    @PatchMapping("/row/{rowId}/toggle-active")
+    public CategoryRowResponse toggleActive(@PathVariable String rowId) {
+        return service.toggleActive(rowId);
+    }
+
+    // Controller mein:
+    @PatchMapping("/row/{rowId}/toggle-featured")
+    public CategoryRowResponse toggleFeatured(@PathVariable String rowId) {
+        return service.toggleFeatured(rowId);
+    }
 }

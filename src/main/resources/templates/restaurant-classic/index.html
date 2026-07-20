@@ -1,10 +1,1321 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Hello Rashid </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="seo-title">AURA | Fine Dining & Gastronomy</title>
+    <meta id="seo-desc" name="description" content="Experience world-class luxury dining, culinary artistry, and immersive atmosphere at AURA.">
+
+    <!-- Open Graph & Schema.org Structured Data -->
+    <meta property="og:title" content="AURA - Luxury Gastronomy">
+    <meta property="og:description" content="An immersive culinary journey crafted by Michelin-starred chefs.">
+    <meta property="og:type" content="restaurant">
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Restaurant",
+            "name": "AURA Fine Dining",
+            "image": "https://images.unsplash.com/photo-1544025162-d76694265947",
+            "servesCuisine": "Modern Gastronomy",
+            "priceRange": "$$$$",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "742 Evergreen Terrace, Culinary District",
+                "addressLocality": "Metropolis"
+            }
+        }
+    </script>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- External Libraries JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.0/dist/vanilla-tilt.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #08080a;
+            --bg-secondary: #121318;
+            --glass-bg: rgba(18, 19, 24, 0.65);
+            --glass-border: rgba(255, 215, 0, 0.15);
+            --text-main: #f3f3f5;
+            --text-muted: #a0a0ab;
+            --accent-gold: #dfb15b;
+            --accent-gold-glow: rgba(223, 177, 91, 0.4);
+            --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            --cursor-color: #dfb15b;
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8f6f0;
+            --bg-secondary: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(184, 134, 11, 0.2);
+            --text-main: #1a1a1d;
+            --text-muted: #66666e;
+            --accent-gold: #b8860b;
+            --accent-gold-glow: rgba(184, 134, 11, 0.3);
+            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            --cursor-color: #b8860b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            transition: background-color 0.6s ease, color 0.6s ease;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: var(--font-heading);
+            letter-spacing: 1px;
+        }
+
+        /* Custom Cursor */
+        #custom-cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background-color: var(--cursor-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 0 15px var(--accent-gold-glow);
+        }
+
+        #cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--accent-gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+            opacity: 0.6;
+        }
+
+        .cursor-active #custom-cursor {
+            width: 35px;
+            height: 35px;
+            background-color: transparent;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .cursor-active #cursor-follower {
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent-gold-glow);
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #050507;
+            z-index: 100000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+        }
+
+        .loader-logo {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            letter-spacing: 8px;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .loader-bar-bg {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loader-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--accent-gold);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        /* Ambient Canvas & Visual FX */
+        #webgl-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .blur-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.25;
+            pointer-events: none;
+            animation: orbFloat 20s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        .orb-1 { width: 500px; height: 500px; background: var(--accent-gold); top: -10%; left: -10%; }
+        .orb-2 { width: 600px; height: 600px; background: #8b0000; bottom: -20%; right: -10%; animation-delay: -5s; }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 80px) scale(1.2); }
+        }
+
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition-smooth);
+        }
+
+        .glass-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .glass-nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
+        }
+
+        /* Dynamic Custom Buttons */
+        .btn-luxury {
+            position: relative;
+            padding: 14px 32px;
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-main);
+            background: transparent;
+            border: 1px solid var(--accent-gold);
+            border-radius: 50px;
+            overflow: hidden;
+            z-index: 1;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn-luxury::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--accent-gold);
+            transition: var(--transition-smooth);
+            z-index: -1;
+        }
+
+        .btn-luxury:hover {
+            color: #000000 !important;
+            box-shadow: 0 0 25px var(--accent-gold-glow);
+        }
+
+        .btn-luxury:hover::before {
+            width: 100%;
+        }
+
+        .btn-luxury-solid {
+            background: var(--accent-gold);
+            color: #000000 !important;
+            font-weight: 600;
+        }
+
+        .btn-luxury-solid:hover {
+            background: #ffffff;
+            border-color: #ffffff;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 100px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+        }
+
+        /* Section Title Styling */
+        .section-tag {
+            font-family: var(--font-heading);
+            color: var(--accent-gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .title-underline {
+            width: 80px;
+            height: 2px;
+            background: var(--accent-gold);
+            margin-bottom: 40px;
+        }
+
+        /* Dynamic Menu Elements */
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--accent-gold);
+            color: #000000;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px var(--accent-gold-glow);
+        }
+
+        .menu-card-img-wrapper {
+            position: relative;
+            height: 240px;
+            overflow: hidden;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .menu-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover .menu-card-img {
+            transform: scale(1.1);
+        }
+
+        .badge-food-type {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+        }
+
+        .badge-veg {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+        }
+
+        .badge-nonveg {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .price-tag {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        /* Masonry Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-auto-rows: 250px;
+            grid-gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .gallery-item.tall { grid-row: span 2; }
+        .gallery-item.wide { grid-column: span 2; }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.08);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            opacity: 0;
+            display: flex;
+            align-items: flex-end;
+            padding: 25px;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+        /* Floating Widgets & Controls */
+        .floating-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9990;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .float-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .float-btn:hover {
+            background: var(--accent-gold);
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        /* Coming Soon State */
+        #coming-soon-screen {
+            position: fixed;
+            inset: 0;
+            background: #08080a;
+            z-index: 1000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Form Inputs */
+        .form-control-luxury {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-main) !important;
+            padding: 14px 18px;
+            transition: var(--transition-smooth);
+        }
+
+        .form-control-luxury:focus {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px var(--accent-gold-glow);
+            outline: none;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 991px) {
+            .gallery-item.wide, .gallery-item.tall {
+                grid-row: span 1;
+                grid-column: span 1;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1> Hello welcome to restaurant-classic</h1>
+
+<!-- Dynamic Draft Lock Screen (Hidden by default unless Business.Published == false) -->
+<div id="coming-soon-screen" class="d-none">
+    <h1 class="loader-logo mb-3">AURA</h1>
+    <p class="section-tag">Grand Unveiling Approaching</p>
+    <p class="text-muted max-w-500 mb-4">Our digital doors are currently sealed as we refine our culinary art. Subscribe to receive an exclusive invitation to our opening night.</p>
+    <div class="d-flex gap-2">
+        <input type="email" class="form-control form-control-luxury" placeholder="Enter your email">
+        <button class="btn-luxury btn-luxury-solid">Notify Me</button>
+    </div>
+</div>
+
+<!-- Custom Animated Cursor -->
+<div id="custom-cursor"></div>
+<div id="cursor-follower"></div>
+
+<!-- Full-screen Loading Animation -->
+<div id="loader">
+    <div class="loader-logo" id="loader-logo-text">AURA</div>
+    <div class="loader-bar-bg">
+        <div class="loader-bar" id="loader-bar"></div>
+    </div>
+    <p class="section-tag mt-3" style="font-size: 0.65rem;" id="loader-status">Curating Gastronomy Experience...</p>
+</div>
+
+<!-- 3D Canvas Layer -->
+<canvas id="webgl-bg"></canvas>
+
+<!-- Ambient Visual Glow Orbs -->
+<div class="blur-orb orb-1"></div>
+<div class="blur-orb orb-2"></div>
+
+<!-- Navigation Header -->
+<header class="fixed-top px-3 px-md-5 py-3 glass-nav">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="#" class="d-flex align-items-center text-decoration-none gap-3">
+            <img id="nav-logo" src="" alt="Aura Logo" style="height: 40px; display:none;">
+            <span class="font-heading h3 mb-0 text-white" id="nav-title">AURA</span>
+        </a>
+
+        <!-- Desktop Navigation Menu -->
+        <nav class="d-none d-lg-flex align-items-center gap-4">
+            <a href="#hero" class="text-decoration-none text-white hover-gold font-heading fs-7">Home</a>
+            <a href="#about" class="text-decoration-none text-white hover-gold font-heading fs-7">About</a>
+            <a href="#menu" class="text-decoration-none text-white hover-gold font-heading fs-7">Menu</a>
+            <a href="#chef" class="text-decoration-none text-white hover-gold font-heading fs-7">Chef</a>
+            <a href="#gallery" class="text-decoration-none text-white hover-gold font-heading fs-7">Gallery</a>
+            <a href="#reviews" class="text-decoration-none text-white hover-gold font-heading fs-7">Reviews</a>
+            <a href="#contact" class="text-decoration-none text-white hover-gold font-heading fs-7">Contact</a>
+        </nav>
+
+        <div class="d-flex align-items-center gap-3">
+            <button class="float-btn border-0" id="theme-toggle" title="Toggle Theme">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </button>
+            <a href="#book" class="btn-luxury d-none d-sm-inline-flex">
+                <span>Reserve Table</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Floating Action Buttons -->
+<div class="floating-controls">
+    <a href="#book" class="float-btn" title="Book Table"><i class="fa-solid fa-utensils"></i></a>
+    <a id="whatsapp-float" href="#" target="_blank" class="float-btn" style="color: #25D366;" title="WhatsApp"><i class="fa-brands fa-whatsapp fs-4"></i></a>
+    <button class="float-btn" id="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Top"><i class="fa-solid fa-arrow-up"></i></button>
+</div>
+
+<!-- Main Content Flow -->
+<main>
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section px-3 px-md-5">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-7" id="hero-text-col">
+                    <span class="section-tag" id="hero-tagline">Exquisite Culinary Artistry</span>
+                    <h1 class="hero-title" id="hero-title">Elevate Your Senses</h1>
+                    <p class="text-muted fs-5 mb-4 max-w-600" id="hero-desc">
+                        Step into a sanctuary where contemporary gastronomy meets timeless elegance. Immerse in crafted tasting menus prepared with uncompromising precision.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#menu" class="btn-luxury btn-luxury-solid">Explore Menu</a>
+                        <a href="#book" class="btn-luxury">Reserve Table</a>
+                    </div>
+                </div>
+                <div class="col-lg-5 position-relative mt-5 mt-lg-0 text-center" id="hero-3d-col">
+                    <div class="glass-card p-4 d-inline-block position-relative" style="width: 100%; max-width: 450px;" data-tilt>
+                        <img id="hero-cover-img" src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1000&q=80" alt="Signature Dish" class="img-fluid rounded-4 shadow-lg">
+                        <div class="glass-card p-3 position-absolute bottom-0 start-0 translate-middle-y ms-3 text-start" style="backdrop-filter: blur(25px);">
+                            <span class="d-block font-heading text-warning mb-1"><i class="fa-solid fa-star"></i> Michelin Recommended</span>
+                            <span class="text-white fw-bold">Seasoned Wagyu Tartare</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5 px-3 px-md-5">
+        <div class="container-fluid py-5">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1000&q=80" alt="Restaurant Interior" class="img-fluid rounded-4 shadow-lg" data-tilt>
+                        <div class="glass-card p-4 position-absolute bottom-0 end-0 m-4 d-none d-sm-block">
+                            <h3 class="font-heading text-gold mb-0" id="counter-years">15+</h3>
+                            <p class="text-muted mb-0">Years of Culinary Excellence</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <span class="section-tag">Our Legacy</span>
+                    <h2 class="section-title">Where Passion Meets Fine Art</h2>
+                    <div class="title-underline"></div>
+                    <p class="text-muted mb-4" id="about-description">
+                        Founded on the principle that dining should be an awakening of all five senses, AURA seamlessly blends traditional cooking traditions with vanguard techniques. Every plate is a tribute to seasonal purity and sustainable sourcing.
+                    </p>
+                    <div class="row g-4 mb-4">
+                        <div class="col-6">
+                            <div class="glass-card p-3 text-center">
+                                <h4 class="font-heading text-gold mb-1" id="counter-orders">85K+</h4>
+                                <p class="text-muted small mb-0">Guests Served</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="glass-card p-3 text-center">
+                                <h4 class="font-heading text-gold mb-1" id="counter-awards">24</h4>
+                                <p class="text-muted small mb-0">Global Awards</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-clock text-gold fs-3"></i>
+                            <div>
+                                <h6 class="mb-1 font-heading">Operating Hours</h6>
+                                <p class="text-muted small mb-0" id="about-hours">Mon - Sun: 05:00 PM - 11:30 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Menu Section -->
+    <section id="menu" class="py-5 px-3 px-md-5">
+        <div class="container-fluid py-5">
+            <div class="text-center max-w-700 mx-auto mb-5">
+                <span class="section-tag">Gastronomic Selection</span>
+                <h2 class="section-title">The Culinary Menu</h2>
+                <div class="title-underline mx-auto"></div>
+            </div>
+
+            <!-- Filters & Search Controls -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-5">
+                <div class="d-flex flex-wrap gap-2" id="filter-btn-group">
+                    <button class="filter-btn active" data-filter="all">All Dishes</button>
+                    <button class="filter-btn" data-filter="Veg">Vegetarian</button>
+                    <button class="filter-btn" data-filter="Non Veg">Non-Vegetarian</button>
+                </div>
+                <div class="position-relative" style="min-width: 280px;">
+                    <input type="text" id="menu-search" class="form-control form-control-luxury ps-4" placeholder="Search dish name...">
+                    <i class="fa-solid fa-magnifying-glass position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
+                </div>
+            </div>
+
+            <!-- Dynamic Grid for Menu Cards -->
+            <div class="row g-4" id="menu-cards-container">
+                <!-- Cards dynamically injected via ES6 script from Entity data -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Chef Section -->
+    <section id="chef" class="py-5 px-3 px-md-5">
+        <div class="container-fluid py-5">
+            <div class="glass-card p-4 p-md-5">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-5 text-center">
+                        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80" alt="Executive Chef" class="img-fluid rounded-4 shadow-lg" data-tilt>
+                    </div>
+                    <div class="col-lg-7">
+                        <span class="section-tag">Master Of Culinary Arts</span>
+                        <h2 class="section-title">Chef Antoine Laurent</h2>
+                        <div class="title-underline"></div>
+                        <p class="text-muted fs-6 mb-4">
+                            "Food is memory, emotion, and architectural precision. My goal is to create plates that evoke forgotten nostalgia while surprising the palate with radical, modern flavor profiles."
+                        </p>
+                        <div class="d-flex flex-wrap gap-4 mb-4">
+                            <div>
+                                <h6 class="text-gold font-heading mb-1">Signature Dish</h6>
+                                <p class="text-muted small mb-0">Black Truffle Glazed Chilean Sea Bass</p>
+                            </div>
+                            <div>
+                                <h6 class="text-gold font-heading mb-1">Experience</h6>
+                                <p class="text-muted small mb-0">22 Years in 3-Star Michelin Kitchens</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-5 px-3 px-md-5">
+        <div class="container-fluid py-5">
+            <div class="text-center mb-5">
+                <span class="section-tag">Atmosphere & Art</span>
+                <h2 class="section-title">Visual Anthology</h2>
+                <div class="title-underline mx-auto"></div>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item tall" data-tilt>
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80" class="gallery-img" alt="Gallery 1">
+                    <div class="gallery-overlay"><span class="font-heading text-white fs-5">Main Dining Hall</span></div>
+                </div>
+                <div class="gallery-item" data-tilt>
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" class="gallery-img" alt="Gallery 2">
+                    <div class="gallery-overlay"><span class="font-heading text-white fs-5">The Mixology Bar</span></div>
+                </div>
+                <div class="gallery-item" data-tilt>
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" class="gallery-img" alt="Gallery 3">
+                    <div class="gallery-overlay"><span class="font-heading text-white fs-5">Plating Artistry</span></div>
+                </div>
+                <div class="gallery-item wide" data-tilt>
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80" class="gallery-img" alt="Gallery 4">
+                    <div class="gallery-overlay"><span class="font-heading text-white fs-5">Private Tasting Cellar</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Reviews -->
+    <section id="reviews" class="py-5 px-3 px-md-5">
+        <div class="container-fluid py-5">
+            <div class="text-center mb-5">
+                <span class="section-tag">Critique & Praises</span>
+                <h2 class="section-title">Patron Testimonials</h2>
+                <div class="title-underline mx-auto"></div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <p class="text-muted italic mb-4">"An ethereal gastronomic journey. The Wagyu tartare paired with the signature smoked cocktail is easily top 3 dining experiences of my life."</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="rounded-circle" width="50" height="50" alt="Reviewer">
+                            <div>
+                                <h6 class="font-heading mb-0">Elena Rostova</h6>
+                                <span class="text-gold small"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <p class="text-muted italic mb-4">"The lighting, liquid motion background aesthetics, and ambient soundscapes match the incredible caliber of the food. Flawless execution."</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="rounded-circle" width="50" height="50" alt="Reviewer">
+                            <div>
+                                <h6 class="font-heading mb-0">Marcus Vance</h6>
+                                <span class="text-gold small"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <p class="text-muted italic mb-4">"A masterclass in modern hospitality. From the seamless online table booking to the final dessert course, pure luxury."</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" class="rounded-circle" width="50" height="50" alt="Reviewer">
+                            <div>
+                                <h6 class="font-heading mb-0">Sophia Chen</h6>
+                                <span class="text-gold small"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Booking Section -->
+    <section id="book" class="py-5 px-3 px-md-5">
+        <div class="container-fluid py-5">
+            <div class="glass-card p-4 p-md-5 max-w-900 mx-auto">
+                <div class="text-center mb-5">
+                    <span class="section-tag">Seamless Experience</span>
+                    <h2 class="section-title">Reserve Your Table</h2>
+                    <div class="title-underline mx-auto"></div>
+                </div>
+
+                <form id="booking-form" onsubmit="handleBooking(event)">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label font-heading small text-muted">Full Name</label>
+                            <input type="text" class="form-control form-control-luxury" required placeholder="John Doe">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-heading small text-muted">Phone Number</label>
+                            <input type="tel" class="form-control form-control-luxury" required placeholder="+1 (555) 000-0000">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label font-heading small text-muted">Guests</label>
+                            <select class="form-control form-control-luxury" required>
+                                <option value="1">1 Person</option>
+                                <option value="2" selected>2 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="6">6+ Private Dining</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label font-heading small text-muted">Date</label>
+                            <input type="date" class="form-control form-control-luxury" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label font-heading small text-muted">Time</label>
+                            <input type="time" class="form-control form-control-luxury" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label font-heading small text-muted">Special Requests / Dietary Restrictions</label>
+                            <textarea class="form-control form-control-luxury" rows="3" placeholder="Allergies, anniversaries, seating preferences..."></textarea>
+                        </div>
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn-luxury btn-luxury-solid w-100 py-3">Confirm Reservation</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5 px-3 px-md-5">
+        <div class="container-fluid py-5">
+            <div class="row g-5">
+                <div class="col-lg-5">
+                    <span class="section-tag">Direct Inquiry</span>
+                    <h2 class="section-title">Get In Touch</h2>
+                    <div class="title-underline"></div>
+
+                    <div class="d-flex flex-column gap-4 mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="float-btn"><i class="fa-solid fa-location-dot text-gold"></i></div>
+                            <div>
+                                <h6 class="mb-0 font-heading">Address</h6>
+                                <p class="text-muted small mb-0" id="info-address">742 Evergreen Terrace, Culinary District</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="float-btn"><i class="fa-solid fa-phone text-gold"></i></div>
+                            <div>
+                                <h6 class="mb-0 font-heading">Direct Line</h6>
+                                <a href="#" class="text-muted small text-decoration-none" id="info-phone">+1 (800) 888-AURA</a>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="float-btn"><i class="fa-solid fa-envelope text-gold"></i></div>
+                            <div>
+                                <h6 class="mb-0 font-heading">Electronic Mail</h6>
+                                <a href="#" class="text-muted small text-decoration-none" id="info-email">concierge@auradining.com</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <a href="#" id="info-instagram" target="_blank" class="float-btn"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" id="info-facebook" target="_blank" class="float-btn"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="glass-card h-100 overflow-hidden" style="min-height: 350px;">
+                        <iframe id="info-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.83543450937!2d144.9537253153166!3d-37.81720997975171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d4c2b349649%3A0xb6899234e561db11!2sEnvato!5e0!3m2!1sen!2s!4v1620000000000!5m2!1sen!2s" width="100%" height="100%" style="border:0; filter: grayscale(90%) invert(90%) contrast(100%);" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="py-5 px-3 px-md-5">
+    <div class="container-fluid">
+        <div class="row g-4 align-items-center justify-content-between">
+            <div class="col-md-4">
+                <span class="font-heading h3 text-gold d-block mb-2" id="footer-logo">AURA</span>
+                <p class="text-muted small mb-0">Crafting timeless gastronomy experiences for discerning palates.</p>
+            </div>
+            <div class="col-md-4 text-md-center">
+                <p class="text-muted small mb-0">&copy; 2026 AURA Culinary Group. All Rights Reserved.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="#" class="text-muted small text-decoration-none me-3">Privacy Policy</a>
+                <a href="#" class="text-muted small text-decoration-none">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- JS Architecture Scripting -->
+<script>
+    /* ===========================================================
+       1. DYNAMIC BUSINESS & MENU DATA (BusinessCategoryDataEntity)
+       =========================================================== */
+    const BusinessEntity = {
+        BusinessName: "AURA Gastronomy",
+        Tagline: "Exquisite Culinary Artistry",
+        Description: "A sanctuary where contemporary gastronomy meets timeless elegance. Immerse in crafted tasting menus prepared with uncompromising precision.",
+        Phone: "+1 (800) 888-2872",
+        Email: "concierge@auradining.com",
+        WhatsApp: "18008882872",
+        Address: "742 Evergreen Terrace, Culinary District",
+        GoogleMap: "https://maps.google.com",
+        Logo: "", // Fallback will trigger if empty
+        CoverImage: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1000&q=80",
+        Published: true, // Business rule flag
+        BusinessHours: "Mon - Sun: 05:00 PM - 11:30 PM",
+        InstagramURL: "https://instagram.com",
+        FacebookURL: "https://facebook.com"
+    };
+
+    const BusinessCategoryDataEntity = [
+        {
+            rowId: "cat_1",
+            itemName: "Wagyu Tartare & Caviar",
+            itemPrice: "$48",
+            itemImage: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+            itemDescription: "A5 Miyazaki Wagyu, Imperial Oscietra Caviar, smoked egg yolk emulsion, crispy brioche.",
+            foodType: "Non Veg"
+        },
+        {
+            rowId: "cat_2",
+            itemName: "Wild Forest Mushroom Risotto",
+            itemPrice: "$36",
+            itemImage: "https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?auto=format&fit=crop&w=600&q=80",
+            itemDescription: "Acquerello carnaroli rice, aged Parmigiano Reggiano, shaved black winter truffle, herb oil.",
+            foodType: "Veg"
+        },
+        {
+            rowId: "cat_3",
+            itemName: "Chilean Sea Bass Glaze",
+            itemPrice: "$54",
+            itemImage: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+            itemDescription: "Pan-seared sea bass, dashi broth, braised baby bok choy, lemongrass-infused foam.",
+            foodType: "Non Veg"
+        },
+        {
+            rowId: "cat_4",
+            itemName: "Heritage Beetroot Carpaccio",
+            itemPrice: "$28",
+            itemImage: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+            itemDescription: "Roasted golden beetroots, whipped goat cheese, candied walnuts, citrus dressing.",
+            foodType: "Veg"
+        },
+        {
+            rowId: "cat_5",
+            itemName: "Dry-Aged Duck Breast",
+            itemPrice: "$50",
+            itemImage: "https://images.unsplash.com/photo-1514944288352-fffac99f0bdf?auto=format&fit=crop&w=600&q=80",
+            itemDescription: "14-day dry aged duck, spiced plum reduction, parsnip puree, glazed baby turnips.",
+            foodType: "Non Veg"
+        },
+        {
+            rowId: "cat_6",
+            itemName: "Deconstructed Chocolate Sphere",
+            itemPrice: "$24",
+            itemImage: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80",
+            itemDescription: "Valrhona 70% dark chocolate shell, hazelnut praline core, warm gold leaf espresso pour.",
+            foodType: "Veg"
+        }
+    ];
+
+    /* ===========================================================
+       2. DOM HYDRATION & BUSINESS RULES ENGINE
+       =========================================================== */
+    function initBusinessRules() {
+        // Rule: Check Published Status
+        if (!BusinessEntity.Published) {
+            document.getElementById('coming-soon-screen').classList.remove('d-none');
+            return;
+        }
+
+        // Populate Text & Information
+        document.getElementById('nav-title').textContent = BusinessEntity.BusinessName;
+        document.getElementById('hero-title').textContent = BusinessEntity.BusinessName;
+        document.getElementById('hero-tagline').textContent = BusinessEntity.Tagline;
+        document.getElementById('hero-desc').textContent = BusinessEntity.Description;
+        document.getElementById('about-description').textContent = BusinessEntity.Description;
+        document.getElementById('about-hours').textContent = BusinessEntity.BusinessHours;
+        document.getElementById('info-address').textContent = BusinessEntity.Address;
+        document.getElementById('info-phone').textContent = BusinessEntity.Phone;
+        document.getElementById('info-phone').href = `tel:${BusinessEntity.Phone}`;
+        document.getElementById('info-email').textContent = BusinessEntity.Email;
+        document.getElementById('info-email').href = `mailto:${BusinessEntity.Email}`;
+        document.getElementById('whatsapp-float').href = `https://wa.me/${BusinessEntity.WhatsApp}`;
+        document.getElementById('info-instagram').href = BusinessEntity.InstagramURL;
+        document.getElementById('info-facebook').href = BusinessEntity.FacebookURL;
+
+        // Handle Missing Images Fallbacks
+        if (BusinessEntity.Logo) {
+            const navLogo = document.getElementById('nav-logo');
+            navLogo.src = BusinessEntity.Logo;
+            navLogo.style.display = 'block';
+        }
+
+        if (BusinessEntity.CoverImage) {
+            document.getElementById('hero-cover-img').src = BusinessEntity.CoverImage;
+        }
+
+        // Render Dynamic Menu Items
+        renderMenuCards(BusinessCategoryDataEntity);
+    }
+
+    function renderMenuCards(items) {
+        const container = document.getElementById('menu-cards-container');
+        container.innerHTML = '';
+
+        items.forEach(item => {
+            const badgeClass = item.foodType === 'Veg' ? 'badge-veg' : 'badge-nonveg';
+            const cardHTML = `
+                <div class="col-md-6 col-lg-4 menu-item-col" data-food-type="${item.foodType}" data-name="${item.itemName.toLowerCase()}">
+                    <div class="glass-card h-100 d-flex flex-direction-column justify-content-between" data-tilt>
+                        <div>
+                            <div class="menu-card-img-wrapper">
+                                <img src="${item.itemImage}" alt="${item.itemName}" class="menu-card-img" loading="lazy">
+                                <span class="badge-food-type ${badgeClass}">${item.foodType}</span>
+                            </div>
+                            <div class="p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="font-heading mb-0 text-white">${item.itemName}</h5>
+                                    <span class="price-tag">${item.itemPrice}</span>
+                                </div>
+                                <p class="text-muted small mb-0">${item.itemDescription}</p>
+                            </div>
+                        </div>
+                        <div class="p-4 pt-0">
+                            <button class="btn-luxury w-100 py-2" onclick="triggerOrderNotify('${item.itemName}')">Order Dish</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHTML);
+        });
+
+        // Re-initialize Tilt on dynamic elements
+        if (typeof VanillaTilt !== 'undefined') {
+            VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+                max: 10,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.2
+            });
+        }
+    }
+
+    /* ===========================================================
+       3. THREE.JS IMMERSIVE 3D BACKGROUND SCENE
+       =========================================================== */
+    function init3DScene() {
+        const canvas = document.getElementById('webgl-bg');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Floating Ambient Particles Mesh
+        const particlesCount = 200;
+        const positions = new Float32Array(particlesCount * 3);
+        const scales = new Float32Array(particlesCount);
+
+        for (let i = 0; i < particlesCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 15;
+            positions[i + 1] = (Math.random() - 0.5) * 15;
+            positions[i + 2] = (Math.random() - 0.5) * 15;
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const material = new THREE.PointsMaterial({
+            color: 0xdfb15b,
+            size: 0.05,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particlesMesh = new THREE.Points(geometry, material);
+        scene.add(particlesMesh);
+
+        // Floating Geometric Geometry representing luxury lighting elements
+        const torusGeo = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+        const torusMat = new THREE.MeshBasicMaterial({ color: 0xdfb15b, wireframe: true, transparent: true, opacity: 0.08 });
+        const torus = new THREE.Mesh(torusGeo, torusMat);
+        torus.position.set(3, 0, -2);
+        scene.add(torus);
+
+        camera.position.z = 5;
+
+        // Mouse Interaction Dynamic Tracking
+        let mouseX = 0;
+        let mouseY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
+        });
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            particlesMesh.rotation.y += 0.001;
+            particlesMesh.rotation.x += 0.0005;
+
+            torus.rotation.x += 0.003;
+            torus.rotation.y += 0.005;
+
+            // Smooth Camera Motion tracking mouse
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handling
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    }
+
+    /* ===========================================================
+       4. CUSTOM CURSOR & MICRO-INTERACTIONS
+       =========================================================== */
+    function initCursor() {
+        const cursor = document.getElementById('custom-cursor');
+        const follower = document.getElementById('cursor-follower');
+
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.3 });
+        });
+
+        document.querySelectorAll('a, button, input, select, textarea, .glass-card').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
+        });
+    }
+
+    /* ===========================================================
+       5. SMOOTH SCROLL (LENIS) & GSAP ANIMATIONS
+       =========================================================== */
+    function initAnimations() {
+        // Lenis Smooth Scroll Setup
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Synchronize GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Entrance Timeline
+        const heroTL = gsap.timeline();
+        heroTL.to('#loader-bar', { width: '100%', duration: 1.2, ease: 'power2.inOut' })
+              .to('#loader', { y: '-100%', duration: 0.8, ease: 'power4.inOut', delay: 0.2 })
+              .from('#hero-tagline', { opacity: 0, y: 30, duration: 0.6 })
+              .from('#hero-title', { opacity: 0, y: 40, duration: 0.8 }, '-=0.4')
+              .from('#hero-desc', { opacity: 0, y: 30, duration: 0.6 }, '-=0.4')
+              .from('#hero-3d-col', { opacity: 0, scale: 0.9, duration: 0.8 }, '-=0.6');
+
+        // ScrollTrigger Animations for Sections
+        gsap.utils.toArray('section').forEach(section => {
+            gsap.from(section.querySelectorAll('.section-tag, .section-title, .title-underline'), {
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 80%'
+                },
+                opacity: 0,
+                y: 40,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: 'power3.out'
+            });
+        });
+    }
+
+    /* ===========================================================
+       6. THEME TOGGLE (DARK / LIGHT MODE + LOCALSTORAGE)
+       =========================================================== */
+    function initThemeToggle() {
+        const toggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const savedTheme = localStorage.getItem('aura_theme') || 'dark';
+
+        document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        toggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('aura_theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+    }
+
+    /* ===========================================================
+       7. MENU FILTERING & SEARCH ENGINE
+       =========================================================== */
+    function initMenuFilters() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('menu-search');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterMenu();
+            });
+        });
+
+        searchInput.addEventListener('input', filterMenu);
+
+        function filterMenu() {
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            const searchQuery = searchInput.value.toLowerCase().trim();
+            const cols = document.querySelectorAll('.menu-item-col');
+
+            cols.forEach(col => {
+                const foodType = col.dataset.foodType;
+                const name = col.dataset.name;
+
+                const matchesFilter = (activeFilter === 'all' || foodType === activeFilter);
+                const matchesSearch = name.includes(searchQuery);
+
+                if (matchesFilter && matchesSearch) {
+                    col.style.display = 'block';
+                    gsap.to(col, { opacity: 1, scale: 1, duration: 0.4 });
+                } else {
+                    gsap.to(col, { opacity: 0, scale: 0.9, duration: 0.3, onComplete: () => { col.style.display = 'none'; } });
+                }
+            });
+        }
+    }
+
+    /* ===========================================================
+       8. FORM HANDLERS & NOTIFICATIONS
+       =========================================================== */
+    function handleBooking(e) {
+        e.preventDefault();
+        alert("Thank you! Your table reservation request has been submitted to AURA. Our concierge will contact you shortly.");
+        e.target.reset();
+    }
+
+    function triggerOrderNotify(itemName) {
+        alert(`Selected: "${itemName}". Opening direct order line...`);
+        window.open(`https://wa.me/${BusinessEntity.WhatsApp}?text=Hello%20AURA,%20I%20would%20like%20to%20order:%20${encodeURIComponent(itemName)}`, '_blank');
+    }
+
+    /* ===========================================================
+       INITIALIZATION ENTRY POINT
+       =========================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+        initBusinessRules();
+        init3DScene();
+        initCursor();
+        initAnimations();
+        initThemeToggle();
+        initMenuFilters();
+    });
+</script>
 </body>
 </html>
