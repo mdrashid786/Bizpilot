@@ -1,0 +1,5 @@
+  {
+    "key": "restaurant-classic",
+    "name": "Classic Charm",
+    "description": "Traditional layout with a timeless, cozy feel."
+  },

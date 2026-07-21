@@ -2,611 +2,449 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velvet Ember — Fire &amp; Finesse Grill House</title>
-    <meta name="description" content="Velvet Ember is a live-fire grill house in Haryana serving wood-charred plates, slow-cooked signatures and a copper-lit bar. Reserve your table.">
-    <meta property="og:title" content="Velvet Ember — Fire &amp; Finesse Grill House">
-    <meta property="og:description" content="A live-fire dining room built around smoke, char and slow-cooked craft.">
-    <meta property="og:type" content="restaurant.restaurant">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="https://velvetember.example/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Velvet Ember — Fire, Flavor &amp; Finesse</title>
+    <meta name="description" content="Velvet Ember is a modern fine-dining restaurant blending smoky, fire-kissed flavors with elegant, contemporary presentation.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,ital@9..144,300..900,0..1&family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Restaurant",
-            "name": "Velvet Ember",
-            "servesCuisine": ["Live-fire Grill", "Modern European", "Bar"],
-            "priceRange": "₹₹₹₹",
-            "telephone": "+91-98765-43210"
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 
     <style>
-        /* ============================= TOKENS ============================= */
+
+        /* Container Box */
+.hero-cover-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #0A0908;
+}
+
+/* Background Image Zoom Animation */
+.hero-bg-zoom {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-bg-zoom img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .6;
+  filter: saturate(1.05) contrast(1.05);
+  animation: bgPulseZoom 18s ease-in-out infinite alternate;
+}
+
+/* Vignette / Dark Overlay */
+.hero-bg-zoom::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,9,8,.2) 0%, rgba(10,9,8,.65) 60%, #0A0908 100%);
+}
+
+@keyframes bgPulseZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* Canvas */
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Floating Elements (Circular Floating Badges) */
+.float-food {
+  position: absolute;
+  z-index: 2;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 30px 60px -15px rgba(0,0,0,.7);
+  border: 1px solid rgba(237,230,214,0.22);
+  pointer-events: none;
+}
+
+.float-food img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ff1 { width: 140px; height: 140px; top: 20%; right: 8%; }
+.ff2 { width: 110px; height: 110px; top: 52%; right: 22%; }
+.ff3 { width: 90px; height: 90px; top: 15%; right: 30%; }
+
+@media (max-width: 768px) {
+  .float-food { display: none; } /* Hide floating elements on mobile */
+}
         :root{
-          --gold:#C9A227;
-          --copper:#B5651D;
-          --ember:#E85D2C;
-          --ease:cubic-bezier(.16,.84,.44,1);
-          --container:1320px;
+          --gold:#C9A227; --copper:#B5651D; --ember:#E85D2C;
+          --ease:cubic-bezier(.16,.84,.44,1); --container:1320px;
         }
         html[data-theme="dark"]{
-          --bg:#0A0908;
-          --bg-alt:#131110;
-          --bg-raise:#1B1815;
-          --surface:rgba(237,230,214,0.045);
-          --surface-strong:rgba(237,230,214,0.09);
-          --ink:#EDE6D6;
-          --ink-dim:#A79C89;
-          --line:rgba(237,230,214,0.12);
-          --line-strong:rgba(237,230,214,0.22);
-          --shadow:0 30px 80px -20px rgba(0,0,0,.7);
-          --glass-blur:blur(18px);
-          --scrim:rgba(10,9,8,.55);
-        }
-        html[data-theme="light"]{
-          --bg:#F2ECDE;
-          --bg-alt:#EAE1CD;
-          --bg-raise:#FFFDF8;
-          --surface:rgba(27,23,18,0.045);
-          --surface-strong:rgba(27,23,18,0.08);
-          --ink:#1B1712;
-          --ink-dim:#6B6153;
-          --line:rgba(27,23,18,0.12);
-          --line-strong:rgba(27,23,18,0.22);
-          --shadow:0 30px 80px -25px rgba(27,23,18,.35);
-          --glass-blur:blur(18px);
-          --scrim:rgba(242,236,222,.6);
+          --bg:#0A0908; --bg-alt:#131110; --bg-raise:#1B1815;
+          --surface:rgba(237,230,214,0.045); --surface-strong:rgba(237,230,214,0.09);
+          --ink:#EDE6D6; --ink-dim:#A79C89; --line:rgba(237,230,214,0.12); --line-strong:rgba(237,230,214,0.22);
+          --shadow:0 30px 80px -20px rgba(0,0,0,.7); --glass-blur:blur(18px); --scrim:rgba(10,9,8,.85);
         }
         *{box-sizing:border-box; margin:0; padding:0;}
-        html{scroll-behavior:auto;}
-        body{
-          background:var(--bg);
-          color:var(--ink);
-          font-family:'Manrope',sans-serif;
-          overflow-x:hidden;
-          cursor:none;
-          transition:background .6s var(--ease), color .6s var(--ease);
-        }
-        @media (hover:none), (pointer:coarse){ body{cursor:auto;} .cursor,.cursor-dot{display:none !important;} }
-        img{max-width:100%; display:block;}
+        html{scroll-behavior:smooth;}
+        html, body { overflow-x: hidden; max-width: 100vw; width: 100%; }
+
+        body{ background:var(--bg); color:var(--ink); font-family:'Manrope',sans-serif; overflow-x:hidden; position: relative; }
+        img{max-width:100%; height:auto; display:block;}
         a{color:inherit; text-decoration:none;}
         button{font-family:inherit; cursor:pointer;}
-        .container{max-width:var(--container); margin:0 auto; padding:0 32px;}
-        h1,h2,h3,h4{font-family:'Fraunces',serif; font-weight:600; line-height:1.05; letter-spacing:-.01em;}
-        .eyebrow{
-          font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.28em; text-transform:uppercase;
-          color:var(--copper); display:flex; align-items:center; gap:12px; margin-bottom:18px;
-        }
+        .container{width:100%; max-width:var(--container); margin:0 auto; padding:0 24px;}
+        h1,h2,h3,h4{font-family:'Fraunces',serif; font-weight:600; line-height:1.1; letter-spacing:-.01em;}
+        .eyebrow{ font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:var(--copper); display:flex; align-items:center; gap:12px; margin-bottom:18px; }
         .eyebrow::before{content:''; width:28px; height:1px; background:var(--copper);}
-        ::selection{ background:var(--ember); color:#0A0908; }
+        ::-webkit-scrollbar{width:7px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--copper); border-radius:10px;}
 
-        /* scrollbar */
-        ::-webkit-scrollbar{width:9px;}
-        ::-webkit-scrollbar-track{background:var(--bg);}
-        ::-webkit-scrollbar-thumb{background:var(--copper); border-radius:10px;}
-
-        /* ============================= LOADER ============================= */
-        #loader{
-          position:fixed; inset:0; z-index:9999; background:#0A0908; color:#EDE6D6;
-          display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px;
-          transition:opacity .9s var(--ease), visibility .9s var(--ease);
-        }
-        #loader.hide{opacity:0; visibility:hidden; pointer-events:none;}
-        .loader-mark{ font-family:'Fraunces',serif; font-size:15vw; max-font-size:120px; font-weight:300; letter-spacing:.02em; position:relative;}
-        .loader-mark svg{ width:min(46vw,340px); height:auto; }
-        .loader-mark path{ stroke:#C9A227; stroke-width:1.4; fill:none; stroke-dasharray:900; stroke-dashoffset:900; animation:draw 2.1s var(--ease) forwards; }
-        @keyframes draw{ to{stroke-dashoffset:0;} }
-        .loader-bar{width:220px; height:1px; background:rgba(237,230,214,.15); position:relative; overflow:hidden;}
-        .loader-bar span{position:absolute; left:0; top:0; height:100%; width:0%; background:linear-gradient(90deg,var(--copper),var(--gold)); animation:load 2.6s var(--ease) forwards;}
-        @keyframes load{ to{width:100%;} }
-        .loader-txt{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.35em; color:#A79C89; text-transform:uppercase;}
-
-        /* ============================= CURSOR ============================= */
-        .cursor,.cursor-dot{ position:fixed; top:0; left:0; pointer-events:none; z-index:9998; border-radius:50%; transform:translate(-50%,-50%); }
-        .cursor{ width:38px; height:38px; border:1px solid var(--copper); transition:width .25s var(--ease),height .25s var(--ease),border-color .25s var(--ease),background .25s var(--ease); }
-        .cursor.active{ width:64px; height:64px; background:rgba(201,162,39,.12); border-color:var(--gold); }
-        .cursor-dot{ width:6px; height:6px; background:var(--ember); }
-
-        /* ============================= EMBER CANVAS ============================= */
         #emberCanvas{ position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.55; }
-        #heroCanvas{ position:absolute; inset:0; width:100%; height:100%; z-index:1; }
 
-        /* ============================= HEADER ============================= */
-        header{
-          position:fixed; top:0; left:0; right:0; z-index:500;
-          padding:22px 0; transition:padding .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease);
-          border-bottom:1px solid transparent;
-        }
-        header.scrolled{
-          padding:12px 0; background:var(--scrim); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
-          border-bottom:1px solid var(--line);
-        }
-        .nav-row{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
-        .brand{ display:flex; align-items:center; gap:12px; font-family:'Fraunces',serif; font-size:21px; letter-spacing:.02em; }
-        .brand svg{ width:30px; height:30px; }
+        header{ position:fixed; top:0; left:0; right:0; z-index:500; padding:18px 0; transition:padding .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease); border-bottom:1px solid transparent; }
+        header.scrolled{ padding:12px 0; background:rgba(10,9,8,0.88); backdrop-filter:var(--glass-blur); border-bottom:1px solid var(--line); }
+        .nav-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:nowrap; }
+        .brand{ display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-size:20px; letter-spacing:.02em; min-width: 0; }
+        .brand img{ width:32px; height:32px; border-radius:50%; object-fit:cover; flex-shrink: 0; }
+        .brand svg{ width:28px; height:28px; flex-shrink: 0; }
+        .brand span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
         .brand-flame path{ stroke:var(--gold); stroke-width:1.3; fill:none; }
-        nav.menu-links{ display:flex; gap:34px; align-items:center; }
-        nav.menu-links a{
-          font-size:13px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; position:relative; padding:4px 0; color:var(--ink);
-        }
-        nav.menu-links a::after{
-          content:''; position:absolute; left:0; bottom:0; width:0%; height:1px; background:var(--gold); transition:width .35s var(--ease);
-        }
+
+        nav.menu-links{ display:flex; gap:28px; align-items:center; }
+        nav.menu-links a{ font-size:13px; letter-spacing:.08em; text-transform:uppercase; font-weight:600; position:relative; padding:4px 0; color:var(--ink); }
+        nav.menu-links a::after{ content:''; position:absolute; left:0; bottom:0; width:0%; height:1px; background:var(--gold); transition:width .35s var(--ease); }
         nav.menu-links a:hover::after{ width:100%; }
-        .nav-actions{ display:flex; align-items:center; gap:14px; }
-        .btn{
-          display:inline-flex; align-items:center; gap:8px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
-          padding:13px 24px; border-radius:2px; border:1px solid var(--line-strong); position:relative; overflow:hidden; white-space:nowrap;
-        }
+        .nav-actions{ display:flex; align-items:center; gap:12px; flex-shrink: 0; }
+        .btn{ display:inline-flex; align-items:center; gap:8px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; padding:12px 22px; border-radius:2px; border:1px solid var(--line-strong); position:relative; overflow:hidden; white-space:nowrap; }
         .btn-solid{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
         .btn-solid span{position:relative; z-index:2;}
         .btn-solid::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,var(--copper),var(--gold)); transform:translateX(-101%); transition:transform .45s var(--ease); z-index:1;}
-        .btn-solid:hover::before{ transform:translateX(0); }
-        .btn-solid:hover{ color:#0A0908; }
-        .btn-ghost{ background:transparent; color:var(--ink); }
-        .btn-ghost:hover{ border-color:var(--gold); color:var(--gold); }
-        .icon-btn{
-          width:40px; height:40px; border-radius:50%; border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center;
-          background:var(--surface); transition:border-color .3s, transform .3s;
-        }
+        .btn-solid:hover::before{ transform:translateX(0); } .btn-solid:hover{ color:#0A0908; }
+        .btn-ghost{ background:transparent; color:var(--ink); } .btn-ghost:hover{ border-color:var(--gold); color:var(--gold); }
+        .icon-btn{ width:40px; height:40px; border-radius:50%; border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center; background:var(--surface); transition:border-color .3s, transform .3s; flex-shrink: 0; }
         .icon-btn:hover{ border-color:var(--gold); transform:rotate(12deg); }
         .icon-btn svg{ width:17px; height:17px; }
         .burger{ display:none; }
 
-        /* theme toggle */
-        .theme-toggle{ width:52px; height:28px; border-radius:20px; border:1px solid var(--line-strong); background:var(--surface); position:relative; padding:0; }
-        .theme-toggle .knob{ position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%; background:linear-gradient(140deg,var(--copper),var(--gold)); transition:transform .45s var(--ease); }
-        html[data-theme="light"] .theme-toggle .knob{ transform:translateX(24px); }
-
-        /* ============================= HERO ============================= */
-        .hero{ position:relative; min-height:100vh; display:flex; align-items:flex-end; overflow:hidden; }
-        .hero-bg{ position:absolute; inset:0; z-index:0; }
-        .hero-bg img{ width:100%; height:100%; object-fit:cover; opacity:.55; filter:saturate(1.05) contrast(1.05); }
-        .hero-bg::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,9,8,.15) 0%, rgba(10,9,8,.55) 55%, var(--bg) 100%); }
-        html[data-theme="light"] .hero-bg::after{ background:linear-gradient(180deg, rgba(242,236,222,.15) 0%, rgba(242,236,222,.6) 55%, var(--bg) 100%); }
-        .hero-inner{ position:relative; z-index:3; width:100%; padding:180px 0 90px; }
-        .hero-grid{ display:grid; grid-template-columns:1fr auto; gap:40px; align-items:end; }
-        .hero-eyebrow{ font-family:'JetBrains Mono',monospace; letter-spacing:.3em; font-size:12px; text-transform:uppercase; color:var(--gold); margin-bottom:22px; overflow:hidden; }
-        .hero-title{ font-size:clamp(52px,9vw,132px); line-height:.92; font-weight:500; }
-        .hero-title .line{ overflow:hidden; }
-        .hero-title .line span{ display:inline-block; transform:translateY(110%); }
-        .hero-title em{ font-style:italic; font-weight:300; color:var(--gold); }
-        .hero-desc{ max-width:420px; color:var(--ink-dim); font-size:16px; line-height:1.7; margin-top:26px; }
-        .hero-side{ writing-mode:vertical-rl; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--ink-dim); display:flex; align-items:center; gap:14px; padding-bottom:6px;}
-        .hero-side::before{ content:''; width:1px; height:60px; background:var(--line-strong); }
-        .hero-cta{ display:flex; gap:16px; margin-top:44px; flex-wrap:wrap; }
-        .scroll-ind{ position:absolute; left:50%; bottom:34px; transform:translateX(-50%); z-index:3; display:flex; flex-direction:column; align-items:center; gap:10px; }
-        .scroll-ind .line{ width:1px; height:46px; background:var(--line-strong); position:relative; overflow:hidden; }
+        .hero{ position:relative; min-height:100vh; min-height:100dvh; display:flex; align-items:flex-end; overflow:hidden; }
+        .hero-bg{ position:absolute; inset:0; z-index:0; background-size:cover; background-position:center; }
+        .hero-bg::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,9,8,.2) 0%, rgba(10,9,8,.65) 60%, var(--bg) 100%); }
+        .hero-inner{ position:relative; z-index:3; width:100%; padding:440px 0 150px; }
+        .hero-eyebrow{ font-family:'JetBrains Mono',monospace; letter-spacing:.25em; font-size:12px; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+        .hero-title{ font-size:clamp(36px, 7vw, 96px); line-height:1; font-weight:500; max-width:900px; word-wrap: break-word; }
+        .hero-desc{ max-width:480px; color:var(--ink-dim); font-size:clamp(14px, 2vw, 16px); line-height:1.7; margin-top:20px; }
+        .hero-cta{ display:flex; gap:16px; margin-top:36px; flex-wrap:wrap; }
+        .scroll-ind{ position:absolute; left:50%; bottom:24px; transform:translateX(-50%); z-index:3; display:flex; flex-direction:column; align-items:center; gap:8px; }
+        .scroll-ind .line{ width:1px; height:36px; background:var(--line-strong); position:relative; overflow:hidden; }
         .scroll-ind .line::after{ content:''; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--gold); animation:scrolldrop 2.2s ease-in-out infinite; }
         @keyframes scrolldrop{ 0%{top:-100%;} 60%{top:100%;} 100%{top:100%;} }
         .scroll-ind span{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.3em; color:var(--ink-dim); text-transform:uppercase;}
 
-        .float-food{ position:absolute; z-index:2; border-radius:50%; overflow:hidden; box-shadow:0 30px 60px -15px rgba(0,0,0,.6); border:1px solid var(--line-strong); pointer-events:none; }
-        .float-food img{ width:100%; height:100%; object-fit:cover; }
-        .ff1{ width:150px; height:150px; top:22%; right:8%; }
-        .ff2{ width:110px; height:110px; top:55%; right:22%; }
-        .ff3{ width:90px; height:90px; top:14%; right:32%; }
+        section{ position:relative; padding:clamp(60px, 10vw, 120px) 0; z-index:2; background:var(--bg); }
+        .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:50px; flex-wrap:wrap; }
+        .section-title{ font-size:clamp(28px, 4vw, 50px); }
+        .section-sub{ max-width:380px; color:var(--ink-dim); font-size:14px; line-height:1.7; }
 
-        /* ============================= SECTION GENERIC ============================= */
-        section{ position:relative; padding:150px 0; z-index:2; background:var(--bg); }
-        .divider{ display:flex; justify-content:center; padding:0 0 0; margin-top:-1px;}
-        .divider svg{ width:180px; height:38px; opacity:.7; }
-        .divider path{ stroke:var(--copper); stroke-width:1.4; fill:none; stroke-dasharray:400; stroke-dashoffset:400; }
-        .divider.inview path{ animation:draw 1.6s var(--ease) forwards; }
-
-        .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:40px; margin-bottom:70px; flex-wrap:wrap; }
-        .section-title{ font-size:clamp(36px,4.4vw,58px); }
-        .section-sub{ max-width:380px; color:var(--ink-dim); font-size:15px; line-height:1.7; }
-
-        /* ============================= ABOUT ============================= */
         .about{ background:var(--bg-alt); }
-        .about-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:80px; align-items:center; }
+        .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
         .about-imgwrap{ position:relative; }
-        .about-imgwrap img{ border-radius:2px; width:100%; height:560px; object-fit:cover; }
-        .about-badge{
-          position:absolute; bottom:-30px; left:-30px; background:var(--bg-raise); border:1px solid var(--line-strong); padding:26px 30px;
-          box-shadow:var(--shadow); max-width:230px;
-        }
-        .about-badge b{ font-family:'Fraunces',serif; font-size:34px; color:var(--gold); display:block; }
-        .about-badge span{ font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim); }
-        .about-text p{ color:var(--ink-dim); line-height:1.85; font-size:16px; margin-bottom:20px; }
-        .stat-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin:44px 0; }
-        .stat b{ font-family:'Fraunces',serif; font-size:38px; color:var(--ink); display:block; }
-        .stat span{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-dim); }
-        .about-meta{ display:grid; grid-template-columns:1fr 1fr; gap:18px; border-top:1px solid var(--line); padding-top:30px; }
-        .about-meta div{ font-size:14px; color:var(--ink-dim); }
+        .about-imgwrap img{ border-radius:2px; width:100%; height:460px; object-fit:cover; }
+        .about-badge{ position:absolute; bottom:-20px; left:-20px; background:var(--bg-raise); border:1px solid var(--line-strong); padding:20px 24px; box-shadow:var(--shadow); max-width:200px; }
+        .about-badge b{ font-family:'Fraunces',serif; font-size:30px; color:var(--gold); display:block; }
+        .about-badge span{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim); }
+        .about-text p{ color:var(--ink-dim); line-height:1.8; font-size:15px; margin-bottom:20px; }
+        .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:36px 0; }
+        .stat b{ font-family:'Fraunces',serif; font-size:clamp(24px, 3vw, 36px); color:var(--ink); display:block; }
+        .stat span{ font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-dim); }
+        .about-meta{ display:grid; grid-template-columns:1fr 1fr; gap:16px; border-top:1px solid var(--line); padding-top:24px; }
+        .about-meta div{ font-size:13px; color:var(--ink-dim); }
         .about-meta b{ display:block; color:var(--ink); font-weight:600; margin-bottom:4px; }
 
-        /* ============================= MENU ============================= */
-        .menu-controls{ display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:56px; align-items:center;}
+        .menu-controls{ display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:40px; align-items:center;}
         .filters{ display:flex; gap:10px; flex-wrap:wrap; }
-        .filter-btn{
-          padding:10px 20px; border:1px solid var(--line-strong); background:transparent; color:var(--ink-dim); font-size:12px;
-          letter-spacing:.08em; text-transform:uppercase; border-radius:30px; transition:all .3s var(--ease);
-        }
+        .filter-btn{ padding:8px 18px; border:1px solid var(--line-strong); background:transparent; color:var(--ink-dim); font-size:12px; letter-spacing:.08em; text-transform:uppercase; border-radius:30px; transition:all .3s var(--ease); white-space:nowrap; }
         .filter-btn.active,.filter-btn:hover{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
-        .search-wrap{ position:relative; }
-        .search-wrap input{
-          background:var(--surface); border:1px solid var(--line-strong); color:var(--ink); padding:12px 44px 12px 18px; border-radius:30px;
-          font-family:inherit; font-size:13px; width:230px; outline:none; transition:border-color .3s, width .3s;
-        }
-        .search-wrap input:focus{ border-color:var(--gold); width:280px; }
-        .search-wrap svg{ position:absolute; right:16px; top:50%; transform:translateY(-50%); width:15px; height:15px; opacity:.5; }
+        .search-wrap{ position:relative; width: 100%; max-width: 280px; }
+        .search-wrap input{ background:var(--surface); border:1px solid var(--line-strong); color:var(--ink); padding:10px 40px 10px 16px; border-radius:30px; font-family:inherit; font-size:13px; width:100%; outline:none; transition:border-color .3s; }
+        .search-wrap input:focus{ border-color:var(--gold); }
+        .search-wrap svg{ position:absolute; right:16px; top:50%; transform:translateY(-50%); width:15px; height:15px; opacity:.5; pointer-events:none; }
 
-        .menu-category{ margin-bottom:80px; }
-        .menu-category-head{ display:flex; align-items:baseline; gap:18px; margin-bottom:34px; }
-        .menu-category-head .num{ font-family:'JetBrains Mono',monospace; color:var(--copper); font-size:13px; }
-        .menu-category-head h3{ font-size:28px; }
-        .menu-category-head .rule{ flex:1; height:1px; background:var(--line); }
-        .menu-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
-        .dish-card{
-          background:var(--surface); border:1px solid var(--line); border-radius:4px; overflow:hidden; position:relative;
-          transition:transform .15s ease, border-color .3s ease, box-shadow .3s ease; transform-style:preserve-3d;
-        }
+        .menu-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px; }
+        .dish-card{ background:var(--surface); border:1px solid var(--line); border-radius:4px; overflow:hidden; position:relative; transition:transform .2s ease, border-color .3s ease, box-shadow .3s ease; display:flex; flex-direction:column; }
         .dish-card:hover{ border-color:var(--line-strong); box-shadow:var(--shadow); }
-        .dish-media{ position:relative; height:230px; overflow:hidden; }
+        .dish-media{ position:relative; height:200px; overflow:hidden; background:var(--surface-strong); display:flex; align-items:center; justify-content:center; }
         .dish-media img{ width:100%; height:100%; object-fit:cover; transition:transform .7s var(--ease); }
-        .dish-card:hover .dish-media img{ transform:scale(1.09); }
-        .dish-tags{ position:absolute; top:14px; left:14px; display:flex; gap:8px; }
-        .tag{ font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:5px 10px; border-radius:20px; backdrop-filter:blur(8px); font-weight:700; }
+        .dish-card:hover .dish-media img{ transform:scale(1.06); }
+        .dish-tags{ position:absolute; top:12px; left:12px; display:flex; gap:8px; }
+        .tag{ font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:4px 8px; border-radius:20px; backdrop-filter:blur(8px); font-weight:700; }
         .tag-veg{ background:rgba(90,168,90,.25); color:#8FD98F; border:1px solid rgba(143,217,143,.5); }
         .tag-nonveg{ background:rgba(201,80,60,.25); color:#F2A28E; border:1px solid rgba(242,162,142,.5); }
-        .tag-pop{ background:rgba(201,162,39,.25); color:var(--gold); border:1px solid rgba(201,162,39,.5); }
-        .fav-btn{
-          position:absolute; top:14px; right:14px; width:34px; height:34px; border-radius:50%; background:rgba(10,9,8,.4); backdrop-filter:blur(8px);
-          border:1px solid rgba(237,230,214,.25); display:flex; align-items:center; justify-content:center; transition:all .3s;
-        }
-        .fav-btn svg{ width:15px; height:15px; stroke:#fff; fill:none; transition:all .3s; }
-        .fav-btn.active svg{ fill:var(--ember); stroke:var(--ember); }
-        .dish-body{ padding:22px 22px 24px; }
+        .dish-body{ padding:20px; flex:1; display:flex; flex-direction:column; }
         .dish-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
-        .dish-top h4{ font-size:19px; font-weight:600; }
+        .dish-top h4{ font-size:18px; font-weight:600; }
         .dish-price{ font-family:'JetBrains Mono',monospace; color:var(--gold); font-size:15px; white-space:nowrap; }
-        .dish-desc{ color:var(--ink-dim); font-size:13.5px; line-height:1.6; margin-bottom:18px; min-height:42px; }
-        .dish-order{ display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); padding-top:16px; }
-        .dish-order button{ background:none; border:none; color:var(--ink); font-size:12px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:8px; }
+        .dish-desc{ color:var(--ink-dim); font-size:13px; line-height:1.6; margin-bottom:16px; flex:1; }
+        .dish-order{ display:flex; align-items:center; justify-content:flex-end; border-top:1px solid var(--line); padding-top:14px; }
+        .dish-order button{ background:none; border:none; color:var(--ink); font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:8px; padding: 4px 0; }
         .dish-order button svg{ width:14px; height:14px; transition:transform .3s; }
         .dish-order button:hover svg{ transform:translateX(4px); }
-        .no-results{ text-align:center; padding:60px 0; color:var(--ink-dim); display:none; }
+        .no-results{ text-align:center; padding:50px 0; color:var(--ink-dim); display:none; grid-column: 1 / -1; }
 
-        /* ============================= SPECIALS SWIPER ============================= */
         .specials{ background:var(--bg-alt); overflow:hidden; }
-        .specials-swiper{ overflow:visible !important; padding:20px 0 60px; }
-        .special-card{
-          position:relative; height:480px; border-radius:6px; overflow:hidden; border:1px solid var(--line-strong);
-          transition:transform .5s var(--ease);
-        }
-        .swiper-slide-active .special-card{ transform:scale(1.0); }
+        .specials-swiper{ overflow:visible !important; padding:10px 0 50px; }
+        .special-card{ position:relative; height:380px; border-radius:6px; overflow:hidden; border:1px solid var(--line-strong); }
         .special-card img{ width:100%; height:100%; object-fit:cover; }
-        .special-overlay{ position:absolute; inset:0; background:linear-gradient(0deg, rgba(10,9,8,.9) 0%, rgba(10,9,8,.05) 55%); display:flex; flex-direction:column; justify-content:flex-end; padding:34px; }
-        .special-overlay .eyebrow{ color:var(--gold); }
-        .special-overlay h3{ font-size:26px; color:#EDE6D6; margin-bottom:8px; }
-        .special-overlay p{ color:#cfc5b0; opacity:.8; font-size:13px; }
+        .special-overlay{ position:absolute; inset:0; background:linear-gradient(0deg, rgba(10,9,8,.92) 0%, rgba(10,9,8,.1) 60%); display:flex; flex-direction:column; justify-content:flex-end; padding:24px; }
+        .special-overlay h3{ font-size:22px; color:#EDE6D6; margin-bottom:6px; }
+        .special-overlay p{ color:#cfc5b0; opacity:.85; font-size:13px; margin-bottom:10px; }
+        .special-overlay .special-order-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; gap: 12px; }
+        .special-order-btn { background: linear-gradient(140deg,var(--copper),var(--gold)); color: #0A0908; border: none; padding: 10px 18px; border-radius: 30px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; white-space: nowrap; }
         .swiper-button-next,.swiper-button-prev{ color:var(--gold) !important; }
         .swiper-pagination-bullet{ background:var(--ink-dim) !important; opacity:.5;}
         .swiper-pagination-bullet-active{ background:var(--gold) !important; opacity:1;}
 
-        /* ============================= CHEF ============================= */
-        .chef-grid{ display:grid; grid-template-columns:.8fr 1.2fr; gap:80px; align-items:center; }
-        .chef-imgwrap{ position:relative; border-radius:2px; overflow:hidden; }
-        .chef-imgwrap img{ width:100%; height:560px; object-fit:cover; filter:grayscale(.15); }
-        .chef-sig{ position:absolute; bottom:24px; left:24px; font-family:'Fraunces',serif; font-style:italic; font-size:24px; color:#fff; text-shadow:0 4px 20px rgba(0,0,0,.6);}
-        .chef-info .role{ font-family:'JetBrains Mono',monospace; letter-spacing:.2em; text-transform:uppercase; font-size:12px; color:var(--copper); margin-bottom:14px; }
-        .chef-info h3{ font-size:44px; margin-bottom:22px; }
-        .chef-info p{ color:var(--ink-dim); line-height:1.85; margin-bottom:26px; font-size:16px; }
-        .chef-stats{ display:flex; gap:40px; margin:30px 0; }
-        .chef-stats div b{ font-family:'Fraunces',serif; font-size:32px; display:block; color:var(--gold); }
-        .chef-stats div span{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim); }
-        .chef-social{ display:flex; gap:12px; margin-top:20px;}
-
-        /* ============================= VIDEO ============================= */
-        .video-wrap{ position:relative; border-radius:6px; overflow:hidden; border:1px solid var(--line-strong); }
-        .video-wrap video{ width:100%; height:640px; object-fit:cover; display:block; }
-        .video-wrap::after{ content:''; position:absolute; inset:0; background:rgba(10,9,8,.25); pointer-events:none; }
-        .play-btn{
-          position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:96px; height:96px; border-radius:50%;
-          background:rgba(237,230,214,.12); backdrop-filter:blur(10px); border:1px solid rgba(237,230,214,.4); display:flex;
-          align-items:center; justify-content:center; z-index:2;
-        }
-        .play-btn::before{ content:''; position:absolute; inset:-14px; border-radius:50%; border:1px solid rgba(237,230,214,.3); animation:pulse 2.4s ease-out infinite; }
-        @keyframes pulse{ 0%{transform:scale(.9); opacity:1;} 100%{transform:scale(1.5); opacity:0;} }
-        .play-btn svg{ width:26px; height:26px; fill:#fff; margin-left:4px; }
-
-        /* ============================= GALLERY ============================= */
-        .gallery-grid{ column-count:3; column-gap:20px; }
-        .gallery-item{ break-inside:avoid; margin-bottom:20px; border-radius:3px; overflow:hidden; position:relative; border:1px solid var(--line); }
-        .gallery-item img{ width:100%; display:block; transition:transform .6s var(--ease), filter .6s; }
+        .gallery-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .gallery-item{ border-radius:3px; overflow:hidden; position:relative; border:1px solid var(--line); aspect-ratio: 4/3; }
+        .gallery-item img{ width:100%; height: 100%; object-fit: cover; display:block; transition:transform .6s var(--ease); }
         .gallery-item:hover img{ transform:scale(1.06); }
         .gallery-item .g-overlay{ position:absolute; inset:0; background:rgba(10,9,8,0); display:flex; align-items:center; justify-content:center; transition:background .4s; }
         .gallery-item:hover .g-overlay{ background:rgba(10,9,8,.35); }
-        .gallery-item .g-icon{ opacity:0; transform:scale(.7); transition:all .4s; width:38px; height:38px; border:1px solid #fff; border-radius:50%; display:flex; align-items:center; justify-content:center;}
-        .gallery-item:hover .g-icon{ opacity:1; transform:scale(1); }
-        .gallery-item .g-icon svg{ width:16px; height:16px; stroke:#fff; }
 
-        #lightbox{ position:fixed; inset:0; background:rgba(6,5,4,.94); z-index:2000; display:none; align-items:center; justify-content:center; padding:40px; }
-        #lightbox.open{ display:flex; }
-        #lightbox img{ max-width:90vw; max-height:85vh; border:1px solid rgba(237,230,214,.2); }
-        #lightbox .lb-close{ position:absolute; top:30px; right:40px; width:44px; height:44px; border-radius:50%; border:1px solid rgba(237,230,214,.3); display:flex; align-items:center; justify-content:center; }
-        #lightbox .lb-close svg{ width:18px; height:18px; stroke:#fff; }
-
-        /* ============================= WHY ============================= */
-        .why-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line); border:1px solid var(--line); }
-        .why-card{ background:var(--bg); padding:44px 36px; transition:background .4s; }
-        .why-card:hover{ background:var(--surface); }
-        .why-card .ic{ width:44px; height:44px; margin-bottom:26px; }
+        .why-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px; }
+        .why-card{ background:var(--bg-alt); padding:36px 28px; border:1px solid var(--line); transition:background .4s, border-color .3s; }
+        .why-card:hover{ background:var(--surface); border-color: var(--line-strong); }
+        .why-card .ic{ width:40px; height:40px; margin-bottom:20px; }
         .why-card .ic svg{ width:100%; height:100%; stroke:var(--gold); fill:none; stroke-width:1.2; }
-        .why-card h4{ font-size:19px; margin-bottom:10px; font-weight:600; }
-        .why-card p{ color:var(--ink-dim); font-size:14px; line-height:1.7; }
+        .why-card h4{ font-size:18px; margin-bottom:10px; font-weight:600; }
+        .why-card p{ color:var(--ink-dim); font-size:13.5px; line-height:1.7; }
 
-        /* ============================= REVIEWS ============================= */
         .reviews{ background:var(--bg-alt); }
-        .review-card{ background:var(--surface); border:1px solid var(--line); padding:36px; border-radius:4px; height:100%; }
-        .stars{ display:flex; gap:4px; margin-bottom:20px; }
-        .stars svg{ width:15px; height:15px; fill:var(--gold); }
-        .review-card p{ color:var(--ink-dim); line-height:1.8; font-size:15px; margin-bottom:26px; font-style:italic; }
-        .review-person{ display:flex; align-items:center; gap:14px; }
-        .review-person img{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
-        .review-person b{ display:block; font-size:14px; }
-        .review-person span{ font-size:12px; color:var(--ink-dim); }
+        .reviews-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .review-card{ background:var(--surface); border:1px solid var(--line); padding:30px; border-radius:4px; height:100%; display: flex; flex-direction: column; justify-content: space-between; }
+        .stars{ display:flex; gap:4px; margin-bottom:16px; } .stars svg{ width:15px; height:15px; fill:var(--gold); }
+        .review-card p{ color:var(--ink-dim); font-size:14px; margin-bottom:20px; font-style:italic; line-height: 1.6; }
+        .review-person{ display:flex; align-items:center; gap:12px; }
+        .review-person img{ width:40px; height:40px; border-radius:50%; object-fit:cover; }
+        .review-person b{ display:block; font-size:13px; }
 
-        /* ============================= BOOK TABLE ============================= */
-        .book{ position:relative; background:var(--bg-alt); }
-        .book-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:70px; }
-        .book-info h2{ font-size:clamp(34px,4vw,50px); margin-bottom:20px; }
-        .book-info p{ color:var(--ink-dim); line-height:1.8; margin-bottom:34px; max-width:400px;}
-        .book-hours{ border-top:1px solid var(--line); padding-top:24px; }
-        .book-hours div{ display:flex; justify-content:space-between; padding:10px 0; font-size:14px; border-bottom:1px solid var(--line); color:var(--ink-dim); }
-        .book-hours div b{ color:var(--ink); font-weight:600;}
-        .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:26px; }
-        .field{ position:relative; grid-column:span 1; }
-        .field.full{ grid-column:1/-1; }
-        .field input,.field select,.field textarea{
-          width:100%; background:transparent; border:none; border-bottom:1px solid var(--line-strong); padding:14px 2px 12px; color:var(--ink);
-          font-family:inherit; font-size:15px; outline:none; transition:border-color .3s;
-        }
-        .field textarea{ resize:none; min-height:70px; }
-        .field label{
-          position:absolute; left:2px; top:14px; color:var(--ink-dim); font-size:15px; pointer-events:none; transition:all .25s var(--ease);
-        }
-        .field input:focus ~ label, .field input:not(:placeholder-shown) ~ label,
-        .field select ~ label, .field textarea:focus ~ label, .field textarea:not(:placeholder-shown) ~ label{
-          top:-14px; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold);
-        }
-        .field .bar{ position:absolute; bottom:0; left:0; height:1px; width:0; background:var(--gold); transition:width .35s var(--ease); }
-        .field input:focus ~ .bar, .field textarea:focus ~ .bar{ width:100%; }
-        .field .err{ font-size:11px; color:#E07A5F; margin-top:6px; display:none; }
-        .field.invalid input, .field.invalid textarea{ border-color:#E07A5F; }
-        .field.invalid .err{ display:block; }
-        .form-submit{ margin-top:36px; width:100%; justify-content:center; }
-        .form-success{ display:none; padding:20px; border:1px solid var(--gold); color:var(--gold); font-size:13px; letter-spacing:.05em; margin-top:20px; text-align:center;}
-        .form-success.show{ display:block; }
-
-        /* ============================= CONTACT ============================= */
-        .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:stretch; }
-        .contact-list{ display:flex; flex-direction:column; gap:0; }
-        .c-item{ display:flex; gap:20px; padding:24px 0; border-bottom:1px solid var(--line); align-items:flex-start; }
-        .c-item .ic{ width:20px; height:20px; margin-top:3px; flex-shrink:0; }
-        .c-item .ic svg{ width:100%; height:100%; stroke:var(--gold); fill:none; }
-        .c-item b{ display:block; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:6px; }
-        .c-item span,.c-item a{ font-size:16px; }
-        .map-wrap{ border-radius:4px; overflow:hidden; border:1px solid var(--line-strong); min-height:340px; }
-        .map-wrap iframe{ width:100%; height:100%; min-height:340px; border:0; filter:grayscale(.4) invert(0); }
+        .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:stretch; }
+        .contact-list{ display:flex; flex-direction:column; }
+        .c-item{ display:flex; gap:16px; padding:20px 0; border-bottom:1px solid var(--line); align-items:flex-start; }
+        .c-item .ic{ width:20px; height:20px; margin-top:2px; flex-shrink:0; } .c-item .ic svg{ width:100%; height:100%; stroke:var(--gold); fill:none; }
+        .c-item b{ display:block; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:4px; }
+        .c-item span,.c-item a{ font-size:15px; word-break: break-word; }
+        .map-wrap{ border-radius:4px; overflow:hidden; border:1px solid var(--line-strong); min-height:300px; }
+        .map-wrap iframe{ width:100%; height:100%; min-height:300px; border:0; }
         html[data-theme="dark"] .map-wrap iframe{ filter:grayscale(.6) invert(.9) contrast(.9); }
 
-        /* ============================= FOOTER ============================= */
-        footer{ background:#0A0908; color:#EDE6D6; padding:100px 0 0; position:relative; z-index:2; }
-        .footer-top{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:60px; padding-bottom:70px; border-bottom:1px solid rgba(237,230,214,.12); }
-        .footer-brand .brand{ margin-bottom:18px; }
-        .footer-brand p{ color:#A79C89; font-size:14px; line-height:1.8; max-width:280px; }
-        .footer-col h5{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A79C89; margin-bottom:22px; }
-        .footer-col a{ display:block; color:#EDE6D6; font-size:14px; margin-bottom:14px; opacity:.85; transition:opacity .3s, transform .3s; }
+        footer{ background:#0A0908; color:#EDE6D6; padding:80px 0 0; position:relative; z-index:2; border-top:1px solid var(--line); }
+        .footer-top{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(237,230,214,.12); }
+        .footer-brand p{ color:#A79C89; font-size:13.5px; line-height:1.7; max-width:300px; margin-top: 12px; }
+        .footer-col h5{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#A79C89; margin-bottom:18px; }
+        .footer-col a{ display:block; color:#EDE6D6; font-size:13.5px; margin-bottom:12px; opacity:.85; transition:opacity .3s, transform .3s; }
         .footer-col a:hover{ opacity:1; transform:translateX(4px); color:var(--gold); }
-        .newsletter-form{ display:flex; border-bottom:1px solid rgba(237,230,214,.3); padding-bottom:10px; margin-top:10px; }
-        .newsletter-form input{ flex:1; background:transparent; border:none; color:#EDE6D6; outline:none; font-size:14px; }
-        .newsletter-form button{ background:none; border:none; color:var(--gold); }
-        .newsletter-form button svg{ width:18px; height:18px; }
-        .footer-bottom{ display:flex; justify-content:space-between; padding:26px 0; font-size:12px; color:#7d7365; flex-wrap:wrap; gap:10px;}
-        .footer-bottom a{ color:#7d7365; }
-        .footer-bottom a:hover{ color:var(--gold); }
+        .footer-social{ display:flex; gap:12px; margin-top:16px; }
+        .footer-bottom{ display:flex; justify-content:space-between; padding:24px 0; font-size:12px; color:#7d7365; flex-wrap:wrap; gap:10px;}
 
-        /* ============================= FLOATING BUTTONS ============================= */
-        .float-stack{ position:fixed; right:26px; bottom:26px; z-index:400; display:flex; flex-direction:column; gap:14px; align-items:flex-end; }
-        .fab{
-          width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);
-          border:1px solid var(--line-strong); transition:transform .3s var(--ease); position:relative;
-        }
-        .fab:hover{ transform:translateY(-4px) scale(1.05); }
-        .fab svg{ width:22px; height:22px; }
-        .fab-wa{ background:#25D366; }
-        .fab-wa svg{ fill:#fff; stroke:none; }
-        .fab-book{ background:linear-gradient(140deg,var(--copper),var(--gold)); }
-        .fab-book svg{ stroke:#0A0908; fill:none; }
+        .float-stack{ position:fixed; right:20px; bottom:20px; z-index:400; display:flex; flex-direction:column; gap:12px; align-items:flex-end; }
+        .fab{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); border:1px solid var(--line-strong); transition:transform .3s var(--ease); position:relative; }
+        .fab:hover{ transform:translateY(-3px) scale(1.03); }
+        .fab svg{ width:20px; height:20px; }
+        .fab-cart{ background:linear-gradient(140deg,var(--copper),var(--gold)); }
+        .fab-cart svg{ stroke:#0A0908; fill:none; }
+        .cart-badge{ position:absolute; top:-2px; right:-2px; background:var(--ember); color:white; font-size:0.65rem; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
         .fab-top{ background:var(--bg-raise); opacity:0; pointer-events:none; transform:translateY(10px); }
         .fab-top.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
         .fab-top svg{ stroke:var(--ink); fill:none; }
 
-        /* ============================= REVEAL/UTIL ============================= */
-        [data-split]{ overflow:hidden; }
-        .reveal-up{ opacity:0; transform:translateY(50px); }
+        #lightbox{ position:fixed; inset:0; background:rgba(6,5,4,.94); z-index:2000; display:none; align-items:center; justify-content:center; padding:20px; }
+        #lightbox.open{ display:flex; }
+        #lightbox img{ max-width:95vw; max-height:85vh; border:1px solid rgba(237,230,214,.2); object-fit: contain; }
+        #lightbox .lb-close{ position:absolute; top:20px; right:20px; width:40px; height:40px; border-radius:50%; border:1px solid rgba(237,230,214,.3); display:flex; align-items:center; justify-content:center; background:rgba(10,9,8,0.6); }
+        #lightbox .lb-close svg{ width:18px; height:18px; stroke:#fff; }
 
-        /* ============================= RESPONSIVE ============================= */
-        @media (max-width: 1080px){
-          nav.menu-links, .nav-actions .btn-ghost, .hero-side{ display:none; }
-          .burger{ display:flex; }
-          .about-grid, .chef-grid, .book-grid, .contact-grid{ grid-template-columns:1fr; }
-          .menu-grid{ grid-template-columns:repeat(2,1fr); }
-          .why-grid{ grid-template-columns:repeat(1,1fr); }
-          .footer-top{ grid-template-columns:1fr 1fr; }
-          .stat-row{ grid-template-columns:repeat(2,1fr); }
-          .gallery-grid{ column-count:2; }
+        .order-modal-overlay{ position:fixed; inset:0; z-index:20000; background:rgba(9,9,11,0.85); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; padding:16px; }
+        .order-modal-overlay.open{ opacity:1; pointer-events:all; }
+        .order-modal{ background:var(--bg-raise); border:1px solid var(--line-strong); border-radius:8px; max-width:440px; width:100%; padding:1.5rem; max-height:90vh; max-height:90dvh; overflow-y:auto; box-shadow: var(--shadow); }
+        .order-modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; }
+        .order-modal-close{ background:none; border:none; color:var(--ink-dim); font-size:1.4rem; padding: 4px; }
+        .order-item-row{ display:flex; align-items:center; gap:8px; padding:10px 0; border-bottom:1px solid var(--line); }
+        .order-item-name{ flex:1; font-size:0.85rem; word-break: break-word; }
+        .qty-btn{ width:26px; height:26px; border-radius:50%; background:var(--surface); border:1px solid var(--line-strong); color:var(--ink); font-size:0.9rem; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;}
+        .order-modal-input{ width:100%; background:var(--surface); border:1px solid var(--line-strong); border-radius:6px; padding:12px 14px; color:var(--ink); margin-bottom:12px; font-family:'Manrope',sans-serif; font-size:14px; }
+        .order-modal-input:focus{ outline:none; border-color:var(--gold); }
+
+        /* RESPONSIVE BREAKPOINTS */
+        @media (max-width: 1024px){
+          .about-grid, .contact-grid{ grid-template-columns:1fr; gap: 40px; }
+          .footer-top{ grid-template-columns: 1fr 1fr; }
+          .footer-brand{ grid-column: span 2; }
         }
-        @media (max-width: 640px){
-          .container{ padding:0 20px; }
-          section{ padding:100px 0; }
-          .menu-grid{ grid-template-columns:1fr; }
-          .form-grid{ grid-template-columns:1fr; }
-          .footer-top{ grid-template-columns:1fr; }
-          .hero-title{ font-size:15vw; }
-          .gallery-grid{ column-count:1; }
-          .float-food{ display:none; }
-          body{ cursor:auto; }
-          .cursor,.cursor-dot{ display:none; }
+
+        @media (max-width: 768px){
+          .burger{ display:flex; }
+          nav.menu-links{
+            position: fixed; inset: 0; background: var(--bg); z-index: 490;
+            flex-direction: column; justify-content: center; align-items: center; gap: 24px;
+            opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+          }
+          nav.menu-links.show{ opacity: 1; pointer-events: all; }
+          nav.menu-links a{ font-size: 18px; }
+
+          .nav-actions .btn-ghost{ display:none; }
+          .brand span { max-width: 140px; font-size: 16px; }
+
+          .hero-cta{ flex-direction:column; align-items:stretch; }
+          .hero-cta .btn{ justify-content:center; text-align:center; }
+
+          .about-imgwrap img{ height:340px; }
+          .about-badge{ left:10px; bottom:-15px; padding:14px 18px; }
+          .about-badge b{ font-size:24px; }
+
+          .menu-controls{ flex-direction:column; align-items:stretch; gap: 16px; }
+          .search-wrap{ max-width: 100%; }
+          .filters{ overflow-x:auto; flex-wrap:nowrap; padding-bottom:6px; width: 100%; -webkit-overflow-scrolling: touch; }
+
+          .footer-top{ grid-template-columns: 1fr; }
+          .footer-brand{ grid-column: span 1; }
+          .footer-bottom{ flex-direction: column; text-align: center; gap: 12px; }
+        }
+
+        @media (max-width: 480px){
+          .container{ padding: 0 16px; }
+          .brand span { max-width: 110px; font-size: 15px; }
+          .nav-actions { gap: 6px; }
+          .btn-solid { padding: 10px 14px; font-size: 10px; }
+          .icon-btn { width: 36px; height: 36px; }
+          .icon-btn svg { width: 15px; height: 15px; }
+
+          .stat-row{ grid-template-columns:repeat(3,1fr); gap:8px; }
+          .stat b{ font-size:20px; }
+          .stat span{ font-size: 9px; }
+          .about-meta{ grid-template-columns:1fr; }
+
+          .special-card{ height:320px; }
+          .special-overlay{ padding:16px; }
+          .special-overlay h3{ font-size:18px; }
+
+          .float-stack{ right:14px; bottom:14px; }
+          .fab{ width:44px; height:44px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ============================= LOADER ============================= -->
-<div id="loader">
-    <div class="loader-mark">
-        <svg viewBox="0 0 300 90" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 70 C 30 20, 50 20, 60 50 C 70 80, 90 30, 100 60" />
-        </svg>
-    </div>
-    <div class="loader-bar"><span></span></div>
-    <div class="loader-txt">Velvet Ember — Kindling the room</div>
-</div>
-
-<!-- ============================= CURSOR ============================= -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-dot" id="cursorDot"></div>
-
-<!-- ============================= EMBER CANVAS ============================= -->
 <canvas id="emberCanvas"></canvas>
 
-<!-- ============================= HEADER ============================= -->
 <header id="siteHeader">
     <div class="container nav-row">
         <a href="#home" class="brand">
             <svg class="brand-flame" viewBox="0 0 40 40"><path d="M20 4c4 8-4 10-2 18 1 5 6 7 10 4-2 10-14 12-20 6-6-6-4-16 2-20-2 6 2 8 4 4 2-4-1-8 6-12z"/></svg>
-            Velvet Ember
+            <span>Velvet Ember</span>
         </a>
-        <nav class="menu-links">
-            <a href="#home">Home</a>
-            <a href="#menu">Menu</a>
-            <a href="#gallery">Gallery</a>
-            <a href="#about">About</a>
-            <a href="#chef">Chef</a>
-            <a href="#reviews">Reviews</a>
-            <a href="#contact">Contact</a>
+        <nav class="menu-links" id="mainMenu">
+            <a href="#home" onclick="closeMenu()">Home</a>
+            <a href="#menu-section" onclick="closeMenu()">Menu</a>
+            <a href="#gallery" onclick="closeMenu()">Gallery</a>
+            <a href="#about" onclick="closeMenu()">About</a>
+            <a href="#reviews" onclick="closeMenu()">Reviews</a>
+            <a href="#contact" onclick="closeMenu()">Contact</a>
         </nav>
         <div class="nav-actions">
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><span class="knob"></span></button>
             <a class="icon-btn" href="https://wa.me/919876543210" target="_blank" aria-label="WhatsApp">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12a8 8 0 1 1-3.9-6.9L20 4l-1 3.9A8 8 0 0 1 20 12z"/><path d="M9 10c.5 2 2 3.5 4 4l1-1.3c.2-.3.6-.4.9-.2l1.7 1c.3.2.4.6.2.9-.7 1.2-2.1 1.8-3.4 1.4-2.7-.8-5-3.1-5.8-5.8-.4-1.3.2-2.7 1.4-3.4.3-.2.7-.1.9.2l1 1.7c.2.3.1.7-.2.9L9 10z"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12a8 8 0 1 1-3.9-6.9L20 4l-1 3.9A8 8 0 0 1 20 12z"/></svg>
             </a>
-            <a href="#book" class="btn btn-ghost">Book Table</a>
-            <a href="#menu" class="btn btn-solid"><span>Order Now</span></a>
-            <button class="icon-btn burger" id="burgerBtn" aria-label="Menu">
+            <button class="btn btn-solid" onclick="openOrder()"><span>Order Now</span></button>
+            <button class="icon-btn burger" onclick="toggleMenu()" aria-label="Menu">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
             </button>
         </div>
     </div>
 </header>
 
-<!-- ============================= HERO ============================= -->
-<section id="home" class="hero" style="padding:0;">
-    <div class="hero-bg">
-        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=1600&q=80" alt="Live fire grill dish at Velvet Ember">
+<!-- HERO COVER CONTAINER -->
+<div class="hero-cover-container">
+    <!-- 1. Background Cover Image (Continuous Slow Zoom Effect) -->
+    <div class="hero-bg-zoom">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=1600&q=80" alt="Cover Image">
     </div>
+
+    <!-- 2. Interactive 3D Canvas Mesh -->
     <canvas id="heroCanvas"></canvas>
 
-    <div class="float-food ff1"><img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&q=80" alt="Charred steak"></div>
-    <div class="float-food ff2"><img src="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=300&q=80" alt="Craft cocktail"></div>
-    <div class="float-food ff3"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&q=80" alt="Dessert plate"></div>
+    <!-- 3. Floating Food/Element Orbs (Soft Parallax Floating) -->
+    <div class="float-food ff1"><img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&q=80" alt="Floating Dish 1"></div>
+    <div class="float-food ff2"><img src="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=300&q=80" alt="Floating Dish 2"></div>
+    <div class="float-food ff3"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&q=80" alt="Floating Dish 3"></div>
 
     <div class="hero-inner container">
-        <div class="hero-grid">
-            <div>
-                <div class="hero-eyebrow" data-split>EST. HARYANA — LIVE-FIRE DINING ROOM</div>
-                <h1 class="hero-title">
-                    <div class="line"><span>Fire, held</span></div>
-                    <div class="line"><span><em>with</em> restraint.</span></div>
-                </h1>
-                <p class="hero-desc" data-aos="fade-up" data-aos-delay="600">Every plate at Velvet Ember passes through open flame before it reaches you — char, smoke and slow reduction, plated with a quiet hand. A grill house built for long evenings.</p>
-                <div class="hero-cta" data-aos="fade-up" data-aos-delay="750">
-                    <a href="#menu" class="btn btn-solid"><span>View Menu</span></a>
-                    <a href="#book" class="btn btn-ghost">Reserve a Table</a>
-                    <button class="btn btn-ghost" id="watchStoryBtn">Watch Story</button>
-                </div>
-            </div>
-            <div class="hero-side">EST. 2016 — WOOD, COAL &amp; COPPER</div>
+        <div class="hero-eyebrow">Fire, Flavor &amp; Finesse</div>
+        <h1 class="hero-title">Velvet Ember</h1>
+        <p class="hero-desc">A modern fine-dining restaurant blending smoky, fire-kissed flavors with elegant, contemporary presentation — every plate crafted to be remembered.</p>
+        <div class="hero-cta">
+            <button class="btn btn-solid" onclick="openOrder()"><span>Order Now</span></button>
         </div>
     </div>
+</div>
 
-    <div class="scroll-ind">
-        <span>Scroll</span>
-        <div class="line"></div>
-    </div>
-</section>
 
-<!-- Divider -->
-<div class="divider" data-divider><svg viewBox="0 0 180 38"><path d="M0 19c20-25 35 25 55 0s35-25 55 0 35-25 70 0"/></svg></div>
-
-<!-- ============================= ABOUT ============================= -->
+<!-- ABOUT -->
 <section id="about" class="about">
     <div class="container about-grid">
         <div class="about-imgwrap" data-aos="fade-right">
-            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80" alt="Velvet Ember dining room interior">
-            <div class="about-badge">
-                <b id="yearsCount">0</b>
-                <span>Years of Live-Fire Craft</span>
-            </div>
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80" alt="About">
+            <div class="about-badge"><b>5★</b><span>Customer Rated</span></div>
         </div>
         <div class="about-text" data-aos="fade-left">
             <div class="eyebrow">Our Story</div>
-            <h2 class="section-title" style="margin-bottom:26px;">A room built<br>around the flame.</h2>
-            <p>Velvet Ember opened as a single hearth and a short menu. Today the kitchen still runs on wood and coal — no shortcuts, no gas line hiding behind the grill. Everything that leaves the pass has touched fire.</p>
-            <p>We work with growers within a day's drive, age our own meat, and pour a bar list built to match smoke rather than fight it.</p>
+            <h2 class="section-title" style="margin-bottom:20px;">About Velvet Ember</h2>
+            <p>Born from a love of open-flame cooking, Velvet Ember brings together smoke, spice, and slow craft in a warm, intimate room. Every dish on our menu is designed to surprise, comfort, and linger long after the last bite.</p>
 
             <div class="stat-row">
-                <div class="stat"><b class="count" data-count="9">0</b><span>Years Open</span></div>
-                <div class="stat"><b class="count" data-count="48000">0</b><span>Guests Hosted</span></div>
-                <div class="stat"><b class="count" data-count="120000">0</b><span>Plates Fired</span></div>
-                <div class="stat"><b class="count" data-count="14">0</b><span>Awards Won</span></div>
+                <div class="stat"><b>12</b><span>Menu</span></div>
+                <div class="stat"><b>Fine Dining</b><span>Category</span></div>
+                <div class="stat"><b>5★</b><span>Rating</span></div>
             </div>
 
             <div class="about-meta">
-                <div><b>Hours</b>Tue – Sun, 5:00 PM – 12:00 AM</div>
+                <div><b>Hours</b><span>Mon – Sun: 12:00 PM – 11:00 PM</span></div>
                 <div><b>Phone</b><a href="tel:+919876543210">+91 98765 43210</a></div>
-                <div><b>Email</b><a href="mailto:hello@velvetember.in">hello@velvetember.in</a></div>
-                <div><b>Address</b>Sector 14, Civil Lines, Bhiwani, Haryana</div>
+                <div><b>Email</b><a href="mailto:hello@velvetember.com">hello@velvetember.com</a></div>
+                <div><b>Address</b><span>12 MG Road, Bandra West, Mumbai</span></div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="divider" data-divider><svg viewBox="0 0 180 38"><path d="M0 19c20-25 35 25 55 0s35-25 55 0 35-25 70 0"/></svg></div>
-
-<!-- ============================= MENU ============================= -->
-<section id="menu">
+<!-- MENU -->
+<section id="menu-section">
     <div class="container">
         <div class="section-head">
             <div>
                 <div class="eyebrow">The Menu</div>
-                <h2 class="section-title">Fired &amp; finished<br>to order.</h2>
+                <h2 class="section-title">Explore Our Menu</h2>
             </div>
-            <p class="section-sub">Every dish below is pulled live from our kitchen board — add a new item to the pass and it appears here automatically, no rebuild required.</p>
+            <p class="section-sub">Everything below reflects what's currently on offer.</p>
         </div>
 
         <div class="menu-controls">
             <div class="filters" id="filterBar">
                 <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="veg">Veg</button>
-                <button class="filter-btn" data-filter="nonveg">Non-Veg</button>
-                <button class="filter-btn" data-filter="popular">Popular</button>
-                <button class="filter-btn" data-filter="latest">Latest</button>
-                <button class="filter-btn" data-filter="price-low">Price: Low</button>
-                <button class="filter-btn" data-filter="price-high">Price: High</button>
+                <button class="filter-btn" data-filter="Veg">Veg</button>
+                <button class="filter-btn" data-filter="Non-Veg">Non-Veg</button>
             </div>
             <div class="search-wrap">
                 <input type="text" id="menuSearch" placeholder="Search the menu…">
@@ -614,24 +452,312 @@
             </div>
         </div>
 
-        <div id="menuMount"></div>
+        <div class="menu-grid" id="menuMount">
+
+            <div class="dish-card filter-item" data-type="Non-Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-nonveg">Non-Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80" alt="Smoked Tandoori Ember Chicken" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Smoked Tandoori Ember Chicken</h4>
+                        <span class="dish-price">₹520</span>
+                    </div>
+                    <p class="dish-desc item-desc">Charcoal-smoked chicken marinated overnight in yogurt and roasted spices, finished over live flame.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Smoked Tandoori Ember Chicken', 520)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-veg">Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&q=80" alt="Charred Paneer Tikka" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Charred Paneer Tikka</h4>
+                        <span class="dish-price">₹360</span>
+                    </div>
+                    <p class="dish-desc item-desc">Cottage cheese cubes grilled over embers, glazed with a smoky mint and coriander chutney.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Charred Paneer Tikka', 360)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Non-Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-nonveg">Non-Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=80" alt="Ember Grilled Lamb Chops" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Ember Grilled Lamb Chops</h4>
+                        <span class="dish-price">₹780</span>
+                    </div>
+                    <p class="dish-desc item-desc">Slow-marinated lamb chops finished on the open grill, served with a red wine reduction.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Ember Grilled Lamb Chops', 780)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-veg">Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=600&q=80" alt="Wild Mushroom Risotto" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Wild Mushroom Risotto</h4>
+                        <span class="dish-price">₹410</span>
+                    </div>
+                    <p class="dish-desc item-desc">Creamy arborio rice simmered with wild mushrooms, truffle oil, and aged parmesan.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Wild Mushroom Risotto', 410)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Non-Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-nonveg">Non-Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Flame Seared Salmon" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Flame Seared Salmon</h4>
+                        <span class="dish-price">₹690</span>
+                    </div>
+                    <p class="dish-desc item-desc">Norwegian salmon seared over open flame, glazed with honey-soy and toasted sesame.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Flame Seared Salmon', 690)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-veg">Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&q=80" alt="Roasted Beetroot Salad" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Roasted Beetroot Salad</h4>
+                        <span class="dish-price">₹280</span>
+                    </div>
+                    <p class="dish-desc item-desc">Fire-roasted beetroot, whipped feta, candied walnuts, and a balsamic reduction.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Roasted Beetroot Salad', 280)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Non-Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-nonveg">Non-Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=600&q=80" alt="Smoky BBQ Ribs" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Smoky BBQ Ribs</h4>
+                        <span class="dish-price">₹650</span>
+                    </div>
+                    <p class="dish-desc item-desc">Slow-cooked pork ribs, glazed in a house-made smoky bourbon barbecue sauce.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Smoky BBQ Ribs', 650)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-veg">Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?w=600&q=80" alt="Grilled Corn &amp; Truffle Flatbread" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Grilled Corn &amp; Truffle Flatbread</h4>
+                        <span class="dish-price">₹340</span>
+                    </div>
+                    <p class="dish-desc item-desc">Wood-fired flatbread topped with charred corn, mozzarella, and shaved black truffle.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Grilled Corn &amp; Truffle Flatbread', 340)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Non-Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-nonveg">Non-Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=80" alt="Ember Roasted Duck Breast" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Ember Roasted Duck Breast</h4>
+                        <span class="dish-price">₹820</span>
+                    </div>
+                    <p class="dish-desc item-desc">Pan-seared duck breast finished over embers, served with cherry-port jus.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Ember Roasted Duck Breast', 820)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-veg">Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80" alt="Charcoal Roasted Vegetable Platter" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Charcoal Roasted Vegetable Platter</h4>
+                        <span class="dish-price">₹390</span>
+                    </div>
+                    <p class="dish-desc item-desc">Seasonal vegetables charred over coal, tossed in herb oil and toasted spice.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Charcoal Roasted Vegetable Platter', 390)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Non-Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-nonveg">Non-Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600&q=80" alt="Fire Grilled Prawns" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Fire Grilled Prawns</h4>
+                        <span class="dish-price">₹590</span>
+                    </div>
+                    <p class="dish-desc item-desc">Jumbo prawns skewered and flame-grilled, tossed in chilli-garlic butter.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Fire Grilled Prawns', 590)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dish-card filter-item" data-type="Veg">
+                <div class="dish-media">
+                    <div class="dish-tags"><span class="tag tag-veg">Veg</span></div>
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80" alt="Dark Chocolate Ember Tart" loading="lazy">
+                </div>
+                <div class="dish-body">
+                    <div class="dish-top">
+                        <h4 class="item-name">Dark Chocolate Ember Tart</h4>
+                        <span class="dish-price">₹300</span>
+                    </div>
+                    <p class="dish-desc item-desc">Rich dark chocolate tart with a smoked caramel core and toasted hazelnuts.</p>
+                    <div class="dish-order">
+                        <button type="button" onclick="addToCart('Dark Chocolate Ember Tart', 300)">
+                            Add to Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
         <p class="no-results" id="noResults">No dishes match your search just yet — try another keyword.</p>
     </div>
 </section>
 
-<!-- ============================= SPECIALS ============================= -->
+<!-- SPECIALS -->
 <section class="specials">
     <div class="container">
         <div class="section-head">
             <div>
                 <div class="eyebrow">Chef's Selection</div>
-                <h2 class="section-title">Tonight's specials.</h2>
+                <h2 class="section-title">Today's Specials</h2>
             </div>
         </div>
     </div>
     <div class="container">
         <div class="swiper specials-swiper">
-            <div class="swiper-wrapper" id="specialsMount"></div>
+            <div class="swiper-wrapper">
+
+                <div class="swiper-slide">
+                    <div class="special-card">
+                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=700&q=80" alt="Smoked Tandoori Ember Chicken">
+                        <div class="special-overlay">
+                            <h3>Smoked Tandoori Ember Chicken</h3>
+                            <p><span>Charcoal-smoked chicken finished over live flame.</span></p>
+                            <div class="special-order-row">
+                                <span class="dish-price" style="color:var(--gold); font-family:'JetBrains Mono',monospace; font-size:16px;">₹520</span>
+                                <button type="button" class="special-order-btn" onclick="addToCart('Smoked Tandoori Ember Chicken', 520)">Add to Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="special-card">
+                        <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=700&q=80" alt="Ember Grilled Lamb Chops">
+                        <div class="special-overlay">
+                            <h3>Ember Grilled Lamb Chops</h3>
+                            <p><span>Finished on the open grill with a red wine reduction.</span></p>
+                            <div class="special-order-row">
+                                <span class="dish-price" style="color:var(--gold); font-family:'JetBrains Mono',monospace; font-size:16px;">₹780</span>
+                                <button type="button" class="special-order-btn" onclick="addToCart('Ember Grilled Lamb Chops', 780)">Add to Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="special-card">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80" alt="Ember Roasted Duck Breast">
+                        <div class="special-overlay">
+                            <h3>Ember Roasted Duck Breast</h3>
+                            <p><span>Pan-seared and finished over embers, cherry-port jus.</span></p>
+                            <div class="special-order-row">
+                                <span class="dish-price" style="color:var(--gold); font-family:'JetBrains Mono',monospace; font-size:16px;">₹820</span>
+                                <button type="button" class="special-order-btn" onclick="addToCart('Ember Roasted Duck Breast', 820)">Add to Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="special-card">
+                        <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=700&q=80" alt="Smoky BBQ Ribs">
+                        <div class="special-overlay">
+                            <h3>Smoky BBQ Ribs</h3>
+                            <p><span>Slow-cooked pork ribs in smoky bourbon barbecue sauce.</span></p>
+                            <div class="special-order-row">
+                                <span class="dish-price" style="color:var(--gold); font-family:'JetBrains Mono',monospace; font-size:16px;">₹650</span>
+                                <button type="button" class="special-order-btn" onclick="addToCart('Smoky BBQ Ribs', 650)">Add to Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-pagination"></div>
@@ -639,50 +765,7 @@
     </div>
 </section>
 
-<div class="divider" data-divider><svg viewBox="0 0 180 38"><path d="M0 19c20-25 35 25 55 0s35-25 55 0 35-25 70 0"/></svg></div>
-
-<!-- ============================= CHEF ============================= -->
-<section id="chef">
-    <div class="container chef-grid">
-        <div class="chef-imgwrap" data-aos="fade-right">
-            <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=800&q=80" alt="Executive Chef of Velvet Ember">
-            <div class="chef-sig">— A. Malhotra</div>
-        </div>
-        <div class="chef-info" data-aos="fade-left">
-            <div class="role">Executive Chef</div>
-            <h3>Arjun Malhotra</h3>
-            <p>Seventeen years behind the grill, trained in Lyon and Copenhagen before bringing an open-fire philosophy home to Haryana. Arjun believes a plate should smell like where it was cooked.</p>
-            <div class="chef-stats">
-                <div><b>17</b><span>Years Cooking</span></div>
-                <div><b>6</b><span>Awards</span></div>
-                <div><b>3</b><span>Cities Trained</span></div>
-            </div>
-            <p style="font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:var(--ink);">Signature Dish — Coal-Roasted Bone Marrow, Charred Sourdough</p>
-            <div class="chef-social">
-                <a class="icon-btn" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
-                <a class="icon-btn" href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4h-2a4 4 0 0 0-4 4v3H7v4h2v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3z"/></svg></a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ============================= VIDEO ============================= -->
-<section style="padding-top:0;">
-    <div class="container">
-        <div class="video-wrap">
-            <video id="storyVideo" muted loop playsinline poster="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80">
-                <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-            </video>
-            <button class="play-btn" id="playBtn" aria-label="Play story">
-                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </button>
-        </div>
-    </div>
-</section>
-
-<div class="divider" data-divider><svg viewBox="0 0 180 38"><path d="M0 19c20-25 35 25 55 0s35-25 55 0 35-25 70 0"/></svg></div>
-
-<!-- ============================= GALLERY ============================= -->
+<!-- GALLERY -->
 <section id="gallery">
     <div class="container">
         <div class="section-head">
@@ -691,770 +774,457 @@
                 <h2 class="section-title">Moments from the room.</h2>
             </div>
         </div>
-        <div class="gallery-grid" id="galleryMount"></div>
+        <div class="gallery-grid" id="galleryMount">
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80" alt="Ambience" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=700&q=80" alt="Interior" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=700&q=80" alt="Setup" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=700&q=80" alt="Detail" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?w=700&q=80" alt="Space" loading="lazy"><div class="g-overlay"></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80" alt="Corner" loading="lazy"><div class="g-overlay"></div></div>
+        </div>
     </div>
 </section>
 
-<!-- ============================= WHY CHOOSE US ============================= -->
+<!-- WHY US -->
 <section style="padding-top:0;">
     <div class="container">
         <div class="section-head">
-            <div>
-                <div class="eyebrow">Why Velvet Ember</div>
-                <h2 class="section-title">The details we don't skip.</h2>
-            </div>
+            <div><div class="eyebrow">Why Us</div><h2 class="section-title">The Velvet Ember Standard</h2></div>
         </div>
     </div>
     <div class="container">
         <div class="why-grid">
             <div class="why-card" data-aos="fade-up">
                 <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2s6 5.5 6 11a6 6 0 1 1-12 0c0-2 1-3.5 2-5 .3 1.5 1 2 1.5 1.5C8 7 9 4 12 2z"/></svg></div>
-                <h4>Fresh, Fired Daily</h4>
-                <p>Nothing is pre-cooked. Every order starts on the coal when it's placed.</p>
+                <h4>Quality First</h4><p>Every detail crafted with care, from ingredients to presentation.</p>
             </div>
             <div class="why-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11.5A8 8 0 0 0 4 10.5C4 17.5 12 22 12 22z"/></svg></div>
-                <h4>Organic Sourcing</h4>
-                <p>Produce and meat sourced from growers within a day's drive of the kitchen.</p>
-            </div>
-            <div class="why-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 2h12v6a6 6 0 0 1-12 0V2z"/><path d="M6 20h12M12 14v6"/></svg></div>
-                <h4>Trained Fire Chefs</h4>
-                <p>Every cook on the line trains a full year on open-flame technique before service.</p>
-            </div>
-            <div class="why-card" data-aos="fade-up">
-                <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12l4-4 4 4 4-8 6 12"/></svg></div>
-                <h4>Fast, Careful Delivery</h4>
-                <p>Insulated fire-safe packaging keeps char and temperature intact to your door.</p>
-            </div>
-            <div class="why-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 20V10l8-6 8 6v10"/><path d="M9 20v-6h6v6"/></svg></div>
-                <h4>Luxury Dining Room</h4>
-                <p>Copper light, low music, and tables set with room to actually talk.</p>
+                <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 2h12v6a6 6 0 0 1-12 0V2z"/></svg></div>
+                <h4>Expert Team</h4><p>Skilled professionals dedicated to an exceptional experience.</p>
             </div>
             <div class="why-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div>
-                <h4>Honest Pricing</h4>
-                <p>One menu, one price for everyone — no surge, no hidden service tiers.</p>
+                <h4>Trusted Standards</h4><p>Consistent quality and hygiene you can always rely on.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ============================= REVIEWS ============================= -->
+<!-- REVIEWS -->
 <section id="reviews" class="reviews">
     <div class="container">
-        <div class="section-head">
-            <div>
-                <div class="eyebrow">Guest Words</div>
-                <h2 class="section-title">What the table says.</h2>
+        <div class="section-head"><div><div class="eyebrow">Guest Words</div><h2 class="section-title">What the table says.</h2></div></div>
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div>
+                    <div class="stars">★★★★★</div>
+                    <p>"Excellent experience from start to finish. Highly recommended to everyone!"</p>
+                </div>
+                <div class="review-person"><img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Reviewer"><div><b>Happy Customer</b></div></div>
             </div>
-        </div>
-        <div class="swiper reviews-swiper">
-            <div class="swiper-wrapper" id="reviewsMount"></div>
-            <div class="swiper-pagination" style="position:static; margin-top:34px;"></div>
+            <div class="review-card">
+                <div>
+                    <div class="stars">★★★★★</div>
+                    <p>"Professional service, great ambience, and everything was just perfect."</p>
+                </div>
+                <div class="review-person"><img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Reviewer"><div><b>Happy Customer</b></div></div>
+            </div>
+            <div class="review-card">
+                <div>
+                    <div class="stars">★★★★★</div>
+                    <p>"Will definitely be coming back. Couldn't have asked for better."</p>
+                </div>
+                <div class="review-person"><img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Reviewer"><div><b>Happy Customer</b></div></div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- ============================= BOOK TABLE ============================= -->
-<section id="book" class="book">
-    <div class="container book-grid">
-        <div class="book-info" data-aos="fade-right">
-            <div class="eyebrow">Reservations</div>
-            <h2>Save the coal<br>for you.</h2>
-            <p>Tables are held for 15 minutes past your slot. For parties above eight, write to us directly and we'll set a private course.</p>
-            <div class="book-hours">
-                <div><span>Tue — Thu</span><b>5:00 PM – 11:00 PM</b></div>
-                <div><span>Fri — Sat</span><b>5:00 PM – 12:30 AM</b></div>
-                <div><span>Sunday</span><b>1:00 PM – 11:00 PM</b></div>
-                <div><span>Monday</span><b>Closed</b></div>
-            </div>
-        </div>
-        <form class="book-form" id="bookForm" novalidate data-aos="fade-left">
-            <div class="form-grid">
-                <div class="field">
-                    <input type="text" id="fName" placeholder=" " required>
-                    <label>Full Name</label><div class="bar"></div>
-                    <span class="err">Please enter your name.</span>
-                </div>
-                <div class="field">
-                    <input type="tel" id="fPhone" placeholder=" " required>
-                    <label>Phone Number</label><div class="bar"></div>
-                    <span class="err">Enter a valid 10-digit number.</span>
-                </div>
-                <div class="field">
-                    <input type="number" id="fGuests" min="1" max="20" placeholder=" " required>
-                    <label>Guests</label><div class="bar"></div>
-                    <span class="err">How many guests?</span>
-                </div>
-                <div class="field">
-                    <input type="date" id="fDate" placeholder=" " required>
-                    <label>Date</label><div class="bar"></div>
-                    <span class="err">Choose a date.</span>
-                </div>
-                <div class="field">
-                    <input type="time" id="fTime" placeholder=" " required>
-                    <label>Time</label><div class="bar"></div>
-                    <span class="err">Choose a time.</span>
-                </div>
-                <div class="field">
-                    <input type="email" id="fEmail" placeholder=" ">
-                    <label>Email (optional)</label><div class="bar"></div>
-                </div>
-                <div class="field full">
-                    <textarea id="fMsg" placeholder=" "></textarea>
-                    <label>Special Requests</label><div class="bar"></div>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-solid form-submit"><span>Confirm Reservation</span></button>
-            <div class="form-success" id="formSuccess">Your table is held. A confirmation will reach you by phone shortly.</div>
-        </form>
-    </div>
-</section>
-
-<!-- ============================= CONTACT ============================= -->
+<!-- CONTACT -->
 <section id="contact">
     <div class="container">
-        <div class="section-head">
-            <div>
-                <div class="eyebrow">Find Us</div>
-                <h2 class="section-title">Come sit by the fire.</h2>
-            </div>
-        </div>
+        <div class="section-head"><div><div class="eyebrow">Find Us</div><h2 class="section-title">Get in touch.</h2></div></div>
         <div class="contact-grid">
             <div class="contact-list" data-aos="fade-right">
                 <div class="c-item">
-                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .6 3a2 2 0 0 1-.5 2L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2-.5c1 .3 2 .5 3 .6a2 2 0 0 1 1.7 2z"/></svg></div>
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3"/></svg></div>
                     <div><b>Phone</b><a href="tel:+919876543210">+91 98765 43210</a></div>
                 </div>
                 <div class="c-item">
                     <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg></div>
-                    <div><b>Email</b><a href="mailto:hello@velvetember.in">hello@velvetember.in</a></div>
+                    <div><b>Email</b><a href="mailto:hello@velvetember.com">hello@velvetember.com</a></div>
                 </div>
                 <div class="c-item">
                     <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3.9-6.9"/></svg></div>
                     <div><b>WhatsApp</b><a href="https://wa.me/919876543210" target="_blank">Message us directly</a></div>
                 </div>
                 <div class="c-item">
-                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11.5A8 8 0 0 0 4 10.5C4 17.5 12 22 12 22z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-                    <div><b>Address</b><span>Sector 14, Civil Lines, Bhiwani, Haryana 127021</span></div>
+                    <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11.5A8 8 0 0 0 4 10.5C4 17.5 12 22 12 22z"/></svg></div>
+                    <div><b>Address</b><span>12 MG Road, Bandra West, Mumbai</span></div>
                 </div>
                 <div class="c-item">
                     <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></div>
-                    <div><b>Instagram</b><a href="#" target="_blank">@velvetember.grill</a></div>
+                    <div><b>Instagram</b><a href="https://instagram.com/velvetember" target="_blank">Follow us</a></div>
                 </div>
             </div>
             <div class="map-wrap" data-aos="fade-left">
-                <iframe src="https://www.google.com/maps?q=Bhiwani,Haryana&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Velvet Ember location map"></iframe>
+                <iframe src="https://maps.google.com/maps?q=12%20MG%20Road%2C%20Bandra%20West%2C%20Mumbai&output=embed" loading="lazy" title="location map"></iframe>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ============================= FOOTER ============================= -->
+<!-- FOOTER -->
 <footer>
     <div class="container footer-top">
         <div class="footer-brand">
             <a href="#home" class="brand" style="color:#EDE6D6;">
                 <svg class="brand-flame" viewBox="0 0 40 40"><path d="M20 4c4 8-4 10-2 18 1 5 6 7 10 4-2 10-14 12-20 6-6-6-4-16 2-20-2 6 2 8 4 4 2-4-1-8 6-12z"/></svg>
-                Velvet Ember
+                <span>Velvet Ember</span>
             </a>
-            <p>A live-fire grill house in Bhiwani, Haryana — smoke, char and a slow evening.</p>
+            <p>A modern fine-dining restaurant blending smoky, fire-kissed flavors with elegant, contemporary presentation.</p>
+            <div class="footer-social">
+                <a href="https://instagram.com/velvetember" class="icon-btn" target="_blank"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/></svg></a>
+                <a href="https://facebook.com/velvetember" class="icon-btn" target="_blank">f</a>
+            </div>
         </div>
         <div class="footer-col">
             <h5>Explore</h5>
-            <a href="#menu">Menu</a>
+            <a href="#menu-section">Menu</a>
             <a href="#gallery">Gallery</a>
-            <a href="#chef">Our Chef</a>
             <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
         </div>
         <div class="footer-col">
             <h5>Hours</h5>
-            <a href="#">Tue – Thu · 5PM – 11PM</a>
-            <a href="#">Fri – Sat · 5PM – 12:30AM</a>
-            <a href="#">Sunday · 1PM – 11PM</a>
-            <a href="#">Monday · Closed</a>
-        </div>
-        <div class="footer-col">
-            <h5>Newsletter</h5>
-            <p style="color:#A79C89; font-size:13px; margin-bottom:6px;">First seating of every new tasting menu, in your inbox.</p>
-            <form class="newsletter-form" id="newsletterForm">
-                <input type="email" placeholder="Your email" required>
-                <button type="submit" aria-label="Subscribe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-            </form>
+            <a>Mon – Sun: 12:00 PM – 11:00 PM</a>
         </div>
     </div>
     <div class="container footer-bottom">
         <span>© 2026 Velvet Ember. All rights reserved.</span>
-        <span><a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a></span>
     </div>
 </footer>
 
-<!-- ============================= FLOATING BUTTONS ============================= -->
 <div class="float-stack">
     <a class="fab fab-top" id="fabTop" href="#home" aria-label="Scroll to top">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </a>
-    <a class="fab fab-book" href="#book" aria-label="Book a table">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
-    </a>
-    <a class="fab fab-wa" href="https://wa.me/919876543210" target="_blank" aria-label="WhatsApp">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.4 5.1L2 22l5.1-1.3C8.6 21.5 10.3 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm5.1 14.2c-.2.6-1.2 1.2-1.7 1.2-.4 0-.9.1-3-.8-2.5-1.1-4.1-3.7-4.2-3.9-.1-.2-1-1.3-1-2.5s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.7.8 1.8.1.2.1.3 0 .5-.1.2-.1.3-.3.5-.1.2-.3.4-.4.5-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.5 1.5.2.1.4.1.5-.1.2-.2.6-.7.8-1 .2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.5.3.1.2.1 1-.1 1.6z"/></svg>
-    </a>
+    <button class="fab fab-cart" onclick="openOrder()" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+        <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+    </button>
 </div>
 
-<!-- ============================= LIGHTBOX ============================= -->
 <div id="lightbox">
     <button class="lb-close" id="lbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <img id="lbImage" src="" alt="Gallery preview">
+    <img id="lbImage" src="" alt="preview">
 </div>
 
-<!-- ============================= LIBS ============================= -->
+<!-- ORDER MODAL -->
+<div class="order-modal-overlay" id="orderModal" onclick="closeOrderOnBg(event)">
+    <div class="order-modal">
+        <div class="order-modal-header">
+            <h4 style="font-family:'Fraunces',serif; font-size: 20px;">Your Order</h4>
+            <button class="order-modal-close" onclick="closeOrder()">✕</button>
+        </div>
+        <div id="orderItemsList"><p style="color:var(--ink-dim); font-size:0.85rem; text-align:center; padding:1rem 0;">Your cart is empty.</p></div>
+        <input type="text" id="custName" class="order-modal-input" placeholder="Your Name">
+        <input type="tel" id="custPhone" class="order-modal-input" placeholder="Mobile Number">
+        <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+            <span style="color:var(--ink-dim); font-size:0.85rem;">Total</span>
+            <strong id="orderTotal" style="color:var(--gold); font-size:1.2rem;">₹0</strong>
+        </div>
+        <button class="btn btn-solid" style="width:100%; justify-content:center;" onclick="placeOrder()"><span>Proceed to WhatsApp →</span></button>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 
 <script>
-    /* =========================================================================
-       BUSINESS DATA  (BusinessEntity + BusinessCategoryDataEntity mock source)
-       In production these are fetched from the backend; the render layer below
-       treats them as the single source of truth so new items need zero code.
-       ========================================================================= */
-    const BusinessEntity = {
-      name: "Velvet Ember",
-      slug: "velvet-ember",
-      tagline: "Fire, held with restraint.",
-      description: "A live-fire grill house in Bhiwani, Haryana.",
-      phone: "+91 98765 43210",
-      email: "hello@velvetember.in",
-      whatsapp: "919876543210",
-      address: "Sector 14, Civil Lines, Bhiwani, Haryana 127021",
-      googleMap: "https://www.google.com/maps?q=Bhiwani,Haryana&output=embed",
-      logo: null,
-      coverImage: "https://images.unsplash.com/photo-1544025162-d76694265947?w=1600&q=80",
-      theme: "dark",
-      published: true,
-      category: "Luxury Grill & Bar",
-      businessHours: { "Tue-Thu": "5:00 PM – 11:00 PM", "Fri-Sat": "5:00 PM – 12:30 AM", "Sun": "1:00 PM – 11:00 PM", "Mon": "Closed" },
-      instagramUrl: "#",
-      facebookUrl: "#"
-    };
-
-    const BusinessCategoryDataEntity = [
-      // Starters — rowId groups the course together
-      { rowId:"starters", itemName:"Coal-Roasted Bone Marrow", itemPrice:520, itemImage:"https://images.unsplash.com/photo-1432139509613-5c4255815697?w=700&q=80", itemDescription:"Charred sourdough, parsley gremolata, smoked salt.", foodType:"nonveg", popular:true, latest:false },
-      { rowId:"starters", itemName:"Smoked Burrata", itemPrice:460, itemImage:"https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=700&q=80", itemDescription:"Charred tomato, basil oil, hearth-fired flatbread.", foodType:"veg", popular:false, latest:true },
-      { rowId:"starters", itemName:"Tandoor Prawns", itemPrice:640, itemImage:"https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=700&q=80", itemDescription:"Kashmiri chili glaze, lime, charred curry leaf.", foodType:"nonveg", popular:true, latest:false },
-
-      // Signature Grills
-      { rowId:"grills", itemName:"36-Hour Short Rib", itemPrice:980, itemImage:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=700&q=80", itemDescription:"Coal-finished, red wine jus, roasted bone broth glaze.", foodType:"nonveg", popular:true, latest:false },
-      { rowId:"grills", itemName:"Whole Charred Cauliflower", itemPrice:560, itemImage:"https://images.unsplash.com/photo-1601315379734-6ad19d6e0e14?w=700&q=80", itemDescription:"Almond romesco, smoked chili oil, herb dust.", foodType:"veg", popular:false, latest:true },
-      { rowId:"grills", itemName:"Fire-Roasted Salmon", itemPrice:840, itemImage:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=700&q=80", itemDescription:"Miso glaze, charred citrus, ember-roasted greens.", foodType:"nonveg", popular:true, latest:false },
-      { rowId:"grills", itemName:"Dry-Aged Ribeye", itemPrice:1450, itemImage:"https://images.unsplash.com/photo-1600891964092-4316c288032e?w=700&q=80", itemDescription:"28-day aged, bone marrow butter, charred shallot.", foodType:"nonveg", popular:true, latest:false },
-
-      // Handmade Pasta
-      { rowId:"pasta", itemName:"Smoked Mushroom Tagliatelle", itemPrice:520, itemImage:"https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=700&q=80", itemDescription:"Wild mushrooms, brown butter, aged parmesan.", foodType:"veg", popular:false, latest:false },
-      { rowId:"pasta", itemName:"Charred Prawn Linguine", itemPrice:680, itemImage:"https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=700&q=80", itemDescription:"Smoked tomato, chili, coal-kissed prawns.", foodType:"nonveg", popular:true, latest:true },
-
-      // Craft Cocktails
-      { rowId:"bar", itemName:"Smoked Old Fashioned", itemPrice:620, itemImage:"https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=700&q=80", itemDescription:"Applewood smoke, bourbon, charred orange.", foodType:"veg", popular:true, latest:false },
-      { rowId:"bar", itemName:"Ember Negroni", itemPrice:590, itemImage:"https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=700&q=80", itemDescription:"Gin, campari, vermouth, coal-fat wash.", foodType:"veg", popular:false, latest:true },
-
-      // Desserts
-      { rowId:"desserts", itemName:"Burnt Basque Cheesecake", itemPrice:420, itemImage:"https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=700&q=80", itemDescription:"Deep-charred crust, whipped mascarpone.", foodType:"veg", popular:true, latest:false },
-      { rowId:"desserts", itemName:"Smoked Chocolate Fondant", itemPrice:390, itemImage:"https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=700&q=80", itemDescription:"Molten center, hazelnut praline, torched cream.", foodType:"veg", popular:false, latest:false }
-    ];
-
-    const CATEGORY_LABELS = { starters:"Starters", grills:"Signature Grills", pasta:"Handmade Pasta", bar:"Craft Cocktails", desserts:"Desserts" };
-
-    /* =========================================================================
-       LOADER
-       ========================================================================= */
-    window.addEventListener("load", ()=>{
-      setTimeout(()=>{
-        document.getElementById("loader").classList.add("hide");
-        document.body.style.overflow = "auto";
-        runIntro();
-      }, 2400);
-    });
-    document.body.style.overflow = "hidden";
-
-    /* =========================================================================
-       THEME TOGGLE
-       ========================================================================= */
-    const root = document.documentElement;
-    const savedTheme = localStorage.getItem("ve-theme") || "dark";
-    root.setAttribute("data-theme", savedTheme);
-    document.getElementById("themeToggle").addEventListener("click", ()=>{
-      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      gsap.to("body", { duration:.01 }); // ensures transition class kicks in
-      root.setAttribute("data-theme", next);
-      localStorage.setItem("ve-theme", next);
-    });
-
-    /* =========================================================================
-       CUSTOM CURSOR
-       ========================================================================= */
-    const cursor = document.getElementById("cursor");
-    const cursorDot = document.getElementById("cursorDot");
-    let mx=0,my=0,cx=0,cy=0;
-    window.addEventListener("mousemove", e=>{
-      mx=e.clientX; my=e.clientY;
-      cursorDot.style.left=mx+"px"; cursorDot.style.top=my+"px";
-    });
-    (function loopCursor(){
-      cx += (mx-cx)*0.16; cy += (my-cy)*0.16;
-      cursor.style.left=cx+"px"; cursor.style.top=cy+"px";
-      requestAnimationFrame(loopCursor);
-    })();
-    document.querySelectorAll("a,button,.dish-card,.gallery-item,input,textarea,.filter-btn").forEach(el=>{
-      el.addEventListener("mouseenter", ()=>cursor.classList.add("active"));
-      el.addEventListener("mouseleave", ()=>cursor.classList.remove("active"));
-    });
-    document.addEventListener("mousedown", ()=>{
-      const ripple = document.createElement("div");
-      ripple.style.cssText = `position:fixed;left:${mx}px;top:${my}px;width:8px;height:8px;border-radius:50%;border:1px solid var(--gold);transform:translate(-50%,-50%);pointer-events:none;z-index:9998;`;
-      document.body.appendChild(ripple);
-      gsap.to(ripple,{ width:70, height:70, opacity:0, duration:.6, ease:"power2.out", onComplete:()=>ripple.remove() });
-    });
-
-    /* =========================================================================
-       LENIS SMOOTH SCROLL
-       ========================================================================= */
-    let lenis;
-    try{
-      lenis = new Lenis({ duration:1.1, easing:t=>1-Math.pow(1-t,3) });
-      function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
-      requestAnimationFrame(raf);
-      lenis.on("scroll", ()=>ScrollTrigger.update());
-    }catch(e){}
+    const whatsappNumber = "919876543210";
 
     gsap.registerPlugin(ScrollTrigger);
 
-    /* =========================================================================
-       HEADER SCROLL STATE + BACK TO TOP
-       ========================================================================= */
-    const headerEl = document.getElementById("siteHeader");
-    const fabTop = document.getElementById("fabTop");
-    window.addEventListener("scroll", ()=>{
-      const y = window.scrollY;
-      headerEl.classList.toggle("scrolled", y > 60);
-      fabTop.classList.toggle("show", y > 700);
-    });
-
-    /* =========================================================================
-       EMBER PARTICLE CANVAS (signature ambient motion)
-       ========================================================================= */
-    const ec = document.getElementById("emberCanvas");
-    const ectx = ec.getContext("2d");
-    let embers = [];
-    function sizeEmberCanvas(){ ec.width = window.innerWidth; ec.height = window.innerHeight; }
-    sizeEmberCanvas();
-    window.addEventListener("resize", sizeEmberCanvas);
-    function spawnEmber(){
-      embers.push({
-        x: Math.random()*ec.width,
-        y: ec.height + 10,
-        r: Math.random()*2 + .6,
-        speed: Math.random()*.6 + .25,
-        drift: (Math.random()-.5)*.6,
-        life: 1,
-        hue: Math.random() > .5 ? "201,162,39" : "232,93,44"
-      });
-    }
-    function tickEmbers(){
-      ectx.clearRect(0,0,ec.width,ec.height);
-      if (embers.length < 70 && Math.random() > .5) spawnEmber();
-      embers.forEach(p=>{
-        p.y -= p.speed; p.x += p.drift; p.life -= 0.0032;
-        ectx.beginPath();
-        ectx.fillStyle = `rgba(${p.hue},${Math.max(p.life,0)*0.85})`;
-        ectx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ectx.fill();
-      });
-      embers = embers.filter(p=>p.life > 0 && p.y > -20);
-      requestAnimationFrame(tickEmbers);
-    }
-    tickEmbers();
-
-    /* =========================================================================
-       THREE.JS — HERO AMBIENT 3D FIELD
-       ========================================================================= */
-    (function heroThree(){
-      const canvas = document.getElementById("heroCanvas");
-      if(!window.THREE || !canvas) return;
-      const heroSection = document.querySelector(".hero");
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, heroSection.clientWidth/heroSection.clientHeight, .1, 100);
-      camera.position.z = 9;
-
-      const group = new THREE.Group();
-      scene.add(group);
-
-      const geoms = [
-        new THREE.TorusGeometry(0.7, 0.22, 16, 60),
-        new THREE.IcosahedronGeometry(0.65, 0),
-        new THREE.OctahedronGeometry(0.6, 0)
-      ];
-      const mat = (hex)=> new THREE.MeshStandardMaterial({ color:hex, metalness:0.7, roughness:0.25, emissive:hex, emissiveIntensity:0.12 });
-      const colors = [0xC9A227, 0xB5651D, 0xE85D2C];
-      const meshes = [];
-      for(let i=0;i<7;i++){
-        const g = geoms[i % geoms.length];
-        const m = new THREE.Mesh(g, mat(colors[i % colors.length]));
-        m.position.set((Math.random()-0.5)*8, (Math.random()-0.5)*5, (Math.random()-0.5)*4 - 1);
-        m.userData.speed = 0.15 + Math.random()*0.25;
-        m.userData.axis = new THREE.Vector3(Math.random(),Math.random(),Math.random()).normalize();
-        group.add(m); meshes.push(m);
-      }
-
-      const light1 = new THREE.PointLight(0xE85D2C, 3, 20); light1.position.set(3,2,4); scene.add(light1);
-      const light2 = new THREE.PointLight(0xC9A227, 2, 20); light2.position.set(-4,-2,3); scene.add(light2);
-      scene.add(new THREE.AmbientLight(0xffffff, 0.25));
-
-      let targetX=0, targetY=0;
-      window.addEventListener("mousemove", e=>{
-        targetX = (e.clientX/window.innerWidth - 0.5);
-        targetY = (e.clientY/window.innerHeight - 0.5);
-      });
-
-      function resizeThree(){
-        const w = heroSection.clientWidth, h = heroSection.clientHeight;
-        renderer.setSize(w,h);
-        camera.aspect = w/h; camera.updateProjectionMatrix();
-      }
-      resizeThree();
-      window.addEventListener("resize", resizeThree);
-
-      function animateThree(){
-        meshes.forEach(m=>{
-          m.rotateOnAxis(m.userData.axis, m.userData.speed*0.01);
+    document.addEventListener("DOMContentLoaded", () => {
+        new Swiper(".specials-swiper", {
+            slidesPerView: 1.1,
+            spaceBetween: 16,
+            grabCursor: true,
+            loop: true,
+            autoplay: {
+                delay: 3500,
+                disableOnInteraction: false,
+            },
+            breakpoints: {
+                600: { slidesPerView: 2, spaceBetween: 20 },
+                1024: { slidesPerView: 3, spaceBetween: 26 }
+            },
+            navigation: { nextEl: ".specials-swiper .swiper-button-next", prevEl: ".specials-swiper .swiper-button-prev" },
+            pagination: { el: ".specials-swiper .swiper-pagination", clickable: true }
         });
-        group.rotation.y += (targetX*0.6 - group.rotation.y*0.02)*0.02;
-        group.rotation.x += (targetY*0.3 - group.rotation.x*0.02)*0.02;
-        camera.position.x += (targetX*1.2 - camera.position.x)*0.03;
-        camera.position.y += (-targetY*1.2 - camera.position.y)*0.03;
-        camera.lookAt(0,0,0);
-        renderer.render(scene, camera);
-        requestAnimationFrame(animateThree);
-      }
-      animateThree();
-    })();
 
-    /* =========================================================================
-       HERO INTRO TIMELINE (split text reveal)
-       ========================================================================= */
-    function runIntro(){
-      const tl = gsap.timeline({ defaults:{ ease:"power4.out" } });
-      tl.to(".hero-eyebrow", { duration:.8, opacity:1 }, 0)
-        .to(".hero-title .line span", { y:"0%", duration:1.1, stagger:.12 }, 0.15)
-        .from(".hero-side", { opacity:0, duration:1 }, 0.6)
-        .from(".scroll-ind", { opacity:0, duration:1 }, 1.2)
-        .from(".float-food", { opacity:0, y:40, scale:.8, duration:1, stagger:.15, ease:"back.out(1.4)" }, 0.9);
-    }
+        AOS.init({ duration: 900, once: true });
+        initEmberCanvas();
 
-    /* float food idle motion */
-    gsap.to(".ff1", { y:-18, duration:3.4, yoyo:true, repeat:-1, ease:"sine.inOut" });
-    gsap.to(".ff2", { y:16, duration:4, yoyo:true, repeat:-1, ease:"sine.inOut", delay:.4 });
-    gsap.to(".ff3", { y:-12, duration:3, yoyo:true, repeat:-1, ease:"sine.inOut", delay:.8 });
-
-    /* =========================================================================
-       SCROLL REVEALS
-       ========================================================================= */
-    gsap.utils.toArray("section .section-head, .about-text, .about-imgwrap, .chef-info, .chef-imgwrap, .book-info, .book-form, .contact-list, .map-wrap").forEach(el=>{
-      gsap.from(el, {
-        scrollTrigger:{ trigger:el, start:"top 82%" },
-        y:60, opacity:0, duration:1, ease:"power3.out"
-      });
-    });
-    document.querySelectorAll("[data-divider]").forEach(d=>{
-      ScrollTrigger.create({ trigger:d, start:"top 90%", onEnter:()=>d.classList.add("inview") });
-    });
-
-    /* =========================================================================
-       MENU RENDER (dynamic from BusinessCategoryDataEntity)
-       ========================================================================= */
-    const mount = document.getElementById("menuMount");
-    const noResults = document.getElementById("noResults");
-    let activeFilter = "all";
-    let searchTerm = "";
-
-    function foodBadge(type){
-      return type === "veg"
-        ? `<span class="tag tag-veg">● Veg</span>`
-        : `<span class="tag tag-nonveg">● Non-Veg</span>`;
-    }
-
-    function dishMatches(item){
-      const q = searchTerm.trim().toLowerCase();
-      if(q && !(item.itemName.toLowerCase().includes(q) || item.itemDescription.toLowerCase().includes(q))) return false;
-      if(activeFilter === "veg") return item.foodType === "veg";
-      if(activeFilter === "nonveg") return item.foodType === "nonveg";
-      if(activeFilter === "popular") return item.popular;
-      if(activeFilter === "latest") return item.latest;
-      return true;
-    }
-
-    function sortItems(list){
-      if(activeFilter === "price-low") return [...list].sort((a,b)=>a.itemPrice-b.itemPrice);
-      if(activeFilter === "price-high") return [...list].sort((a,b)=>b.itemPrice-a.itemPrice);
-      return list;
-    }
-
-    function renderMenu(){
-      // group by rowId, preserving category order of first appearance
-      const groups = {};
-      const order = [];
-      BusinessCategoryDataEntity.forEach(item=>{
-        if(!groups[item.rowId]){ groups[item.rowId] = []; order.push(item.rowId); }
-        groups[item.rowId].push(item);
-      });
-
-      let html = "";
-      let totalVisible = 0;
-      let catIndex = 0;
-
-      order.forEach(rowId=>{
-        const items = sortItems(groups[rowId].filter(dishMatches));
-        if(items.length === 0) return;
-        catIndex++;
-        totalVisible += items.length;
-        html += `
-          <div class="menu-category" data-aos="fade-up">
-            <div class="menu-category-head">
-              <span class="num">${String(catIndex).padStart(2,"0")}</span>
-              <h3>${CATEGORY_LABELS[rowId] || rowId}</h3>
-              <div class="rule"></div>
-            </div>
-            <div class="menu-grid">
-              ${items.map(renderCard).join("")}
-            </div>
-          </div>`;
-      });
-
-      mount.innerHTML = html;
-      noResults.style.display = totalVisible === 0 ? "block" : "none";
-      attachCardEvents();
-      if(window.AOS) AOS.refreshHard();
-    }
-
-    function renderCard(item){
-      const badges = [foodBadge(item.foodType)];
-      if(item.popular) badges.push(`<span class="tag tag-pop">★ Popular</span>`);
-      return `
-        <div class="dish-card" data-tilt>
-          <div class="dish-media">
-            <img src="${item.itemImage}" alt="${item.itemName}" loading="lazy">
-            <div class="dish-tags">${badges.join("")}</div>
-            <button class="fav-btn" aria-label="Save dish">
-              <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-9C.7 8.4 2.4 5 5.8 5c2 0 3.4 1 4.2 2.3C10.8 6 12.2 5 14.2 5c3.4 0 5.1 3.4 3.3 7-2.5 4.4-9.5 9-9.5 9z"/></svg>
-            </button>
-          </div>
-          <div class="dish-body">
-            <div class="dish-top">
-              <h4>${item.itemName}</h4>
-              <span class="dish-price">₹${item.itemPrice}</span>
-            </div>
-            <p class="dish-desc">${item.itemDescription}</p>
-            <div class="dish-order">
-              <span style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim);">${CATEGORY_LABELS[item.rowId]||""}</span>
-              <button type="button">Order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-            </div>
-          </div>
-        </div>`;
-    }
-
-    function attachCardEvents(){
-      document.querySelectorAll(".fav-btn").forEach(btn=>{
-        btn.addEventListener("click", e=>{ e.stopPropagation(); btn.classList.toggle("active"); });
-      });
-      document.querySelectorAll("[data-tilt]").forEach(card=>{
-        card.addEventListener("mousemove", e=>{
-          const r = card.getBoundingClientRect();
-          const px = (e.clientX - r.left)/r.width - 0.5;
-          const py = (e.clientY - r.top)/r.height - 0.5;
-          card.style.transform = `perspective(800px) rotateY(${px*7}deg) rotateX(${-py*7}deg) translateY(-4px)`;
+        const headerEl = document.getElementById("siteHeader");
+        const fabTop = document.getElementById("fabTop");
+        window.addEventListener("scroll", () => {
+            const y = window.scrollY;
+            headerEl.classList.toggle("scrolled", y > 60);
+            fabTop.classList.toggle("show", y > 500);
         });
-        card.addEventListener("mouseleave", ()=>{ card.style.transform = "perspective(800px) rotateY(0) rotateX(0) translateY(0)"; });
-      });
+
+        initGalleryLightbox();
+        initMenuFilter();
+    });
+
+    // Mobile Menu Handlers
+    function toggleMenu() {
+        const nav = document.getElementById("mainMenu");
+        nav.classList.toggle("show");
+    }
+    function closeMenu() {
+        const nav = document.getElementById("mainMenu");
+        nav.classList.remove("show");
     }
 
-    document.getElementById("filterBar").addEventListener("click", e=>{
-      const btn = e.target.closest(".filter-btn");
-      if(!btn) return;
-      document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
-      btn.classList.add("active");
-      activeFilter = btn.dataset.filter;
-      renderMenu();
-    });
-    document.getElementById("menuSearch").addEventListener("input", e=>{
-      searchTerm = e.target.value;
-      renderMenu();
-    });
-    renderMenu();
-
-    /* =========================================================================
-       SPECIALS SWIPER (popular dishes)
-       ========================================================================= */
-    const specialsData = BusinessCategoryDataEntity.filter(i=>i.popular);
-    document.getElementById("specialsMount").innerHTML = specialsData.map(item=>`
-      <div class="swiper-slide">
-        <div class="special-card">
-          <img src="${item.itemImage}" alt="${item.itemName}">
-          <div class="special-overlay">
-            <div class="eyebrow">${CATEGORY_LABELS[item.rowId]}</div>
-            <h3>${item.itemName}</h3>
-            <p>₹${item.itemPrice} · ${item.itemDescription}</p>
-          </div>
-        </div>
-      </div>`).join("");
-
-    new Swiper(".specials-swiper", {
-      slidesPerView:1.15, spaceBetween:26, centeredSlides:false, grabCursor:true,
-      breakpoints:{ 700:{ slidesPerView:2.2 }, 1100:{ slidesPerView:3.1 } },
-      navigation:{ nextEl:".specials-swiper .swiper-button-next", prevEl:".specials-swiper .swiper-button-prev" },
-      pagination:{ el:".specials-swiper .swiper-pagination", clickable:true }
-    });
-
-    /* =========================================================================
-       GALLERY (masonry + lightbox)
-       ========================================================================= */
-    const galleryImages = [
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80",
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=700&q=80",
-      "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=700&q=80",
-      "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=700&q=80",
-      "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=700&q=80",
-      "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=700&q=80",
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=700&q=80",
-      "https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=700&q=80"
-    ];
-    document.getElementById("galleryMount").innerHTML = galleryImages.map(src=>`
-      <div class="gallery-item">
-        <img src="${src}" alt="Velvet Ember gallery photo" loading="lazy">
-        <div class="g-overlay"><div class="g-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></svg></div></div>
-      </div>`).join("");
-
-    const lightbox = document.getElementById("lightbox");
-    const lbImage = document.getElementById("lbImage");
-    document.getElementById("galleryMount").addEventListener("click", e=>{
-      const item = e.target.closest(".gallery-item");
-      if(!item) return;
-      lbImage.src = item.querySelector("img").src;
-      lightbox.classList.add("open");
-    });
-    document.getElementById("lbClose").addEventListener("click", ()=>lightbox.classList.remove("open"));
-    lightbox.addEventListener("click", e=>{ if(e.target === lightbox) lightbox.classList.remove("open"); });
-
-    /* =========================================================================
-       REVIEWS SWIPER
-       ========================================================================= */
-    const reviews = [
-      { name:"Priya Sharma", loc:"Bhiwani", text:"The short rib alone is worth the drive. Smoke without being heavy-handed — every course had real restraint.", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80" },
-      { name:"Rohan Mehta", loc:"Rohtak", text:"Best cocktail bar in the region right now. The smoked old fashioned changed how I think about a Negroni.", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80" },
-      { name:"Ananya Kapoor", loc:"Hisar", text:"Booked for an anniversary, stayed for three hours. Service paced the night perfectly, never once rushed.", img:"https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&q=80" },
-      { name:"Vikram Singh", loc:"Bhiwani", text:"The whole charred cauliflower converted three committed carnivores at our table. Genuinely special kitchen.", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80" }
-    ];
-    document.getElementById("reviewsMount").innerHTML = reviews.map(r=>`
-      <div class="swiper-slide">
-        <div class="review-card">
-          <div class="stars">${"<svg viewBox='0 0 20 20'><path d='M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6z'/></svg>".repeat(5)}</div>
-          <p>"${r.text}"</p>
-          <div class="review-person">
-            <img src="${r.img}" alt="${r.name}">
-            <div><b>${r.name}</b><span>${r.loc}</span></div>
-          </div>
-        </div>
-      </div>`).join("");
-
-    new Swiper(".reviews-swiper", {
-      slidesPerView:1.05, spaceBetween:24, loop:true, autoplay:{ delay:3600, disableOnInteraction:false }, grabCursor:true,
-      breakpoints:{ 700:{ slidesPerView:2 }, 1100:{ slidesPerView:3 } },
-      pagination:{ el:".reviews-swiper .swiper-pagination", clickable:true }
-    });
-
-    /* =========================================================================
-       ANIMATED COUNTERS
-       ========================================================================= */
-    document.querySelectorAll(".count").forEach(el=>{
-      const target = +el.dataset.count;
-      ScrollTrigger.create({
-        trigger: el, start:"top 88%", once:true,
-        onEnter:()=>{
-          gsap.to(el, {
-            innerText: target, duration:2, ease:"power2.out", snap:{ innerText:1 },
-            onUpdate:function(){ el.innerText = Math.floor(el.innerText).toLocaleString("en-IN"); }
-          });
+    // ===== EMBER PARTICLE CANVAS =====
+    function initEmberCanvas() {
+        const ec = document.getElementById("emberCanvas");
+        const ectx = ec.getContext("2d");
+        let embers = [];
+        function sizeCanvas() { ec.width = window.innerWidth; ec.height = window.innerHeight; }
+        sizeCanvas();
+        window.addEventListener("resize", sizeCanvas);
+        function spawn() {
+            embers.push({ x: Math.random()*ec.width, y: ec.height+10, r: Math.random()*2+.6, speed: Math.random()*.6+.25, drift: (Math.random()-.5)*.6, life: 1, hue: Math.random()>.5?"201,162,39":"232,93,44" });
         }
-      });
-    });
-    const yearsEl = document.getElementById("yearsCount");
-    ScrollTrigger.create({
-      trigger: yearsEl, start:"top 88%", once:true,
-      onEnter:()=>{ gsap.to(yearsEl,{ innerText:9, duration:1.6, snap:{innerText:1}, onUpdate:function(){ yearsEl.innerText = Math.floor(yearsEl.innerText); } }); }
-    });
-
-    /* =========================================================================
-       VIDEO PLAY / WATCH STORY
-       ========================================================================= */
-    const storyVideo = document.getElementById("storyVideo");
-    const playBtn = document.getElementById("playBtn");
-    function toggleVideo(){
-      if(storyVideo.paused){ storyVideo.play(); playBtn.style.opacity = 0; }
-      else{ storyVideo.pause(); playBtn.style.opacity = 1; }
+        function tick() {
+            ectx.clearRect(0,0,ec.width,ec.height);
+            if (embers.length < 50 && Math.random() > .5) spawn();
+            embers.forEach(p => { p.y -= p.speed; p.x += p.drift; p.life -= 0.0032;
+                ectx.beginPath(); ectx.fillStyle = `rgba(${p.hue},${Math.max(p.life,0)*0.85})`; ectx.arc(p.x,p.y,p.r,0,Math.PI*2); ectx.fill(); });
+            embers = embers.filter(p => p.life > 0 && p.y > -20);
+            requestAnimationFrame(tick);
+        }
+        tick();
     }
-    playBtn.addEventListener("click", toggleVideo);
-    document.getElementById("watchStoryBtn").addEventListener("click", ()=>{
-      document.querySelector(".video-wrap").scrollIntoView({ behavior:"smooth", block:"center" });
-      setTimeout(toggleVideo, 700);
-    });
 
-    /* =========================================================================
-       BOOKING FORM VALIDATION
-       ========================================================================= */
-    const bookForm = document.getElementById("bookForm");
-    bookForm.addEventListener("submit", e=>{
-      e.preventDefault();
-      let valid = true;
-      const rules = [
-        { id:"fName", test:v=>v.trim().length > 1 },
-        { id:"fPhone", test:v=>/^[6-9]\d{9}$/.test(v.trim()) },
-        { id:"fGuests", test:v=>+v >= 1 && +v <= 20 },
-        { id:"fDate", test:v=>v.length > 0 },
-        { id:"fTime", test:v=>v.length > 0 }
-      ];
-      rules.forEach(rule=>{
-        const input = document.getElementById(rule.id);
-        const field = input.closest(".field");
-        const ok = rule.test(input.value);
-        field.classList.toggle("invalid", !ok);
-        if(!ok) valid = false;
-      });
-      if(valid){
-        document.getElementById("formSuccess").classList.add("show");
-        bookForm.reset();
-        setTimeout(()=>document.getElementById("formSuccess").classList.remove("show"), 6000);
-      }
-    });
+    // ===== GALLERY LIGHTBOX =====
+    function initGalleryLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        const lbImage = document.getElementById("lbImage");
+        document.getElementById("galleryMount").addEventListener("click", e => {
+            const item = e.target.closest(".gallery-item");
+            if (!item) return;
+            lbImage.src = item.querySelector("img").src;
+            lightbox.classList.add("open");
+        });
+        document.getElementById("lbClose").addEventListener("click", () => lightbox.classList.remove("open"));
+        lightbox.addEventListener("click", e => { if (e.target === lightbox) lightbox.classList.remove("open"); });
+    }
 
-    /* newsletter (front-end only demo) */
-    document.getElementById("newsletterForm").addEventListener("submit", e=>{
-      e.preventDefault();
-      const input = e.target.querySelector("input");
-      input.value = "Subscribed ✓";
-      setTimeout(()=>{ input.value=""; input.placeholder="Your email"; }, 2200);
-    });
+    // ===== MENU SEARCH + FILTER =====
+    function initMenuFilter() {
+        const searchInput = document.getElementById("menuSearch");
+        const filterBar = document.getElementById("filterBar");
+        const noResults = document.getElementById("noResults");
 
-    /* =========================================================================
-       SEO — inject dynamic title/description from BusinessEntity
-       ========================================================================= */
-    document.title = `${BusinessEntity.name} — ${BusinessEntity.tagline}`;
+        function processFilter() {
+            const query = searchInput.value.toLowerCase().trim();
+            const activeBtn = filterBar ? filterBar.querySelector(".filter-btn.active") : null;
+            const activeFilter = activeBtn ? activeBtn.getAttribute("data-filter") : "all";
+            let visibleCount = 0;
+
+            document.querySelectorAll(".filter-item").forEach(card => {
+                const nameEl = card.querySelector(".item-name");
+                const descEl = card.querySelector(".item-desc");
+                const name = nameEl ? nameEl.innerText.toLowerCase() : "";
+                const desc = descEl ? descEl.innerText.toLowerCase() : "";
+                const type = card.getAttribute("data-type");
+
+                const matchesSearch = name.includes(query) || desc.includes(query);
+                const matchesFilter = activeFilter === "all" || type === activeFilter;
+                const show = matchesSearch && matchesFilter;
+                card.style.display = show ? "flex" : "none";
+                if (show) visibleCount++;
+            });
+
+            noResults.style.display = visibleCount === 0 ? "block" : "none";
+        }
+
+        if (searchInput) searchInput.addEventListener("input", processFilter);
+        if (filterBar) {
+            filterBar.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.addEventListener("click", e => {
+                    filterBar.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                    e.target.classList.add("active");
+                    processFilter();
+                });
+            });
+        }
+    }
+
+    // ===== CART / CHECKOUT =====
+    let cart = [];
+
+    function addToCart(name, price) {
+        const numericPrice = Number(price) || 0;
+        const existing = cart.find(i => i.name === name);
+        if (existing) existing.qty++;
+        else cart.push({ name, price: numericPrice, qty: 1 });
+        updateCartBadge();
+        renderCart();
+    }
+
+    function updateCartBadge() {
+        const badge = document.getElementById("cartBadge");
+        const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+        if (totalQty > 0) { badge.style.display = "flex"; badge.textContent = totalQty; }
+        else badge.style.display = "none";
+    }
+
+    function renderCart() {
+        const container = document.getElementById("orderItemsList");
+        if (cart.length === 0) {
+            container.innerHTML = '<p style="color:var(--ink-dim); font-size:0.85rem; text-align:center; padding:1rem 0;">Your cart is empty.</p>';
+            document.getElementById("orderTotal").textContent = "₹0";
+            return;
+        }
+        container.innerHTML = cart.map(item => `
+            <div class="order-item-row">
+                <span class="order-item-name">${item.name}</span>
+                <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
+                <span style="min-width:20px; text-align:center;">${item.qty}</span>
+                <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+                <span style="min-width:55px; text-align:right; color:var(--gold); font-size: 0.85rem;">₹${item.price * item.qty}</span>
+            </div>`).join("");
+        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        document.getElementById("orderTotal").textContent = `₹${total}`;
+    }
+
+    function changeQty(name, delta) {
+        const idx = cart.findIndex(i => i.name === name);
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
+        updateCartBadge();
+        renderCart();
+    }
+
+    function openOrder() { document.getElementById("orderModal").classList.add("open"); }
+    function closeOrder() { document.getElementById("orderModal").classList.remove("open"); }
+    function closeOrderOnBg(e) { if (e.target === document.getElementById("orderModal")) closeOrder(); }
+
+    function placeOrder() {
+        if (cart.length === 0) { alert("Please add items first!"); return; }
+        const name = document.getElementById("custName").value.trim();
+        const phone = document.getElementById("custPhone").value.trim();
+        if (!name) { alert("Please enter your name!"); return; }
+        if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
+
+        let message = "Hello! I would like to place an order:\n\n";
+        message += `Name: ${name}\nMobile: ${phone}\n\n`;
+        cart.forEach(item => { message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`; });
+        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        message += `\nTotal: ₹${total}`;
+
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
+
+        cart = [];
+        document.getElementById("custName").value = "";
+        document.getElementById("custPhone").value = "";
+        updateCartBadge();
+        renderCart();
+        closeOrder();
+    }
+    // 1. Floating Items Idle Bounce Animation (GSAP)
+gsap.to(".ff1", { y: -18, duration: 3.4, yoyo: true, repeat: -1, ease: "sine.inOut" });
+gsap.to(".ff2", { y: 16, duration: 4, yoyo: true, repeat: -1, ease: "sine.inOut", delay: .4 });
+gsap.to(".ff3", { y: -12, duration: 3, yoyo: true, repeat: -1, ease: "sine.inOut", delay: .8 });
+
+// 2. Interactive 3D Ambient Particle Mesh (Three.js)
+(function initCover3D(){
+  const canvas = document.getElementById("heroCanvas");
+  if(!window.THREE || !canvas) return;
+
+  const container = canvas.parentElement;
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, .1, 100);
+  camera.position.z = 9;
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  const geoms = [
+    new THREE.TorusGeometry(0.7, 0.22, 16, 60),
+    new THREE.IcosahedronGeometry(0.65, 0),
+    new THREE.OctahedronGeometry(0.6, 0)
+  ];
+
+  const mat = (hex) => new THREE.MeshStandardMaterial({
+    color: hex, metalness: 0.7, roughness: 0.25, emissive: hex, emissiveIntensity: 0.12
+  });
+
+  const colors = [0xC9A227, 0xB5651D, 0xE85D2C];
+  const meshes = [];
+
+  for(let i = 0; i < 7; i++){
+    const g = geoms[i % geoms.length];
+    const m = new THREE.Mesh(g, mat(colors[i % colors.length]));
+    m.position.set((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 4 - 1);
+    m.userData.speed = 0.15 + Math.random() * 0.25;
+    m.userData.axis = new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize();
+    group.add(m);
+    meshes.push(m);
+  }
+
+  const light1 = new THREE.PointLight(0xE85D2C, 3, 20);
+  light1.position.set(3, 2, 4);
+  scene.add(light1);
+
+  const light2 = new THREE.PointLight(0xC9A227, 2, 20);
+  light2.position.set(-4, -2, 3);
+  scene.add(light2);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+
+  let targetX = 0, targetY = 0;
+  window.addEventListener("mousemove", e => {
+    targetX = (e.clientX / window.innerWidth - 0.5);
+    targetY = (e.clientY / window.innerHeight - 0.5);
+  });
+
+  function resizeThree(){
+    const w = container.clientWidth, h = container.clientHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resizeThree();
+  window.addEventListener("resize", resizeThree);
+
+  function animateThree(){
+    meshes.forEach(m => {
+      m.rotateOnAxis(m.userData.axis, m.userData.speed * 0.01);
+    });
+    group.rotation.y += (targetX * 0.6 - group.rotation.y * 0.02) * 0.02;
+    group.rotation.x += (targetY * 0.3 - group.rotation.x * 0.02) * 0.02;
+    camera.position.x += (targetX * 1.2 - camera.position.x) * 0.03;
+    camera.position.y += (-targetY * 1.2 - camera.position.y) * 0.03;
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animateThree);
+  }
+  animateThree();
+})();
 </script>
+
 </body>
 </html>
