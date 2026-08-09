@@ -610,6 +610,20 @@
         </div>
         <input type="text" id="custName" class="order-modal-input" placeholder="Your Name">
         <input type="tel" id="custPhone" class="order-modal-input" placeholder="Mobile Number">
+        <div style="margin-bottom:1.5rem;">
+            <label style="display:block; font-size:0.85rem; color:var(--text-light); margin-bottom:8px;">Are you dining in?</label>
+            <div style="display:flex; gap:10px;">
+                <button type="button" id="diningYesBtn" onclick="setDiningIn(true)"
+                        style="flex:1; padding:10px; border-radius:6px; border:1px solid rgba(200,169,110,0.3); background:transparent; color:var(--soft-black); font-family:'Jost',sans-serif; cursor:pointer;">
+                    Yes
+                </button>
+                <button type="button" id="diningNoBtn" onclick="setDiningIn(false)"
+                        style="flex:1; padding:10px; border-radius:6px; border:1px solid rgba(200,169,110,0.3); background:transparent; color:var(--soft-black); font-family:'Jost',sans-serif; cursor:pointer;">
+                    No
+                </button>
+            </div>
+            <input type="text" id="tableNumber" placeholder="Table Number" style="display:none; margin-top:10px; width:100%; padding:12px 14px; border-radius:6px; border:1px solid rgba(200,169,110,0.3); background:var(--beige); color:var(--soft-black); font-family:'Jost',sans-serif; font-size:0.9rem; outline:none;">
+        </div>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-light-muted small">Total</span>
             <strong class="text-gold fs-5" id="orderTotal">₹0</strong>
@@ -623,7 +637,19 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+    let isDiningIn = null;
 
+    function setDiningIn(value) {
+        isDiningIn = value;
+        document.getElementById("diningYesBtn").style.background = value === true ? "var(--brown-mid)" : "transparent";
+        document.getElementById("diningYesBtn").style.color = value === true ? "var(--cream)" : "var(--soft-black)";
+        document.getElementById("diningNoBtn").style.background = value === false ? "var(--brown-mid)" : "transparent";
+        document.getElementById("diningNoBtn").style.color = value === false ? "var(--cream)" : "var(--soft-black)";
+        document.getElementById("tableNumber").style.display = value === true ? "block" : "none";
+    }
+
+</script>
 <script th:inline="javascript">
     /*<![CDATA[*/
     const whatsappNumber = /*[[${business.whatsapp != null ? '91' + business.whatsapp : ''}]]*/ "";
@@ -711,6 +737,14 @@
 
         let message = "Hello! I would like to place an order:\n\n";
         message += `Name: ${name}\nMobile: ${phone}\n\n`;
+        if (isDiningIn === true) {
+            const tableNum = document.getElementById("tableNumber").value.trim();
+            message += `Dining In: Yes\n`;
+            if (tableNum) message += `Table Number: ${tableNum}\n`;
+            message += `\n`;
+            } else if (isDiningIn === false) {
+                message += `Dining In: No\n\n`;
+            }
         cart.forEach(item => {
             message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`;
         });
@@ -724,6 +758,13 @@
         document.getElementById("custPhone").value = "";
         updateCartBadge();
         renderCart();
+        isDiningIn = null;
+        document.getElementById("tableNumber").value = "";
+        document.getElementById("tableNumber").style.display = "none";
+        document.getElementById("diningYesBtn").style.background = "transparent";
+        document.getElementById("diningYesBtn").style.color = "var(--soft-black)";
+        document.getElementById("diningNoBtn").style.background = "transparent";
+        document.getElementById("diningNoBtn").style.color = "var(--soft-black)";
         closeOrder();
     }
 
