@@ -1,30 +1,26 @@
 package com.bizpilot.business.service;
 
+import com.bizpilot.config.CloudinaryService;
 import net.coobird.thumbnailator.Thumbnails;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class FileStorageService {
 
-    @Value("${app.file.upload-dir}")
-    private String uploadDir;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     private static final List<String> ALLOWED_TYPES =
             List.of("image/jpeg", "image/png", "image/webp");
 
-    private static final long MAX_UPLOAD_SIZE = 1 * 1024 * 1024; // 1 MB (frontend se aane wali file)
-    private static final long TARGET_SIZE = 200 * 1024;          // 200 KB (final saved size)
+    private static final long MAX_UPLOAD_SIZE = 2 * 1024 * 1024; // 1 MB (frontend se aane wali file)
+    private static final long TARGET_SIZE = 1024 * 1024;          // 200 KB (final saved size)
 
     public String storeLogo(MultipartFile file) {
         return storeCompressed(file, "logo", 512, 512);
@@ -45,18 +41,11 @@ public class FileStorageService {
         try {
             byte[] compressedBytes = compressToTargetSize(file, width, height);
 
-            Path folderPath = Paths.get(uploadDir, subFolder);
-            Files.createDirectories(folderPath);
-
-            String fileName = UUID.randomUUID() + ".jpg"; // hamesha jpg mein save (best compression ratio)
-            Path targetPath = folderPath.resolve(fileName);
-
-            Files.write(targetPath, compressedBytes);
-
-            return "/uploads/business/" + subFolder + "/" + fileName;
+            // Compressed bytes ko hi Cloudinary pe upload karo — raw file nahi
+            return cloudinaryService.upload(compressedBytes, subFolder);
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file", e);
+            throw new RuntimeException("Failed to process file", e);
         }
     }
 
@@ -99,14 +88,8 @@ public class FileStorageService {
         return result;
     }
 
-    public void delete(String relativePath) {
-        if (relativePath == null || relativePath.isBlank()) return;
-
-        try {
-            String fileName = relativePath.replace("/uploads/business/", "");
-            Path filePath = Paths.get(uploadDir, fileName);
-            Files.deleteIfExists(filePath);
-        } catch (IOException ignored) {
-        }
+    public void delete(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) return;
+        cloudinaryService.delete(imageUrl);
     }
 }

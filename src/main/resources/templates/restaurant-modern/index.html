@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${business.businessName} + ' | Fine Dining'">Lumina | Ultra-Luxury Dining Experience</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-
 
     <meta name="description" th:content="${business.tagline != null ? business.tagline : business.description}" content="Experience high-end culinary art.">
 
@@ -14,12 +12,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
     <style>
         :root {
             --bg-main: #09090B;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(255, 255, 255, 0.04);
             --card-border: rgba(255, 255, 255, 0.08);
             --primary-gradient: linear-gradient(135deg, #FF6B00 0%, #FF9E00 100%);
             --primary-solid: #FF6B00;
@@ -31,135 +28,186 @@
             --font-sans: 'Plus Jakarta Sans', sans-serif;
             --font-serif: 'Poppins', sans-serif;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { background-color: var(--bg-main); color: var(--text-primary); font-family: var(--font-sans); overflow-x: hidden; scroll-behavior: smooth; }
 
         #page-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-main); z-index: 99999; display: flex; justify-content: center; align-items: center; transition: opacity 0.6s ease; }
-        .luxury-spinner { width: 60px; height: 60px; border: 2px solid transparent; border-top-color: var(--primary-solid); border-bottom-color: var(--neon-accent); border-radius: 50%; animation: rotateSpinner 1.5s linear infinite; }
-        .loader-logo { font-family: var(--font-serif); color: #FFF; letter-spacing: 6px; margin-top: 20px; font-size: 1.2rem; text-align: center; }
+        .luxury-spinner { width: 50px; height: 50px; border: 2px solid transparent; border-top-color: var(--primary-solid); border-bottom-color: var(--neon-accent); border-radius: 50%; animation: rotateSpinner 1.2s linear infinite; }
+        .loader-logo { font-family: var(--font-serif); color: #FFF; letter-spacing: 5px; margin-top: 16px; font-size: 1.1rem; text-align: center; }
         @keyframes rotateSpinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         #scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--primary-solid), var(--neon-accent)); z-index: 10000; width: 0%; }
 
-        .custom-cursor { width: 30px; height: 30px; border: 1px solid var(--neon-accent); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 999999; transition: width 0.2s, height 0.2s, background-color 0.2s; }
-        .custom-cursor-dot { width: 6px; height: 6px; background-color: var(--primary-solid); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 999999; }
+        .custom-cursor { width: 28px; height: 28px; border: 1px solid var(--neon-accent); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 999999; transition: width 0.2s, height 0.2s, background-color 0.2s; }
+        .custom-cursor-dot { width: 5px; height: 5px; background-color: var(--primary-solid); border-radius: 50%; position: fixed; transform: translate(-50%, -50%); pointer-events: none; z-index: 999999; }
 
         #three-bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 
-        .font-luxury { font-family: var(--font-serif); letter-spacing: -1px; }
+        .font-luxury { font-family: var(--font-serif); letter-spacing: -0.5px; }
         .text-gold { color: var(--secondary-gold); }
         .text-neon-accent { color: var(--neon-accent); }
         .text-light-muted { color: var(--text-muted); }
-        .tracking-wide { letter-spacing: 3px; font-weight: 600; font-size: 0.85rem; }
+        .tracking-wide { letter-spacing: 2.5px; font-weight: 600; font-size: 0.8rem; }
 
-        .specials-swiper { width: 100%; padding: 20px 0 60px; overflow: visible !important; }
-        .special-slide-card { height: 100%; }
-        .specials-swiper .swiper-pagination-bullet { background: #FFF !important; opacity: 0.3; }
-        .specials-swiper .swiper-pagination-bullet-active { background: var(--primary-solid) !important; opacity: 1 !important; width: 20px; border-radius: 10px; }
-        .specials-swiper .swiper-button-next, .specials-swiper .swiper-button-prev { color: var(--secondary-gold) !important; }
-
-        .dynamic-navbar { padding: 20px 0; transition: background-color 0.4s, padding 0.4s ease, border 0.4s; border-bottom: 1px solid transparent; background: rgba(9, 9, 11, 0.1); backdrop-filter: blur(0px); }
-        .dynamic-navbar.scrolled { padding: 12px 0; background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(25px); border-bottom: 1px solid var(--card-border); }
-        .navbar-brand .brand-name { font-family: var(--font-serif); font-weight: 700; letter-spacing: 3px; color: #FFF; }
-        .nav-link { color: var(--text-muted); font-weight: 500; font-size: 0.95rem; margin: 0 10px; position: relative; }
+        .dynamic-navbar { padding: 16px 0; transition: background-color 0.4s, padding 0.4s ease, border 0.4s; border-bottom: 1px solid transparent; background: rgba(9, 9, 11, 0.2); backdrop-filter: blur(8px); }
+        .dynamic-navbar.scrolled { padding: 10px 0; background: rgba(9, 9, 11, 0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--card-border); }
+        .navbar-brand .brand-name { font-family: var(--font-serif); font-weight: 700; letter-spacing: 2px; color: #FFF; }
+        .nav-link { color: var(--text-muted); font-weight: 500; font-size: 0.9rem; margin: 0 8px; position: relative; }
         .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background-color: var(--primary-solid); transition: width 0.3s ease; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link:hover, .nav-link.active { color: #FFF !important; }
 
-        .btn-primary-gradient { background: var(--primary-gradient); color: white; border: none; font-weight: 600; border-radius: 8px; transition: transform 0.3s, box-shadow 0.3s; }
-        .btn-primary-gradient:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 107, 0, 0.4); color: white; }
-        .btn-outline-glass { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); color: #FFF; border-radius: 8px; backdrop-filter: blur(10px); transition: background 0.3s, border 0.3s; }
+        .btn-primary-gradient { background: var(--primary-gradient); color: white; border: none; font-weight: 600; border-radius: 6px; transition: transform 0.3s, box-shadow 0.3s; }
+        .btn-primary-gradient:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 107, 0, 0.35); color: white; }
+        .btn-outline-glass { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border); color: #FFF; border-radius: 6px; backdrop-filter: blur(10px); transition: background 0.3s, border 0.3s; }
         .btn-outline-glass:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--secondary-gold); color: #FFF; }
-        .btn-neon-accent { border: 1px solid var(--neon-accent); color: var(--neon-accent); background: transparent; border-radius: 8px; font-weight: 600; }
-        .btn-neon-accent:hover { background: var(--neon-accent); color: #000; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
+        .btn-neon-accent { border: 1px solid var(--neon-accent); color: var(--neon-accent); background: transparent; border-radius: 6px; font-weight: 600; }
+        .btn-neon-accent:hover { background: var(--neon-accent); color: #000; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
 
-        .glass-card { background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); transition: border 0.3s, box-shadow 0.3s, transform 0.3s; }
+        .glass-card { background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); transition: border 0.3s, box-shadow 0.3s, transform 0.3s; }
 
-        .hero-section { position: relative; min-height: 100vh; width: 100%; padding-top: 100px; }
-        .hero-bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 1; opacity: 0.25; }
-        .hero-section::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle at 50% 50%, transparent 10%, var(--bg-main) 90%); z-index: 2; }
+        /* HERO */
+        .hero-bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 1; opacity: 0.3; }
+        .hero-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, transparent 10%, var(--bg-main) 90%); z-index: 2; }
         .hero-z-index { z-index: 3; }
         .max-w-600 { max-width: 600px; }
 
-        .section-padding { padding: 120px 0; }
+        /* HERO ALIGNMENT FIX */
+        .hero-section {
+          position: relative;
+          min-height: 100vh;
+          min-height: 100dvh;
+          width: 100%;
+          padding-top: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .hero-content-box {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          width: 100%;
+          max-width: 850px;
+          margin: 0 auto;
+        }
+
+        .hero-eyebrow {
+          color: var(--neon-accent);
+          letter-spacing: 2.5px;
+          font-weight: 600;
+          font-size: 0.8rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .hero-title {
+          color: #FFFFFF;
+          font-weight: 700;
+          font-family: var(--font-serif);
+          margin-bottom: 1rem;
+          line-height: 1.1;
+        }
+
+        .hero-desc {
+          color: var(--text-muted);
+          max-width: 600px;
+          width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          margin-bottom: 1.75rem;
+          line-height: 1.6;
+          font-size: 1rem;
+        }
+
+        .hero-cta {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        /* SPACING CORRECTIONS */
+        .section-padding { padding: clamp(45px, 6vw, 80px) 0; }
         .bg-dark-gradient-layer { background: linear-gradient(180deg, var(--bg-main) 0%, rgba(15,15,20,1) 50%, var(--bg-main) 100%); }
 
-        .custom-rounded { border-radius: 24px; }
-        .img-luxury { border: 1px solid var(--card-border); transition: transform 0.5s; }
+        .custom-rounded { border-radius: 16px; }
+        .img-luxury { border: 1px solid var(--card-border); transition: transform 0.4s; }
         .img-luxury:hover { transform: scale(1.02); }
 
-        .premium-search-input {border: 1px solid var(--card-border) !important; color: black !important; padding: 15px 25px !important; border-radius: 30px !important; }
-        .premium-search-input:focus { border-color: var(--neon-accent) !important; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2) !important; }
-        .filter-pill { border-radius: 20px; padding: 8px 25px; font-size: 0.9rem; }
+        .premium-search-input { background: rgba(255, 255, 255, 0.05) !important; border: 1px solid var(--card-border) !important; color: #FFF !important; padding: 12px 20px !important; border-radius: 30px !important; }
+        .premium-search-input::placeholder { color: var(--text-muted); }
+        .premium-search-input:focus { border-color: var(--neon-accent) !important; box-shadow: 0 0 12px rgba(0, 229, 255, 0.2) !important; outline: none; }
+        .filter-pill { border-radius: 20px; padding: 7px 20px; font-size: 0.85rem; }
         .filter-pill.active { background: var(--primary-gradient); border-color: transparent; color: white; }
 
         .menu-card-wrapper { perspective: 1000px; }
-        .premium-menu-card { border-radius: 20px; overflow: visible; position: relative; padding: 25px; height: 100%; transition: border 0.4s, box-shadow 0.4s; display: flex; flex-direction: column; }
-        .menu-img-container { border-radius: 16px; overflow: hidden; height: 200px; width: 100%; position: relative; margin-bottom: 20px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; }
-        .menu-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        .premium-menu-card:hover .menu-img-container img { transform: scale(1.1); }
-        .premium-menu-card:hover { border-color: var(--secondary-gold); box-shadow: 0 15px 35px rgba(255, 209, 102, 0.1); }
-        .badge-type { position: absolute; top: 15px; left: 15px; z-index: 5; padding: 5px 12px; font-size: 0.75rem; font-weight: 700; border-radius: 30px; }
-        .bg-veg { background-color: rgba(34, 197, 94, 0.2); border: 1px solid var(--success-neon); color: var(--success-neon); }
-        .bg-nonveg { background-color: rgba(239, 68, 68, 0.2); border: 1px solid #EF4444; color: #EF4444; }
-        .card-price-tag { font-size: 1.4rem; font-weight: 700; color: var(--secondary-gold); }
+        .premium-menu-card { border-radius: 16px; position: relative; padding: 20px; height: 100%; display: flex; flex-direction: column; }
+        .menu-img-container { border-radius: 12px; overflow: hidden; height: 180px; width: 100%; position: relative; margin-bottom: 16px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; }
+        .menu-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .premium-menu-card:hover .menu-img-container img { transform: scale(1.06); }
+        .premium-menu-card:hover { border-color: var(--secondary-gold); box-shadow: 0 10px 25px rgba(255, 209, 102, 0.08); }
+        .badge-type { position: absolute; top: 12px; left: 12px; z-index: 5; padding: 4px 10px; font-size: 0.7rem; font-weight: 700; border-radius: 20px; }
+        .bg-veg { background-color: rgba(34, 197, 94, 0.25); border: 1px solid var(--success-neon); color: var(--success-neon); }
+        .bg-nonveg { background-color: rgba(239, 68, 68, 0.25); border: 1px solid #EF4444; color: #EF4444; }
+        .card-price-tag { font-size: 1.25rem; font-weight: 700; color: var(--secondary-gold); }
 
-        .specialsSwiper, .reviewsSwiper { width: 100%; padding: 40px 0; }
-        .swiper-pagination-bullet { background: #FFF !important; opacity: 0.3; }
-        .swiper-pagination-bullet-active { background: var(--primary-solid) !important; opacity: 1 !important; width: 20px; border-radius: 10px;}
+        /* SPECIALS CAROUSEL */
+        .specials-swiper { width: 100%; padding: 10px 0 45px; overflow: visible !important; }
+        .special-slide-card { height: 100%; }
+        .specials-swiper .swiper-pagination-bullet { background: #FFF !important; opacity: 0.3; }
+        .specials-swiper .swiper-pagination-bullet-active { background: var(--primary-solid) !important; opacity: 1 !important; width: 18px; border-radius: 10px; }
+        .specials-swiper .swiper-button-next, .specials-swiper .swiper-button-prev { color: var(--secondary-gold) !important; scale: 0.7; }
 
-        .feature-icon-wrap i { font-size: 2.5rem; }
+        .feature-icon-wrap i { font-size: 2.2rem; }
         .gradient-icon-accent { background: linear-gradient(135deg, var(--neon-accent), var(--primary-solid)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .max-w-800 { max-width: 800px; }
         .border-gold-glow { border: 1px solid rgba(255, 209, 102, 0.15); }
 
-        /* REVIEWS — simplified static grid (Swiper hata diya, more reliable layout) */
-        .review-card { padding: 2rem; border-radius: 16px; height: 100%; }
-        .reviewer-img { width: 48px; height: 48px; object-fit: cover; }
-        .review-quote-mark { font-size: 2.5rem; font-family: var(--font-serif); color: var(--secondary-gold); opacity: 0.4; line-height: 1; }
+        /* REVIEWS */
+        .review-card { padding: 1.5rem; border-radius: 14px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+        .reviewer-img { width: 44px; height: 44px; object-fit: cover; }
+        .review-quote-mark { font-size: 2rem; font-family: var(--font-serif); color: var(--secondary-gold); opacity: 0.4; line-height: 1; }
 
-        .social-circle { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: 0.3s; background: var(--card-bg); }
+        .social-circle { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: 0.3s; background: var(--card-bg); }
         .social-circle:hover { border-color: var(--neon-accent); color: var(--neon-accent); transform: translateY(-3px); }
-        .map-iframe-container { min-height: 350px; }
+        .map-iframe-container { min-height: 280px; }
 
-        .masonry-gallery-grid { display: flex; flex-wrap: wrap; }
-        .image-box-masonry { padding: 8px; overflow: hidden; }
-        .gallery-zoom { width: 100%; height: 260px; object-fit: cover; transition: transform 0.4s; border-radius: 12px !important; }
-        .gallery-zoom:hover { transform: scale(1.04); }
+        .gallery-zoom { width: 100%; height: 220px; object-fit: cover; transition: transform 0.4s; border-radius: 10px !important; }
+        .gallery-zoom:hover { transform: scale(1.03); }
 
-        .floating-cart-btn { position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px; background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.6rem; z-index: 999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.3s; text-decoration: none; border: none; cursor: none !important; }
-        .floating-cart-btn:hover { transform: scale(1.1); color: white; }
-        .cart-badge { position: absolute; top: -4px; right: -4px; background: var(--primary-solid); color: white; font-size: 0.7rem; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        /* FLOATING UTILITIES */
+        .floating-cart-btn { position: fixed; bottom: 24px; left: 24px; width: 52px; height: 52px; background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; z-index: 999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.3s; text-decoration: none; border: none; cursor: pointer; }
+        .floating-cart-btn:hover { transform: scale(1.08); color: white; }
+        .cart-badge { position: absolute; top: -3px; right: -3px; background: var(--primary-solid); color: white; font-size: 0.65rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        #scroll-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50%; color: white; display: none; align-items: center; justify-content: center; z-index: 999; backdrop-filter: blur(5px); transition: 0.3s; }
+        #scroll-to-top { position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50%; color: white; display: none; align-items: center; justify-content: center; z-index: 999; backdrop-filter: blur(5px); transition: 0.3s; cursor: pointer; }
         #scroll-to-top.show { display: flex; }
         #scroll-to-top:hover { border-color: var(--primary-solid); color: var(--primary-solid); }
 
         /* ORDER MODAL */
-        .order-modal-overlay { position: fixed; inset: 0; z-index: 20000; background: rgba(9,9,11,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; }
+        .order-modal-overlay { position: fixed; inset: 0; z-index: 20000; background: rgba(9,9,11,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 16px; }
         .order-modal-overlay.open { opacity: 1; pointer-events: all; }
-        .order-modal { background: #131316; border: 1px solid var(--card-border); border-radius: 16px; max-width: 460px; width: 100%; padding: 2rem; max-height: 90vh; overflow-y: auto; }
-        .order-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4rem; }
-        .order-modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: none !important; }
-        .order-item-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--card-border); }
-        .order-item-name { flex: 1; font-size: 0.9rem; }
-        .qty-btn { width: 26px; height: 26px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--card-border); color: white; font-size: 0.9rem; }
-        .order-modal-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px; color: white; margin-bottom: 12px; font-family: var(--font-sans); }
+        .order-modal { background: #131316; border: 1px solid var(--card-border); border-radius: 12px; max-width: 440px; width: 100%; padding: 1.5rem; max-height: 90vh; overflow-y: auto; }
+        .order-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+        .order-modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
+        .order-item-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--card-border); }
+        .order-item-name { flex: 1; font-size: 0.85rem; word-break: break-word; }
+        .qty-btn { width: 24px; height: 24px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--card-border); color: white; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+        .order-modal-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 12px; color: white; margin-bottom: 10px; font-family: var(--font-sans); font-size: 0.9rem; }
         .order-modal-input:focus { outline: none; border-color: var(--neon-accent); }
 
-        /* Footer fix */
         .footer-links-list { list-style: none; }
-        .footer-links-list li { margin-bottom: 8px; }
-        .footer-links-list a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .footer-links-list li { margin-bottom: 6px; }
+        .footer-links-list a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
         .footer-links-list a:hover { color: var(--secondary-gold); }
 
         @media (max-width: 991px) {
-            .navbar-collapse { background: rgba(9,9,11,0.95); padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid var(--card-border); }
-            .nav-btn-group { margin-top: 15px; flex-direction: column; }
+            .navbar-collapse { background: rgba(9,9,11,0.95); padding: 16px; border-radius: 10px; margin-top: 12px; border: 1px solid var(--card-border); }
+            .nav-btn-group { margin-top: 12px; flex-direction: column; }
             .custom-cursor, .custom-cursor-dot { display: none !important; }
-            * { cursor: auto !important; }
-            .floating-cart-btn { cursor: pointer !important; }
         }
     </style>
 </head>
@@ -192,7 +240,7 @@
         <nav class="navbar navbar-expand-lg fixed-top dynamic-navbar">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center" href="#hero">
-                    <img th:if="${business.logo != null}" th:src="${business.logo}" alt="Logo" class="me-2" style="height:36px; width:36px; object-fit:cover; border-radius:50%;">
+                    <img th:if="${business.logo != null}" th:src="${business.logo}" alt="Logo" class="me-2" style="height:32px; width:32px; object-fit:cover; border-radius:50%;">
                     <span class="brand-name" th:text="${business.businessName}">LUMINA</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -202,12 +250,12 @@
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                         <li class="nav-item"><a class="nav-link active" href="#hero">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="#menu-section" th:text="${config.dashboardSectionLabel}">Menu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#special-dishes">Specials</a></li>
+                        <li class="nav-item" th:if="${!#lists.isEmpty(specialItems)}"><a class="nav-link" href="#special-dishes">Specials</a></li>
                         <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
                         <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                         <li class="nav-item ms-lg-3 d-flex gap-2 nav-btn-group">
-                            <button onclick="openOrder()" class="btn btn-neon-accent btn-sm"><i class="fas fa-shopping-bag me-1"></i> Order Now</button>
+                            <button onclick="openOrder()" class="btn btn-neon-accent btn-sm px-3"><i class="fas fa-shopping-bag me-1"></i> Order Now</button>
                         </li>
                     </ul>
                 </div>
@@ -216,20 +264,31 @@
     </header>
 
     <!-- HERO -->
-    <section id="hero" class="hero-section d-flex align-items-center justify-content-center">
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero-section">
         <div class="hero-bg-overlay"
              th:style="${business.coverImage != null}
-                        ? 'background-image:url(' + ${business.coverImage} + ')'
-                        : 'background-image:url(https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80)'"></div>
-        <div class="container text-center hero-z-index">
-            <h6 class="text-neon-accent tracking-wide mb-3" data-aos="fade-down" th:if="${business.tagline != null}" th:text="${business.tagline}">TAGLINE</h6>
-            <h1 class="display-2 text-white fw-bold mb-3 font-luxury" data-aos="zoom-in" data-aos-delay="200" th:text="${business.businessName}">Business Name</h1>
-           <!-- <p class="lead text-light-muted max-w-600 mx-auto mb-5" data-aos="fade-up" data-aos-delay="400" th:if="${business.description != null}" th:text="${business.description}">
-                Description here.
-            </p>-->
-            <div class="d-flex justify-content-center gap-3 flex-wrap" data-aos="fade-up" data-aos-delay="600">
-                <button onclick="openOrder()" class="btn btn-primary-gradient btn-lg px-4 py-3"><i class="fas fa-shopping-bag me-2"></i>Order Now</button>
-                <a href="#menu-section" class="btn btn-outline-glass btn-lg px-4 py-3" th:text="'View ' + ${config.dashboardSectionLabel}">View Menu</a>
+                    ? 'background-image:url(' + ${business.coverImage} + ')'
+                    : 'background-image:url(https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80)'"></div>
+
+        <div class="container hero-z-index">
+            <div class="hero-content-box">
+                <h6 class="hero-eyebrow" data-aos="fade-down" th:if="${business.tagline != null}" th:text="${business.tagline}">TAGLINE</h6>
+
+                <h1 class="display-3 hero-title" data-aos="zoom-in" data-aos-delay="150" th:text="${business.businessName}">Business Name</h1>
+
+                <p class="hero-desc" data-aos="fade-up" data-aos-delay="300" th:if="${business.description != null}" th:text="${business.description}">
+                    Description here.
+                </p>
+
+                <div class="hero-cta" data-aos="fade-up" data-aos-delay="450">
+                    <button onclick="openOrder()" class="btn btn-primary-gradient btn-lg px-4 py-2" style="font-size:1rem;">
+                        <i class="fas fa-shopping-bag me-2"></i>Order Now
+                    </button>
+                    <a href="#menu-section" class="btn btn-outline-glass btn-lg px-4 py-2" style="font-size:1rem;" th:text="'View ' + ${config.dashboardSectionLabel}">
+                        View Menu
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -237,7 +296,7 @@
     <!-- ABOUT -->
     <section id="about" class="section-padding">
         <div class="container">
-            <div class="row align-items-center g-5">
+            <div class="row align-items-center g-4">
                 <div class="col-lg-6" data-aos="fade-right">
                     <div class="about-image-wrapper card-3d-tilt">
                         <img th:if="${business.coverImage != null}" th:src="${business.coverImage}" alt="Our Space" class="img-fluid custom-rounded img-luxury shadow-lg">
@@ -247,61 +306,46 @@
                 </div>
                 <div class="col-lg-6" data-aos="fade-left">
                     <span class="text-neon-accent tracking-wide d-block mb-2">OUR STORY</span>
-                    <h2 class="display-5 text-white fw-bold mb-4 font-luxury" th:text="'About ' + ${business.businessName}">About Us</h2>
+                    <h2 class="display-6 text-white fw-bold mb-3 font-luxury" th:text="'About ' + ${business.businessName}">About Us</h2>
                     <p class="text-light-muted mb-4" th:if="${business.description != null}" th:text="${business.description}">
                         Description here.
                     </p>
 
-                    <div class="row g-3 mb-4 text-light-muted info-card-grid">
+                    <div class="row g-3 mb-4 text-light-muted">
                         <div class="col-sm-6" th:if="${business.businessHours != null}">
                             <div class="p-3 glass-card rounded-3">
-                                <i class="far fa-clock text-gold mb-2"></i>
-                                <h6>Hours</h6>
+                                <i class="far fa-clock text-gold mb-1"></i>
+                                <h6 class="text-white mb-1">Hours</h6>
                                 <span class="small" th:text="${business.businessHours}">Hours here</span>
                             </div>
                         </div>
                         <div class="col-sm-6" th:if="${business.address != null}">
                             <div class="p-3 glass-card rounded-3">
-                                <i class="fas fa-map-marker-alt text-neon-accent mb-2"></i>
-                                <h6>Location</h6>
+                                <i class="fas fa-map-marker-alt text-neon-accent mb-1"></i>
+                                <h6 class="text-white mb-1">Location</h6>
                                 <span class="small" th:text="${business.address}">Address here</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row g-3 counter-grid pt-3 border-top border-secondary-subtle">
+                    <div class="row g-2 pt-3 border-top border-secondary-subtle">
                         <div class="col-3 text-center">
-                            <h3 class="text-gold fw-bold mb-0 count-num" data-target="5">5</h3>
+                            <h3 class="text-gold fw-bold mb-0 fs-4">5</h3>
                             <small class="text-light-muted">Years Exp</small>
                         </div>
                         <div class="col-3 text-center">
-                            <h3 class="text-neon-accent fw-bold mb-0 count-num" data-target="20">20</h3>
-                            <small class="text-light-muted">K+ Guests</small>
+                            <h3 class="text-neon-accent fw-bold mb-0 fs-4">20K+</h3>
+                            <small class="text-light-muted">Guests</small>
                         </div>
                         <div class="col-3 text-center">
-                            <h3 class="text-white fw-bold mb-0 count-num" data-target="50">50</h3>
-                            <small class="text-light-muted">K+ Orders</small>
+                            <h3 class="text-white fw-bold mb-0 fs-4">50K+</h3>
+                            <small class="text-light-muted">Orders</small>
                         </div>
                         <div class="col-3 text-center">
-                            <h3 class="text-gold fw-bold mb-0">4.9</h3>
+                            <h3 class="text-gold fw-bold mb-0 fs-4">4.9★</h3>
                             <small class="text-light-muted">Rating</small>
                         </div>
                     </div>
-
-                   <!-- <div class="row g-3 counter-grid pt-3 border-top border-secondary-subtle">
-                        <div class="col-4 text-center">
-                            <h3 class="text-gold fw-bold mb-0" th:text="${#lists.size(categoryData)}">0</h3>
-                            <small class="text-light-muted" th:text="${config.dashboardSectionLabel}">Items</small>
-                        </div>
-                        <div class="col-4 text-center">
-                            <h3 class="text-neon-accent fw-bold mb-0" th:text="${business.category}">Category</h3>
-                            <small class="text-light-muted">Category</small>
-                        </div>
-                        <div class="col-4 text-center">
-                            <h3 class="text-white fw-bold mb-0">5★</h3>
-                            <small class="text-light-muted">Rated</small>
-                        </div>
-                    </div>-->
                 </div>
             </div>
         </div>
@@ -310,20 +354,20 @@
     <!-- MENU -->
     <section id="menu-section" class="section-padding bg-dark-gradient-layer">
         <div class="container">
-            <div class="text-center mb-5" data-aos="zoom-in">
-                <span class="text-neon-accent tracking-wide d-block mb-2">CURATED SELECTIONS</span>
-                <h2 class="display-5 text-white fw-bold font-luxury" th:text="'Explore Our ' + ${config.dashboardSectionLabel}">Explore The Menu</h2>
+            <div class="text-center mb-4" data-aos="zoom-in">
+                <span class="text-neon-accent tracking-wide d-block mb-1">CURATED SELECTIONS</span>
+                <h2 class="display-6 text-white fw-bold font-luxury" th:text="'Explore Our ' + ${config.dashboardSectionLabel}">Explore The Menu</h2>
                 <div class="max-w-600 mx-auto mt-3">
                     <input type="text" id="menu-search" class="form-control premium-search-input" placeholder="Search dishes...">
                 </div>
 
-                <div class="d-flex justify-content-center gap-2 mt-4 flex-wrap" th:if="${typeKey != null and !#lists.isEmpty(typeOptions)}">
+                <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap" th:if="${typeKey != null and !#lists.isEmpty(typeOptions)}">
                     <button class="btn btn-outline-glass filter-pill active" data-filter="all">All</button>
                     <button class="btn btn-outline-glass filter-pill" th:each="opt : ${typeOptions}" th:data-filter="${opt}" th:text="${opt}">Veg</button>
                 </div>
             </div>
 
-            <div class="row g-4" id="dynamic-menu-grid">
+            <div class="row g-3" id="dynamic-menu-grid">
 
                 <div class="col-lg-4 col-md-6 menu-card-wrapper filter-item"
                      th:each="item : ${categoryData}"
@@ -335,11 +379,11 @@
                                   th:classappend="${item.get(typeKey) == 'Veg' ? 'bg-veg' : 'bg-nonveg'}"
                                   th:text="${item.get(typeKey)}">Veg</span>
                             <img th:if="${imageKey != null and item.get(imageKey) != null}" th:src="${item.get(imageKey)}" th:alt="${nameKey != null ? item.get(nameKey) : 'item'}" loading="lazy">
-                            <i th:unless="${imageKey != null and item.get(imageKey) != null}" class="fas fa-utensils" style="font-size:2.5rem; color:var(--text-muted);"></i>
+                            <i th:unless="${imageKey != null and item.get(imageKey) != null}" class="fas fa-utensils" style="font-size:2rem; color:var(--text-muted);"></i>
                         </div>
-                        <h4 class="text-white font-luxury mb-2 item-name" th:text="${nameKey != null ? item.get(nameKey) : 'Item'}">Item Name</h4>
-                        <p class="text-light-muted small mb-4 item-desc" th:if="${descriptionKey != null and item.get(descriptionKey) != null}" th:text="${item.get(descriptionKey)}">Description</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <h5 class="text-white font-luxury mb-1 item-name" th:text="${nameKey != null ? item.get(nameKey) : 'Item'}">Item Name</h5>
+                        <p class="text-light-muted small mb-3 item-desc" th:if="${descriptionKey != null and item.get(descriptionKey) != null}" th:text="${item.get(descriptionKey)}">Description</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                             <span class="card-price-tag" th:if="${priceKey != null and item.get(priceKey) != null}" th:text="'₹' + ${item.get(priceKey)}">₹0</span>
                             <button class="btn btn-outline-glass btn-sm px-3"
                                     th:attr="onclick=|addToCart('${item.get(nameKey)}', ${priceKey != null and item.get(priceKey) != null ? item.get(priceKey) : 0})|">
@@ -349,7 +393,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(categoryData)}">
+                <div class="col-12 text-center py-4" th:if="${#lists.isEmpty(categoryData)}">
                     <p class="text-light-muted">Nothing has been added yet. Check back soon!</p>
                 </div>
 
@@ -358,59 +402,25 @@
     </section>
 
     <!-- SPECIALS -->
-    <!--<section id="special-dishes" class="section-padding" th:if="${!#lists.isEmpty(specialItems)}">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-neon-accent tracking-wide d-block mb-2">MAESTRO RECOMMENDATIONS</span>
-                <h2 class="display-5 text-white fw-bold font-luxury">Chef's Specials</h2>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-md-6" th:each="item : ${specialItems}" data-aos="fade-up">
-                    <div class="glass-card p-4 rounded-4 d-flex flex-column flex-md-row align-items-center gap-4 border-gold-glow h-100">
-                        <img th:if="${imageKey != null and item.get(imageKey) != null}" th:src="${item.get(imageKey)}" th:alt="${nameKey != null ? item.get(nameKey) : 'item'}"
-                             class="img-fluid rounded-3 object-fit-cover" style="width:180px; height:180px; flex-shrink:0;">
-                        <div class="flex-grow-1">
-                            <span class="text-gold tracking-wide small d-block mb-1"><i class="fas fa-crown"></i> SIGNATURE</span>
-                            <h3 class="text-white font-luxury mb-2" th:text="${nameKey != null ? item.get(nameKey) : 'Item'}">Item Name</h3>
-                            <p class="text-light-muted small mb-3" th:if="${descriptionKey != null and item.get(descriptionKey) != null}" th:text="${item.get(descriptionKey)}">Description</p>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <span class="fs-4 fw-bold text-white" th:if="${priceKey != null and item.get(priceKey) != null}" th:text="'₹' + ${item.get(priceKey)}">₹0</span>
-                                <button class="btn btn-primary-gradient px-4"
-                                        th:attr="onclick=|addToCart('${item.get(nameKey)}', ${priceKey != null and item.get(priceKey) != null ? item.get(priceKey) : 0})|">
-                                    Order Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>-->
-
-    <!-- SPECIALS -->
     <section id="special-dishes" class="section-padding" th:if="${!#lists.isEmpty(specialItems)}">
         <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-neon-accent tracking-wide d-block mb-2">MAESTRO RECOMMENDATIONS</span>
-                <h2 class="display-5 text-white fw-bold font-luxury">Chef's Specials</h2>
+            <div class="text-center mb-4" data-aos="fade-up">
+                <span class="text-neon-accent tracking-wide d-block mb-1">MAESTRO RECOMMENDATIONS</span>
+                <h2 class="display-6 text-white fw-bold font-luxury">Chef's Specials</h2>
             </div>
-        </div>
-
-        <div class="container">
             <div class="swiper specials-swiper">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" th:each="item : ${specialItems}">
-                        <div class="glass-card p-4 rounded-4 d-flex flex-column flex-md-row align-items-center gap-4 border-gold-glow special-slide-card">
+                        <div class="glass-card p-3 rounded-4 d-flex flex-column flex-md-row align-items-center gap-3 border-gold-glow special-slide-card">
                             <img th:if="${imageKey != null and item.get(imageKey) != null}" th:src="${item.get(imageKey)}" th:alt="${nameKey != null ? item.get(nameKey) : 'item'}"
-                                 class="img-fluid rounded-3 object-fit-cover" style="width:180px; height:180px; flex-shrink:0;">
+                                 class="img-fluid rounded-3 object-fit-cover" style="width:140px; height:140px; flex-shrink:0;">
                             <div class="flex-grow-1">
                                 <span class="text-gold tracking-wide small d-block mb-1"><i class="fas fa-crown"></i> SIGNATURE</span>
-                                <h3 class="text-white font-luxury mb-2" th:text="${nameKey != null ? item.get(nameKey) : 'Item'}">Item Name</h3>
-                                <p class="text-light-muted small mb-3" th:if="${descriptionKey != null and item.get(descriptionKey) != null}" th:text="${item.get(descriptionKey)}">Description</p>
+                                <h4 class="text-white font-luxury mb-1" th:text="${nameKey != null ? item.get(nameKey) : 'Item'}">Item Name</h4>
+                                <p class="text-light-muted small mb-2" th:if="${descriptionKey != null and item.get(descriptionKey) != null}" th:text="${item.get(descriptionKey)}">Description</p>
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <span class="fs-4 fw-bold text-white" th:if="${priceKey != null and item.get(priceKey) != null}" th:text="'₹' + ${item.get(priceKey)}">₹0</span>
-                                    <button class="btn btn-primary-gradient px-4"
+                                    <span class="fs-5 fw-bold text-white" th:if="${priceKey != null and item.get(priceKey) != null}" th:text="'₹' + ${item.get(priceKey)}">₹0</span>
+                                    <button class="btn btn-primary-gradient px-3 py-1 btn-sm"
                                             th:attr="onclick=|addToCart('${item.get(nameKey)}', ${priceKey != null and item.get(priceKey) != null ? item.get(priceKey) : 0})|">
                                         Order Now
                                     </button>
@@ -421,30 +431,7 @@
                 </div>
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
-                <div class="swiper-pagination mt-4"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CHEF EXPERTISE SECTION -->
-    <section id="chef" class="section-padding bg-dark-gradient-layer">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-5" data-aos="fade-right">
-                    <div class="chef-card card-3d-tilt glass-card p-3 rounded-4">
-                        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=600&q=80" alt="Executive Culinary Artist" class="img-fluid custom-rounded shadow-sm mb-3">
-                        <h4 class="text-white mb-1">Chef Jean-Luc Matrix</h4>
-                        <p class="text-gold small mb-0">20+ Years Michelin Star Strategy</p>
-                    </div>
-                </div>
-                <div class="col-lg-7" data-aos="fade-left">
-                    <span class="text-neon-accent tracking-wide d-block mb-2">THE VISIONARY CREATOR</span>
-                    <h2 class="display-6 text-white fw-bold mb-4 font-luxury">Deconstructing Traditions, Assembling Future Taste profiles</h2>
-                    <p class="text-light-muted lead mb-4">
-                        "Gastronomy is an evolving temporal architecture. My objective is to completely transform common agricultural nodes into high-end emotional layers."
-                    </p>
-                    <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=400&q=80" alt="Culinary Signature" class="signature-img opacity-75 rounded">
-                </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
@@ -452,31 +439,31 @@
     <!-- WHY US -->
     <section id="why-us" class="section-padding bg-dark-gradient-layer">
         <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-neon-accent tracking-wide d-block mb-2">WHY CHOOSE US</span>
-                <h2 class="display-5 text-white fw-bold font-luxury" th:text="'The ' + ${business.businessName} + ' Standard'">Our Standard</h2>
+            <div class="text-center mb-4" data-aos="fade-up">
+                <span class="text-neon-accent tracking-wide d-block mb-1">WHY CHOOSE US</span>
+                <h2 class="display-6 text-white fw-bold font-luxury" th:text="'The ' + ${business.businessName} + ' Standard'">Our Standard</h2>
             </div>
 
-            <div class="row g-4 text-center">
+            <div class="row g-3 text-center">
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="glass-card feature-card p-5 rounded-4 h-100 card-3d-tilt">
-                        <div class="feature-icon-wrap mb-4"><i class="fas fa-leaf gradient-icon-accent"></i></div>
-                        <h4 class="text-white mb-3">Quality First</h4>
-                        <p class="text-light-muted mb-0">Every detail crafted with care, from ingredients to presentation.</p>
+                    <div class="glass-card feature-card p-4 rounded-4 h-100 card-3d-tilt">
+                        <div class="feature-icon-wrap mb-3"><i class="fas fa-leaf gradient-icon-accent"></i></div>
+                        <h5 class="text-white mb-2">Quality First</h5>
+                        <p class="text-light-muted small mb-0">Every detail crafted with care, from ingredients to presentation.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="glass-card feature-card p-5 rounded-4 h-100 card-3d-tilt">
-                        <div class="feature-icon-wrap mb-4"><i class="fas fa-award gradient-icon-accent"></i></div>
-                        <h4 class="text-white mb-3">Expert Team</h4>
-                        <p class="text-light-muted mb-0">Skilled professionals dedicated to an exceptional experience.</p>
+                    <div class="glass-card feature-card p-4 rounded-4 h-100 card-3d-tilt">
+                        <div class="feature-icon-wrap mb-3"><i class="fas fa-award gradient-icon-accent"></i></div>
+                        <h5 class="text-white mb-2">Expert Team</h5>
+                        <p class="text-light-muted small mb-0">Skilled professionals dedicated to an exceptional experience.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="glass-card feature-card p-5 rounded-4 h-100 card-3d-tilt">
-                        <div class="feature-icon-wrap mb-4"><i class="fas fa-shield-alt gradient-icon-accent"></i></div>
-                        <h4 class="text-white mb-3">Trusted Standards</h4>
-                        <p class="text-light-muted mb-0">Consistent quality and hygiene you can always rely on.</p>
+                    <div class="glass-card feature-card p-4 rounded-4 h-100 card-3d-tilt">
+                        <div class="feature-icon-wrap mb-3"><i class="fas fa-shield-alt gradient-icon-accent"></i></div>
+                        <h5 class="text-white mb-2">Trusted Standards</h5>
+                        <p class="text-light-muted small mb-0">Consistent quality and hygiene you can always rely on.</p>
                     </div>
                 </div>
             </div>
@@ -486,60 +473,66 @@
     <!-- GALLERY -->
     <section id="gallery" class="section-padding">
         <div class="container">
-            <div class="text-center mb-5" data-aos="zoom-in">
-                <span class="text-neon-accent tracking-wide d-block mb-2">VISUAL STORY</span>
-                <h2 class="display-5 text-white fw-bold font-luxury">A Glimpse Inside</h2>
+            <div class="text-center mb-4" data-aos="zoom-in">
+                <span class="text-neon-accent tracking-wide d-block mb-1">VISUAL STORY</span>
+                <h2 class="display-6 text-white fw-bold font-luxury">A Glimpse Inside</h2>
             </div>
 
-            <div class="row g-3 masonry-gallery-grid" data-aos="fade-up">
-                <div class="col-md-4 col-sm-6 image-box-masonry"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded gallery-zoom" alt="Ambience"></div>
-                <div class="col-md-4 col-sm-6 image-box-masonry"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded gallery-zoom" alt="Interior"></div>
-                <div class="col-md-4 col-sm-6 image-box-masonry"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded gallery-zoom" alt="Setup"></div>
-                <div class="col-md-6 col-sm-6 image-box-masonry"><img src="https://images.unsplash.com/photo-1522336572468-97b06e8ef143?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded gallery-zoom" alt="Lounge Area"></div>
-                <div class="col-md-6 col-sm-6 image-box-masonry"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded gallery-zoom" alt="Detail Shot"></div>
+            <div class="row g-3" data-aos="fade-up">
+                <div class="col-md-4 col-sm-6"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded gallery-zoom" alt="Ambience"></div>
+                <div class="col-md-4 col-sm-6"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded gallery-zoom" alt="Interior"></div>
+                <div class="col-md-4 col-sm-6"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded gallery-zoom" alt="Setup"></div>
+                <div class="col-md-6 col-sm-6"><img src="https://images.unsplash.com/photo-1522336572468-97b06e8ef143?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded gallery-zoom" alt="Lounge Area"></div>
+                <div class="col-md-6 col-sm-6"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded gallery-zoom" alt="Detail Shot"></div>
             </div>
         </div>
     </section>
 
-    <!-- REVIEWS — simplified, reliable grid (no Swiper dependency issues) -->
+    <!-- REVIEWS -->
     <section id="reviews" class="section-padding bg-dark-gradient-layer">
         <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <span class="text-neon-accent tracking-wide d-block mb-2">CUSTOMER REVIEWS</span>
-                <h2 class="display-5 text-white fw-bold font-luxury">What People Say</h2>
+            <div class="text-center mb-4" data-aos="fade-up">
+                <span class="text-neon-accent tracking-wide d-block mb-1">CUSTOMER REVIEWS</span>
+                <h2 class="display-6 text-white fw-bold font-luxury">What People Say</h2>
             </div>
 
-            <div class="row g-4">
+            <div class="row g-3">
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="glass-card review-card">
-                        <span class="review-quote-mark">"</span>
-                        <div class="text-gold small mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p class="text-light-muted mb-4" style="font-size:0.92rem; line-height:1.7;">Excellent experience from start to finish. Highly recommended to everyone!</p>
-                        <div class="d-flex align-items-center gap-3">
+                        <div>
+                            <span class="review-quote-mark">"</span>
+                            <div class="text-gold small mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                            <p class="text-light-muted mb-3 small">Excellent experience from start to finish. Highly recommended to everyone!</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
                             <img src="https://randomuser.me/api/portraits/women/45.jpg" class="rounded-circle reviewer-img" alt="Reviewer">
-                            <div><h6 class="text-white mb-0">Happy Customer</h6></div>
+                            <div><h6 class="text-white mb-0 small">Happy Customer</h6></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="glass-card review-card">
-                        <span class="review-quote-mark">"</span>
-                        <div class="text-gold small mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p class="text-light-muted mb-4" style="font-size:0.92rem; line-height:1.7;">Professional service, great ambience, and everything was just perfect.</p>
-                        <div class="d-flex align-items-center gap-3">
+                        <div>
+                            <span class="review-quote-mark">"</span>
+                            <div class="text-gold small mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                            <p class="text-light-muted mb-3 small">Professional service, great ambience, and everything was just perfect.</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
                             <img src="https://randomuser.me/api/portraits/men/54.jpg" class="rounded-circle reviewer-img" alt="Reviewer">
-                            <div><h6 class="text-white mb-0">Happy Customer</h6></div>
+                            <div><h6 class="text-white mb-0 small">Happy Customer</h6></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="glass-card review-card">
-                        <span class="review-quote-mark">"</span>
-                        <div class="text-gold small mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p class="text-light-muted mb-4" style="font-size:0.92rem; line-height:1.7;">Will definitely be coming back. Couldn't have asked for a better experience.</p>
-                        <div class="d-flex align-items-center gap-3">
+                        <div>
+                            <span class="review-quote-mark">"</span>
+                            <div class="text-gold small mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                            <p class="text-light-muted mb-3 small">Will definitely be coming back. Couldn't have asked for a better experience.</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
                             <img src="https://randomuser.me/api/portraits/women/65.jpg" class="rounded-circle reviewer-img" alt="Reviewer">
-                            <div><h6 class="text-white mb-0">Happy Customer</h6></div>
+                            <div><h6 class="text-white mb-0 small">Happy Customer</h6></div>
                         </div>
                     </div>
                 </div>
@@ -550,31 +543,25 @@
     <!-- CONTACT -->
     <section id="contact" class="section-padding">
         <div class="container">
-            <div class="row g-5">
+            <div class="row g-4">
                 <div class="col-md-5" data-aos="fade-right">
-                    <span class="text-neon-accent tracking-wide d-block mb-2">GET IN TOUCH</span>
-                    <h2 class="display-6 text-white fw-bold mb-4 font-luxury">Contact Us</h2>
-                    <ul class="list-unstyled contact-info-list text-light-muted fs-5">
-                        <li class="mb-3" th:if="${business.phone != null}"><i class="fas fa-phone text-gold me-3"></i> <span th:text="${business.phone}">Phone</span></li>
-                        <li class="mb-3" th:if="${business.email != null}"><i class="fas fa-envelope text-neon-accent me-3"></i> <span th:text="${business.email}">Email</span></li>
-                        <li class="mb-3" th:if="${business.address != null}"><i class="fas fa-map-marked-alt text-white me-3"></i> <span th:text="${business.address}">Address</span></li>
+                    <span class="text-neon-accent tracking-wide d-block mb-1">GET IN TOUCH</span>
+                    <h2 class="display-6 text-white fw-bold mb-3 font-luxury">Contact Us</h2>
+                    <ul class="list-unstyled contact-info-list text-light-muted">
+                        <li class="mb-3" th:if="${business.phone != null}"><i class="fas fa-phone text-gold me-2"></i> <span th:text="${business.phone}">Phone</span></li>
+                        <li class="mb-3" th:if="${business.email != null}"><i class="fas fa-envelope text-neon-accent me-2"></i> <span th:text="${business.email}">Email</span></li>
+                        <li class="mb-3" th:if="${business.address != null}"><i class="fas fa-map-marked-alt text-white me-2"></i> <span th:text="${business.address}">Address</span></li>
                     </ul>
-                    <div class="d-flex gap-3 social-links-block mt-4" th:if="${business.instagramUrl != null or business.facebookUrl != null}">
+                    <div class="d-flex gap-2 social-links-block mt-3" th:if="${business.instagramUrl != null or business.facebookUrl != null}">
                         <a th:if="${business.instagramUrl != null}" th:href="${business.instagramUrl}" class="social-circle" target="_blank"><i class="fab fa-instagram"></i></a>
                         <a th:if="${business.facebookUrl != null}" th:href="${business.facebookUrl}" class="social-circle" target="_blank"><i class="fab fa-facebook-f"></i></a>
                     </div>
-                    <a th:if="${business.googleMap != null}" th:href="${business.googleMap}" target="_blank" class="btn btn-outline-glass mt-4">
-                        <i class="fas fa-directions me-2"></i>Get Directions
-                    </a>
                 </div>
                 <div class="col-md-7" data-aos="fade-left">
                     <div class="map-iframe-container glass-card p-2 rounded-3 h-100" th:if="${business.address != null}">
                         <iframe th:src="'https://maps.google.com/maps?q=' + ${#uris.escapeQueryParam(business.address)} + '&output=embed'"
-                                width="100%" height="350" style="border:0; border-radius: 8px; filter: invert(90%) hue-rotate(180deg);"
+                                width="100%" height="280" style="border:0; border-radius: 8px; filter: invert(90%) hue-rotate(180deg);"
                                 allowfullscreen="" loading="lazy"></iframe>
-                    </div>
-                    <div class="glass-card p-5 rounded-3 h-100 d-flex align-items-center justify-content-center text-light-muted" th:unless="${business.address != null}">
-                        Location not available yet.
                     </div>
                 </div>
             </div>
@@ -582,15 +569,15 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="pt-5 pb-3 border-top border-secondary-subtle">
+    <footer class="pt-4 pb-3 border-top border-secondary-subtle">
         <div class="container">
-            <div class="row g-4 mb-4">
+            <div class="row g-3 mb-3">
                 <div class="col-lg-4">
-                    <h3 class="text-gold font-luxury mb-3" th:text="${business.businessName}">Business Name</h3>
+                    <h4 class="text-gold font-luxury mb-2" th:text="${business.businessName}">Business Name</h4>
                     <p class="text-light-muted small" th:if="${business.description != null}" th:text="${business.description}">Description</p>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <h6 class="text-white mb-3 tracking-wide text-uppercase">Quick Links</h6>
+                    <h6 class="text-white mb-2 tracking-wide text-uppercase small">Quick Links</h6>
                     <ul class="footer-links-list">
                         <li><a href="#hero">Home</a></li>
                         <li><a href="#menu-section" th:text="${config.dashboardSectionLabel}">Menu</a></li>
@@ -599,8 +586,8 @@
                     </ul>
                 </div>
                 <div class="col-lg-4 col-md-6" th:if="${business.businessHours != null}">
-                    <h6 class="text-white mb-3 tracking-wide text-uppercase">Business Hours</h6>
-                    <p class="text-light-muted small mb-1" th:text="${business.businessHours}">Hours here</p>
+                    <h6 class="text-white mb-2 tracking-wide text-uppercase small">Business Hours</h6>
+                    <p class="text-light-muted small mb-0" th:text="${business.businessHours}">Hours here</p>
                 </div>
             </div>
             <div class="border-top border-secondary-subtle pt-3 d-flex flex-wrap justify-content-between text-light-muted small">
@@ -615,7 +602,7 @@
 <div class="order-modal-overlay" id="orderModal" onclick="closeOrderOnBg(event)">
     <div class="order-modal">
         <div class="order-modal-header">
-            <h4 class="text-white font-luxury mb-0">Your Order</h4>
+            <h5 class="text-white font-luxury mb-0">Your Order</h5>
             <button class="order-modal-close" onclick="closeOrder()">✕</button>
         </div>
         <div id="orderItemsList">
@@ -627,12 +614,13 @@
             <span class="text-light-muted small">Total</span>
             <strong class="text-gold fs-5" id="orderTotal">₹0</strong>
         </div>
-        <button class="btn btn-primary-gradient w-100 py-3" onclick="placeOrder()">Proceed to WhatsApp →</button>
+        <button class="btn btn-primary-gradient w-100 py-2" onclick="placeOrder()">Proceed to WhatsApp →</button>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 
@@ -646,16 +634,18 @@
         initGSAPCoreAnimations();
         initCoreInteractions();
         bindTiltSensors();
+        initSpecialsCarousel();
 
         setTimeout(() => {
             const loader = document.getElementById("page-loader");
-            loader.style.opacity = "0";
-            setTimeout(() => loader.style.display = "none", 600);
-            AOS.init({ duration: 1000, once: true });
-        }, 600);
+            if (loader) {
+                loader.style.opacity = "0";
+                setTimeout(() => loader.style.display = "none", 600);
+            }
+            AOS.init({ duration: 800, once: true });
+        }, 400);
     });
 
-    // ===== CART / CHECKOUT =====
     let cart = [];
 
     function addToCart(name, price) {
@@ -689,9 +679,9 @@
             <div class="order-item-row">
                 <span class="order-item-name">${item.name}</span>
                 <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
-                <span style="min-width:20px; text-align:center;">${item.qty}</span>
+                <span style="min-width:18px; text-align:center;">${item.qty}</span>
                 <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
-                <span style="min-width:60px; text-align:right; color:var(--secondary-gold);">₹${item.price * item.qty}</span>
+                <span style="min-width:50px; text-align:right; color:var(--secondary-gold); font-size:0.85rem;">₹${item.price * item.qty}</span>
             </div>
         `).join("");
         const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
@@ -727,8 +717,7 @@
         const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
         message += `\nTotal: ₹${total}`;
 
-        const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-        window.open(url, "_blank");
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
 
         cart = [];
         document.getElementById("custName").value = "";
@@ -738,22 +727,23 @@
         closeOrder();
     }
 
-    // ===== THREE.JS BACKGROUND =====
     function initThreeJSBackground() {
         const canvas = document.getElementById("three-bg-canvas");
+        if (!canvas || !window.THREE) return;
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        const particlesCount = 240;
+        const particlesCount = 200;
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particlesCount * 3);
         for (let i = 0; i < particlesCount * 3; i++) positions[i] = (Math.random() - 0.5) * 12;
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-        const material = new THREE.PointsMaterial({ size: 0.035, color: new THREE.Color('#00E5FF'), transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+        const material = new THREE.PointsMaterial({ size: 0.03, color: new THREE.Color('#00E5FF'), transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
         const particleSystem = new THREE.Points(geometry, material);
         scene.add(particleSystem);
         camera.position.z = 4;
@@ -766,10 +756,10 @@
 
         function animateFrame() {
             requestAnimationFrame(animateFrame);
-            particleSystem.rotation.y += 0.0012;
-            particleSystem.rotation.x += 0.0006;
-            camera.position.x += (mouseX * 0.4 - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY * 0.4 - camera.position.y) * 0.05;
+            particleSystem.rotation.y += 0.001;
+            particleSystem.rotation.x += 0.0005;
+            camera.position.x += (mouseX * 0.3 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.05;
             camera.lookAt(scene.position);
             renderer.render(scene, camera);
         }
@@ -786,13 +776,18 @@
         window.addEventListener("scroll", () => {
             const totalHeight = document.body.scrollHeight - window.innerHeight;
             const progress = (window.scrollY / totalHeight) * 100;
-            document.getElementById("scroll-progress").style.width = `${progress}%`;
+            const scrollBar = document.getElementById("scroll-progress");
+            if (scrollBar) scrollBar.style.width = `${progress}%`;
 
             const nav = document.querySelector(".dynamic-navbar");
-            if (window.scrollY > 60) nav.classList.add("scrolled"); else nav.classList.remove("scrolled");
+            if (nav) {
+                if (window.scrollY > 50) nav.classList.add("scrolled"); else nav.classList.remove("scrolled");
+            }
 
             const topBtn = document.getElementById("scroll-to-top");
-            if (window.scrollY > 400) topBtn.classList.add("show"); else topBtn.classList.remove("show");
+            if (topBtn) {
+                if (window.scrollY > 350) topBtn.classList.add("show"); else topBtn.classList.remove("show");
+            }
         });
     }
 
@@ -800,22 +795,18 @@
         const cursor = document.querySelector(".custom-cursor");
         const dot = document.querySelector(".custom-cursor-dot");
 
-        window.addEventListener("mousemove", (e) => {
-            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
-            gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.02 });
-        });
+        if (cursor && dot && window.innerWidth > 991) {
+            window.addEventListener("mousemove", (e) => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+                gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.02 });
+            });
+        }
 
-        document.querySelectorAll("a, button, .filter-pill, .premium-menu-card").forEach(item => {
-            item.addEventListener("mouseenter", () => cursor.style.transform = "translate(-50%, -50%) scale(1.6)");
-            item.addEventListener("mouseleave", () => cursor.style.transform = "translate(-50%, -50%) scale(1)");
-        });
-
-        // Search + filter — DOM already server-rendered
         const searchInput = document.getElementById("menu-search");
         const filterButtons = document.querySelectorAll(".filter-pill");
 
         function processFilter() {
-            const query = searchInput.value.toLowerCase().trim();
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
             const activeBtn = document.querySelector(".filter-pill.active");
             const activeFilter = activeBtn ? activeBtn.getAttribute("data-filter") : "all";
 
@@ -842,68 +833,52 @@
             });
         });
 
-        document.getElementById("scroll-to-top").addEventListener("click", () => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        });
+        const scrollToTopBtn = document.getElementById("scroll-to-top");
+        if (scrollToTopBtn) {
+            scrollToTopBtn.addEventListener("click", () => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        }
     }
 
     function bindTiltSensors() {
+        if (window.innerWidth <= 991) return;
         document.querySelectorAll(".card-3d-tilt").forEach(card => {
             card.addEventListener("mousemove", (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left - (rect.width / 2);
                 const y = e.clientY - rect.top - (rect.height / 2);
-                const factorX = (x / (rect.width / 2)) * 10;
-                const factorY = -(y / (rect.height / 2)) * 10;
-                card.style.transform = `rotateX(${factorY}deg) rotateY(${factorX}deg) translateY(-4px)`;
+                const factorX = (x / (rect.width / 2)) * 8;
+                const factorY = -(y / (rect.height / 2)) * 8;
+                card.style.transform = `rotateX(${factorY}deg) rotateY(${factorX}deg) translateY(-2px)`;
             });
             card.addEventListener("mouseleave", () => {
                 card.style.transform = "rotateX(0deg) rotateY(0deg) translateY(0px)";
             });
         });
     }
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-    initThreeJSBackground();
-    initGSAPCoreAnimations();
-    initCoreInteractions();
-    bindTiltSensors();
-    initSpecialsCarousel();   // 👈 ye add karo
-
-    setTimeout(() => {
-    const loader = document.getElementById("page-loader");
-    loader.style.opacity = "0";
-    setTimeout(() => loader.style.display = "none", 600);
-    AOS.init({ duration: 1000, once: true });
-    }, 600);
-    });
 
     function initSpecialsCarousel() {
-    const el = document.querySelector(".specials-swiper");
-    if (!el) return; // agar specialItems khali hain, section hi render nahi hua
+        const el = document.querySelector(".specials-swiper");
+        if (!el || !window.Swiper) return;
 
-    new Swiper(".specials-swiper", {
-        slidesPerView: 1,
-        spaceBetween: 26,
-        loop: true,
-        autoplay: {
-            delay: 3500,
-            disableOnInteraction: false,
-        },
-        grabCursor: true,
-        pagination: { el: ".specials-swiper .swiper-pagination", clickable: true },
-        navigation: {
-            nextEl: ".specials-swiper .swiper-button-next",
-            prevEl: ".specials-swiper .swiper-button-prev",
-        },
-        breakpoints: {
-            768: { slidesPerView: 1 },
-            1100: { slidesPerView: 2 },
-        },
-    });
-}
+        new Swiper(".specials-swiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: { delay: 3500, disableOnInteraction: false },
+            grabCursor: true,
+            pagination: { el: ".specials-swiper .swiper-pagination", clickable: true },
+            navigation: {
+                nextEl: ".specials-swiper .swiper-button-next",
+                prevEl: ".specials-swiper .swiper-button-prev",
+            },
+            breakpoints: {
+                768: { slidesPerView: 1 },
+                1024: { slidesPerView: 2, spaceBetween: 24 },
+            },
+        });
+    }
 </script>
 </body>
 </html>
