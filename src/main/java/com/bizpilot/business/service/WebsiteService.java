@@ -138,6 +138,7 @@ public class WebsiteService {
                 .toList();
 
         model.addAttribute("business", business);
+        model.addAttribute("businessSlug", slug);
         model.addAttribute("config", config);
         model.addAttribute("categoryData", rowsList);
         model.addAttribute("specialItems", specialItems);

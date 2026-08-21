@@ -652,274 +652,290 @@
 </script>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    const whatsappNumber = /*[[${business.whatsapp != null ? '91' + business.whatsapp : ''}]]*/ "";
-    /*]]>*/
+   const whatsappNumber = /*[[${business.whatsapp != null ? '91' + business.whatsapp : ''}]]*/ "";
+   const businessSlug = /*[[${businessSlug}]]*/ "";
+   // const API_BASE_URL = "https://admin.trybizly.com/api";
+   const API_BASE_URL = "http://localhost:8080/api";
+   /*]]>*/
 
-    document.addEventListener("DOMContentLoaded", () => {
-        initThreeJSBackground();
-        initGSAPCoreAnimations();
-        initCoreInteractions();
-        bindTiltSensors();
-        initSpecialsCarousel();
+   document.addEventListener("DOMContentLoaded", () => {
+       initThreeJSBackground();
+       initGSAPCoreAnimations();
+       initCoreInteractions();
+       bindTiltSensors();
+       initSpecialsCarousel();
 
-        setTimeout(() => {
-            const loader = document.getElementById("page-loader");
-            if (loader) {
-                loader.style.opacity = "0";
-                setTimeout(() => loader.style.display = "none", 600);
-            }
-            AOS.init({ duration: 800, once: true });
-        }, 400);
-    });
+       setTimeout(() => {
+           const loader = document.getElementById("page-loader");
+           if (loader) {
+               loader.style.opacity = "0";
+               setTimeout(() => loader.style.display = "none", 600);
+           }
+           AOS.init({ duration: 800, once: true });
+       }, 400);
+   });
 
-    let cart = [];
+   let cart = [];
 
-    function addToCart(name, price) {
-        const numericPrice = Number(price) || 0;
-        const existing = cart.find(i => i.name === name);
-        if (existing) existing.qty++;
-        else cart.push({ name, price: numericPrice, qty: 1 });
-        updateCartBadge();
-        renderCart();
-    }
+   function addToCart(name, price) {
+       const numericPrice = Number(price) || 0;
+       const existing = cart.find(i => i.name === name);
+       if (existing) existing.qty++;
+       else cart.push({ name, price: numericPrice, qty: 1 });
+       updateCartBadge();
+       renderCart();
+   }
 
-    function updateCartBadge() {
-        const badge = document.getElementById("cart-badge");
-        const totalQty = cart.reduce((s, i) => s + i.qty, 0);
-        if (totalQty > 0) {
-            badge.style.display = "flex";
-            badge.textContent = totalQty;
-        } else {
-            badge.style.display = "none";
-        }
-    }
+   function updateCartBadge() {
+       const badge = document.getElementById("cart-badge");
+       const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+       if (totalQty > 0) {
+           badge.style.display = "flex";
+           badge.textContent = totalQty;
+       } else {
+           badge.style.display = "none";
+       }
+   }
 
-    function renderCart() {
-        const container = document.getElementById("orderItemsList");
-        if (cart.length === 0) {
-            container.innerHTML = '<p class="text-light-muted small text-center py-3">Your cart is empty.</p>';
-            document.getElementById("orderTotal").textContent = "₹0";
-            return;
-        }
-        container.innerHTML = cart.map(item => `
-            <div class="order-item-row">
-                <span class="order-item-name">${item.name}</span>
-                <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
-                <span style="min-width:18px; text-align:center;">${item.qty}</span>
-                <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
-                <span style="min-width:50px; text-align:right; color:var(--secondary-gold); font-size:0.85rem;">₹${item.price * item.qty}</span>
-            </div>
-        `).join("");
-        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-        document.getElementById("orderTotal").textContent = `₹${total}`;
-    }
+   function renderCart() {
+       const container = document.getElementById("orderItemsList");
+       if (cart.length === 0) {
+           container.innerHTML = '<p class="text-light-muted small text-center py-3">Your cart is empty.</p>';
+           document.getElementById("orderTotal").textContent = "₹0";
+           return;
+       }
+       container.innerHTML = cart.map(item => `
+           <div class="order-item-row">
+               <span class="order-item-name">${item.name}</span>
+               <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
+               <span style="min-width:18px; text-align:center;">${item.qty}</span>
+               <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+               <span style="min-width:50px; text-align:right; color:var(--secondary-gold); font-size:0.85rem;">₹${item.price * item.qty}</span>
+           </div>
+       `).join("");
+       const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+       document.getElementById("orderTotal").textContent = `₹${total}`;
+   }
 
-    function changeQty(name, delta) {
-        const idx = cart.findIndex(i => i.name === name);
-        cart[idx].qty += delta;
-        if (cart[idx].qty <= 0) cart.splice(idx, 1);
-        updateCartBadge();
-        renderCart();
-    }
+   function changeQty(name, delta) {
+       const idx = cart.findIndex(i => i.name === name);
+       cart[idx].qty += delta;
+       if (cart[idx].qty <= 0) cart.splice(idx, 1);
+       updateCartBadge();
+       renderCart();
+   }
 
-    function openOrder() { document.getElementById("orderModal").classList.add("open"); }
-    function closeOrder() { document.getElementById("orderModal").classList.remove("open"); }
-    function closeOrderOnBg(e) { if (e.target === document.getElementById("orderModal")) closeOrder(); }
+   function openOrder() { document.getElementById("orderModal").classList.add("open"); }
+   function closeOrder() { document.getElementById("orderModal").classList.remove("open"); }
+   function closeOrderOnBg(e) { if (e.target === document.getElementById("orderModal")) closeOrder(); }
 
-    function placeOrder() {
-        if (cart.length === 0) { alert("Please add items first!"); return; }
+  async function placeOrder() {
+    if (cart.length === 0) { alert("Please add items first!"); return; }
+    const name = document.getElementById("custName").value.trim();
+    const phone = document.getElementById("custPhone").value.trim();
+    if (!name) { alert("Please enter your name!"); return; }
+    if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
 
-        const name = document.getElementById("custName").value.trim();
-        const phone = document.getElementById("custPhone").value.trim();
+    const tableNum = isDiningIn === true ? document.getElementById("tableNumber").value.trim() : null;
 
-        if (!name) { alert("Please enter your name!"); return; }
-        if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
-
-        let message = "Hello! I would like to place an order:\n\n";
-        message += `Name: ${name}\nMobile: ${phone}\n\n`;
-        if (isDiningIn === true) {
-            const tableNum = document.getElementById("tableNumber").value.trim();
-            message += `Dining In: Yes\n`;
-            if (tableNum) message += `Table Number: ${tableNum}\n`;
-            message += `\n`;
-            } else if (isDiningIn === false) {
-                message += `Dining In: No\n\n`;
-            }
-        cart.forEach(item => {
-            message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`;
+    // Order ko backend mein save karo (WhatsApp khulne se pehle)
+    try {
+        await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                customerName: name,
+                customerPhone: phone,
+                items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
+                diningIn: isDiningIn,
+                tableNumber: tableNum
+            })
         });
-        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-        message += `\nTotal: ₹${total}`;
-
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
-
-        cart = [];
-        document.getElementById("custName").value = "";
-        document.getElementById("custPhone").value = "";
-        updateCartBadge();
-        renderCart();
-        isDiningIn = null;
-        document.getElementById("tableNumber").value = "";
-        document.getElementById("tableNumber").style.display = "none";
-        document.getElementById("diningYesBtn").style.background = "transparent";
-        document.getElementById("diningYesBtn").style.color = "var(--soft-black)";
-        document.getElementById("diningNoBtn").style.background = "transparent";
-        document.getElementById("diningNoBtn").style.color = "var(--soft-black)";
-        closeOrder();
+    } catch (err) {
+        console.error("Failed to save order:", err);
+        // Save fail ho bhi jaye, WhatsApp flow rukna nahi chahiye
     }
 
-    function initThreeJSBackground() {
-        const canvas = document.getElementById("three-bg-canvas");
-        if (!canvas || !window.THREE) return;
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-        const particlesCount = 200;
-        const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(particlesCount * 3);
-        for (let i = 0; i < particlesCount * 3; i++) positions[i] = (Math.random() - 0.5) * 12;
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-        const material = new THREE.PointsMaterial({ size: 0.03, color: new THREE.Color('#00E5FF'), transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
-        const particleSystem = new THREE.Points(geometry, material);
-        scene.add(particleSystem);
-        camera.position.z = 4;
-
-        let mouseX = 0, mouseY = 0;
-        window.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth) - 0.5;
-            mouseY = (e.clientY / window.innerHeight) - 0.5;
-        });
-
-        function animateFrame() {
-            requestAnimationFrame(animateFrame);
-            particleSystem.rotation.y += 0.001;
-            particleSystem.rotation.x += 0.0005;
-            camera.position.x += (mouseX * 0.3 - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.05;
-            camera.lookAt(scene.position);
-            renderer.render(scene, camera);
-        }
-        animateFrame();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+    let message = "Hello! I would like to place an order:\n\n";
+    message += `Name: ${name}\nMobile: ${phone}\n\n`;
+    if (isDiningIn === true) {
+        message += `Dining In: Yes\n`;
+        if (tableNum) message += `Table Number: ${tableNum}\n`;
+        message += `\n`;
+    } else if (isDiningIn === false) {
+        message += `Dining In: No\n\n`;
     }
+    cart.forEach(item => { message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`; });
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    message += `\nTotal: ₹${total}`;
 
-    function initGSAPCoreAnimations() {
-        window.addEventListener("scroll", () => {
-            const totalHeight = document.body.scrollHeight - window.innerHeight;
-            const progress = (window.scrollY / totalHeight) * 100;
-            const scrollBar = document.getElementById("scroll-progress");
-            if (scrollBar) scrollBar.style.width = `${progress}%`;
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
 
-            const nav = document.querySelector(".dynamic-navbar");
-            if (nav) {
-                if (window.scrollY > 50) nav.classList.add("scrolled"); else nav.classList.remove("scrolled");
-            }
+    cart = [];
+    document.getElementById("custName").value = "";
+    document.getElementById("custPhone").value = "";
+    updateCartBadge();
+    renderCart();
+    isDiningIn = null;
+    document.getElementById("tableNumber").value = "";
+    document.getElementById("tableNumber").style.display = "none";
+    document.getElementById("diningYesBtn").style.background = "transparent";
+    document.getElementById("diningNoBtn").style.background = "transparent";
+    closeOrder();
+}
 
-            const topBtn = document.getElementById("scroll-to-top");
-            if (topBtn) {
-                if (window.scrollY > 350) topBtn.classList.add("show"); else topBtn.classList.remove("show");
-            }
-        });
-    }
+   function initThreeJSBackground() {
+       const canvas = document.getElementById("three-bg-canvas");
+       if (!canvas || !window.THREE) return;
 
-    function initCoreInteractions() {
-        const cursor = document.querySelector(".custom-cursor");
-        const dot = document.querySelector(".custom-cursor-dot");
+       const scene = new THREE.Scene();
+       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+       renderer.setSize(window.innerWidth, window.innerHeight);
+       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        if (cursor && dot && window.innerWidth > 991) {
-            window.addEventListener("mousemove", (e) => {
-                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
-                gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.02 });
-            });
-        }
+       const particlesCount = 200;
+       const geometry = new THREE.BufferGeometry();
+       const positions = new Float32Array(particlesCount * 3);
+       for (let i = 0; i < particlesCount * 3; i++) positions[i] = (Math.random() - 0.5) * 12;
+       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-        const searchInput = document.getElementById("menu-search");
-        const filterButtons = document.querySelectorAll(".filter-pill");
+       const material = new THREE.PointsMaterial({ size: 0.03, color: new THREE.Color('#00E5FF'), transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending });
+       const particleSystem = new THREE.Points(geometry, material);
+       scene.add(particleSystem);
+       camera.position.z = 4;
 
-        function processFilter() {
-            const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
-            const activeBtn = document.querySelector(".filter-pill.active");
-            const activeFilter = activeBtn ? activeBtn.getAttribute("data-filter") : "all";
+       let mouseX = 0, mouseY = 0;
+       window.addEventListener('mousemove', (e) => {
+           mouseX = (e.clientX / window.innerWidth) - 0.5;
+           mouseY = (e.clientY / window.innerHeight) - 0.5;
+       });
 
-            document.querySelectorAll(".filter-item").forEach(card => {
-                const nameEl = card.querySelector(".item-name");
-                const descEl = card.querySelector(".item-desc");
-                const name = nameEl ? nameEl.innerText.toLowerCase() : "";
-                const desc = descEl ? descEl.innerText.toLowerCase() : "";
-                const type = card.getAttribute("data-type");
+       function animateFrame() {
+           requestAnimationFrame(animateFrame);
+           particleSystem.rotation.y += 0.001;
+           particleSystem.rotation.x += 0.0005;
+           camera.position.x += (mouseX * 0.3 - camera.position.x) * 0.05;
+           camera.position.y += (-mouseY * 0.3 - camera.position.y) * 0.05;
+           camera.lookAt(scene.position);
+           renderer.render(scene, camera);
+       }
+       animateFrame();
 
-                const matchesSearch = name.includes(query) || desc.includes(query);
-                const matchesFilter = activeFilter === "all" || type === activeFilter;
+       window.addEventListener('resize', () => {
+           camera.aspect = window.innerWidth / window.innerHeight;
+           camera.updateProjectionMatrix();
+           renderer.setSize(window.innerWidth, window.innerHeight);
+       });
+   }
 
-                card.style.display = (matchesSearch && matchesFilter) ? "block" : "none";
-            });
-        }
+   function initGSAPCoreAnimations() {
+       window.addEventListener("scroll", () => {
+           const totalHeight = document.body.scrollHeight - window.innerHeight;
+           const progress = (window.scrollY / totalHeight) * 100;
+           const scrollBar = document.getElementById("scroll-progress");
+           if (scrollBar) scrollBar.style.width = `${progress}%`;
 
-        if (searchInput) searchInput.addEventListener("input", processFilter);
-        filterButtons.forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                filterButtons.forEach(b => b.classList.remove("active"));
-                e.target.classList.add("active");
-                processFilter();
-            });
-        });
+           const nav = document.querySelector(".dynamic-navbar");
+           if (nav) {
+               if (window.scrollY > 50) nav.classList.add("scrolled"); else nav.classList.remove("scrolled");
+           }
 
-        const scrollToTopBtn = document.getElementById("scroll-to-top");
-        if (scrollToTopBtn) {
-            scrollToTopBtn.addEventListener("click", () => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            });
-        }
-    }
+           const topBtn = document.getElementById("scroll-to-top");
+           if (topBtn) {
+               if (window.scrollY > 350) topBtn.classList.add("show"); else topBtn.classList.remove("show");
+           }
+       });
+   }
 
-    function bindTiltSensors() {
-        if (window.innerWidth <= 991) return;
-        document.querySelectorAll(".card-3d-tilt").forEach(card => {
-            card.addEventListener("mousemove", (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left - (rect.width / 2);
-                const y = e.clientY - rect.top - (rect.height / 2);
-                const factorX = (x / (rect.width / 2)) * 8;
-                const factorY = -(y / (rect.height / 2)) * 8;
-                card.style.transform = `rotateX(${factorY}deg) rotateY(${factorX}deg) translateY(-2px)`;
-            });
-            card.addEventListener("mouseleave", () => {
-                card.style.transform = "rotateX(0deg) rotateY(0deg) translateY(0px)";
-            });
-        });
-    }
+   function initCoreInteractions() {
+       const cursor = document.querySelector(".custom-cursor");
+       const dot = document.querySelector(".custom-cursor-dot");
 
-    function initSpecialsCarousel() {
-        const el = document.querySelector(".specials-swiper");
-        if (!el || !window.Swiper) return;
+       if (cursor && dot && window.innerWidth > 991) {
+           window.addEventListener("mousemove", (e) => {
+               gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+               gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.02 });
+           });
+       }
 
-        new Swiper(".specials-swiper", {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: { delay: 3500, disableOnInteraction: false },
-            grabCursor: true,
-            pagination: { el: ".specials-swiper .swiper-pagination", clickable: true },
-            navigation: {
-                nextEl: ".specials-swiper .swiper-button-next",
-                prevEl: ".specials-swiper .swiper-button-prev",
-            },
-            breakpoints: {
-                768: { slidesPerView: 1 },
-                1024: { slidesPerView: 2, spaceBetween: 24 },
-            },
-        });
-    }
+       const searchInput = document.getElementById("menu-search");
+       const filterButtons = document.querySelectorAll(".filter-pill");
+
+       function processFilter() {
+           const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+           const activeBtn = document.querySelector(".filter-pill.active");
+           const activeFilter = activeBtn ? activeBtn.getAttribute("data-filter") : "all";
+
+           document.querySelectorAll(".filter-item").forEach(card => {
+               const nameEl = card.querySelector(".item-name");
+               const descEl = card.querySelector(".item-desc");
+               const name = nameEl ? nameEl.innerText.toLowerCase() : "";
+               const desc = descEl ? descEl.innerText.toLowerCase() : "";
+               const type = card.getAttribute("data-type");
+
+               const matchesSearch = name.includes(query) || desc.includes(query);
+               const matchesFilter = activeFilter === "all" || type === activeFilter;
+
+               card.style.display = (matchesSearch && matchesFilter) ? "block" : "none";
+           });
+       }
+
+       if (searchInput) searchInput.addEventListener("input", processFilter);
+       filterButtons.forEach(btn => {
+           btn.addEventListener("click", (e) => {
+               filterButtons.forEach(b => b.classList.remove("active"));
+               e.target.classList.add("active");
+               processFilter();
+           });
+       });
+
+       const scrollToTopBtn = document.getElementById("scroll-to-top");
+       if (scrollToTopBtn) {
+           scrollToTopBtn.addEventListener("click", () => {
+               window.scrollTo({ top: 0, behavior: "smooth" });
+           });
+       }
+   }
+
+   function bindTiltSensors() {
+       if (window.innerWidth <= 991) return;
+       document.querySelectorAll(".card-3d-tilt").forEach(card => {
+           card.addEventListener("mousemove", (e) => {
+               const rect = card.getBoundingClientRect();
+               const x = e.clientX - rect.left - (rect.width / 2);
+               const y = e.clientY - rect.top - (rect.height / 2);
+               const factorX = (x / (rect.width / 2)) * 8;
+               const factorY = -(y / (rect.height / 2)) * 8;
+               card.style.transform = `rotateX(${factorY}deg) rotateY(${factorX}deg) translateY(-2px)`;
+           });
+           card.addEventListener("mouseleave", () => {
+               card.style.transform = "rotateX(0deg) rotateY(0deg) translateY(0px)";
+           });
+       });
+   }
+
+   function initSpecialsCarousel() {
+       const el = document.querySelector(".specials-swiper");
+       if (!el || !window.Swiper) return;
+
+       new Swiper(".specials-swiper", {
+           slidesPerView: 1,
+           spaceBetween: 20,
+           loop: true,
+           autoplay: { delay: 3500, disableOnInteraction: false },
+           grabCursor: true,
+           pagination: { el: ".specials-swiper .swiper-pagination", clickable: true },
+           navigation: {
+               nextEl: ".specials-swiper .swiper-button-next",
+               prevEl: ".specials-swiper .swiper-button-prev",
+           },
+           breakpoints: {
+               768: { slidesPerView: 1 },
+               1024: { slidesPerView: 2, spaceBetween: 24 },
+           },
+       });
+   }
 </script>
 </body>
 </html>

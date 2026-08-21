@@ -689,6 +689,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
 <script>
     let isDiningIn = null;
 
@@ -705,6 +706,9 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     const whatsappNumber = /*[[${business.whatsapp != null ? '91' + business.whatsapp : ''}]]*/ "";
+    const businessSlug = /*[[${businessSlug}]]*/ "";
+    // const API_BASE_URL = "https://admin.trybizly.com/api";
+    const API_BASE_URL = "http://localhost:8080/api";
     /*]]>*/
 
     gsap.registerPlugin(ScrollTrigger);
@@ -865,41 +869,60 @@
     function closeOrder() { document.getElementById("orderModal").classList.remove("open"); }
     function closeOrderOnBg(e) { if (e.target === document.getElementById("orderModal")) closeOrder(); }
 
-    function placeOrder() {
-        if (cart.length === 0) { alert("Please add items first!"); return; }
-        const name = document.getElementById("custName").value.trim();
-        const phone = document.getElementById("custPhone").value.trim();
-        if (!name) { alert("Please enter your name!"); return; }
-        if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
+    async function placeOrder() {
+    if (cart.length === 0) { alert("Please add items first!"); return; }
+    const name = document.getElementById("custName").value.trim();
+    const phone = document.getElementById("custPhone").value.trim();
+    if (!name) { alert("Please enter your name!"); return; }
+    if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
 
-        let message = "Hello! I would like to place an order:\n\n";
-        message += `Name: ${name}\nMobile: ${phone}\n\n`;
-        if (isDiningIn === true) {
-            const tableNum = document.getElementById("tableNumber").value.trim();
-            message += `Dining In: Yes\n`;
-            if (tableNum) message += `Table Number: ${tableNum}\n`;
-            message += `\n`;
-        } else if (isDiningIn === false) {
-            message += `Dining In: No\n\n`;
-        }
-        cart.forEach(item => { message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`; });
-        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-        message += `\nTotal: ₹${total}`;
+    const tableNum = isDiningIn === true ? document.getElementById("tableNumber").value.trim() : null;
 
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
-
-        cart = [];
-        document.getElementById("custName").value = "";
-        document.getElementById("custPhone").value = "";
-        updateCartBadge();
-        renderCart();
-        isDiningIn = null;
-        document.getElementById("tableNumber").value = "";
-        document.getElementById("tableNumber").style.display = "none";
-        document.getElementById("diningYesBtn").style.background = "transparent";
-        document.getElementById("diningNoBtn").style.background = "transparent";
-        closeOrder();
+    // Order ko backend mein save karo (WhatsApp khulne se pehle)
+    try {
+        await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                customerName: name,
+                customerPhone: phone,
+                items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
+                diningIn: isDiningIn,
+                tableNumber: tableNum
+            })
+        });
+    } catch (err) {
+        console.error("Failed to save order:", err);
+        // Save fail ho bhi jaye, WhatsApp flow rukna nahi chahiye
     }
+
+    let message = "Hello! I would like to place an order:\n\n";
+    message += `Name: ${name}\nMobile: ${phone}\n\n`;
+    if (isDiningIn === true) {
+        message += `Dining In: Yes\n`;
+        if (tableNum) message += `Table Number: ${tableNum}\n`;
+        message += `\n`;
+    } else if (isDiningIn === false) {
+        message += `Dining In: No\n\n`;
+    }
+    cart.forEach(item => { message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`; });
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    message += `\nTotal: ₹${total}`;
+
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
+
+    cart = [];
+    document.getElementById("custName").value = "";
+    document.getElementById("custPhone").value = "";
+    updateCartBadge();
+    renderCart();
+    isDiningIn = null;
+    document.getElementById("tableNumber").value = "";
+    document.getElementById("tableNumber").style.display = "none";
+    document.getElementById("diningYesBtn").style.background = "transparent";
+    document.getElementById("diningNoBtn").style.background = "transparent";
+    closeOrder();
+}
 
     gsap.to(".ff1", { y: -16, duration: 3.4, yoyo: true, repeat: -1, ease: "sine.inOut" });
     gsap.to(".ff2", { y: 14, duration: 4, yoyo: true, repeat: -1, ease: "sine.inOut", delay: .4 });
