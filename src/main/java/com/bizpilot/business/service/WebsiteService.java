@@ -96,7 +96,10 @@ public class WebsiteService {
 
             grouped.computeIfAbsent(row.getSortOrder(), key -> new LinkedHashMap<>());
             grouped.get(row.getSortOrder()).put(row.getFieldKey(), row.getFieldValue());
-
+            grouped.get(row.getSortOrder()).put(row.getFieldKey(), row.getFieldValue());
+            if (row.getStockQuantity() != null) {
+                grouped.get(row.getSortOrder()).put("__stock", String.valueOf(row.getStockQuantity()));
+            }
             if (Boolean.TRUE.equals(row.getFeatured())) {
                 featuredSortOrders.add(row.getSortOrder());
             }

@@ -13,6 +13,7 @@ public class CategoryRowResponse {
     private Map<String, String> fields;
     private Boolean active;
     private Boolean featured;
+    private Integer stockQuantity;
 
 
 }

@@ -34,6 +34,9 @@ public class BusinessCategoryDataEntity extends BaseEntity {
 
     private Boolean active;
 
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity; // null = unlimited
+
     @Column(name = "featured", nullable = false)
     @Builder.Default
     private Boolean featured = false;

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Status</title>
+    <style>
+        body{font-family:Arial,sans-serif; background:#0A0908; color:#EDE6D6; margin:0; padding:40px 20px; display:flex; justify-content:center;}
+        .card{max-width:480px; width:100%; background:#1B1815; border-radius:16px; padding:32px;}
+        h2{margin-bottom:6px;}
+        .status-badge{display:inline-block; padding:8px 20px; border-radius:30px; font-weight:700; font-size:14px; margin:16px 0;}
+        .item-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size:14px;}
+        .total{display:flex; justify-content:space-between; font-weight:700; margin-top:14px; font-size:16px;}
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>Order #<span id="orderId" th:text="${orderId}"></span></h2>
+    <p id="tableInfo" style="color:#9599A6; font-size:13px;"></p>
+    <div class="status-badge" id="statusBadge">Loading...</div>
+    <div id="itemsList"></div>
+    <div class="total"><span>Total</span><span id="totalAmount">₹0</span></div>
+    <p style="margin-top:20px; font-size:12px; color:#9599A6;">This page auto-updates every 8 seconds.</p>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const orderId = /*[[${orderId}]]*/ 0;
+    const API_BASE_URL = "https://admin.trybizly.com/api";
+    /*]]>*/
+
+    const STATUS_COLORS = {
+      PENDING: "#FFB020", ACCEPTED: "#3B82F6", PREPARING: "#8B5CF6",
+      READY: "#00D9B5", COMPLETED: "#22C55E", CANCELLED: "#EF4444"
+    };
+
+    async function loadOrder() {
+      try {
+        const res = await fetch(`${API_BASE_URL}/public/orders/detail/${orderId}`);
+        const data = await res.json();
+
+        const badge = document.getElementById("statusBadge");
+        badge.textContent = data.status;
+        badge.style.background = (STATUS_COLORS[data.status] || "#999") + "22";
+        badge.style.color = STATUS_COLORS[data.status] || "#999";
+
+        if (data.tableNumber) {
+          document.getElementById("tableInfo").textContent = `Table Number: ${data.tableNumber}`;
+        }
+
+        const items = JSON.parse(data.itemsJson);
+        document.getElementById("itemsList").innerHTML = items.map(i =>
+          `<div class="item-row"><span>${i.name} x${i.qty}</span><span>₹${i.price * i.qty}</span></div>`
+        ).join("");
+
+        document.getElementById("totalAmount").textContent = `₹${data.totalAmount}`;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    loadOrder();
+    setInterval(loadOrder, 8000);
+</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ public class CategoryRowRequest {
 
     private Boolean active;
     private Boolean featured;
+    private Integer stockQuantity;
 
 
 }

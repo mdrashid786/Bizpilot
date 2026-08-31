@@ -1,0 +1,1 @@
+ALTER TABLE business_category_data ADD COLUMN stock_quantity INT NULL;

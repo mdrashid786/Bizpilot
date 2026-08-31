@@ -1,5 +1,6 @@
 package com.bizpilot.business.entity;
 
+import com.bizpilot.business.model.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,4 +42,9 @@ public class OrderEntity extends BaseEntity {
 
     @Column(name = "table_number", length = 50)
     private String tableNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private OrderStatus status = OrderStatus.PENDING;
 }

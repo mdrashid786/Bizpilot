@@ -84,6 +84,7 @@ public class SecurityConfig {
                                 "/error",
                                 "/{slug:^(?!.*\\.).*$}",
                                 "/api/public/**",
+                                "/order-status/**",
                                 "/themes/**",
                                 "/preview/**",
                                 "/theme-previews/**",

@@ -43,6 +43,12 @@ public class WebsiteController {
         return websiteService.render(slug, model);
     }
 
+    @GetMapping("/order-status/{orderId}")
+    public String orderStatus(@PathVariable Long orderId, Model model) {
+        model.addAttribute("orderId", orderId);
+        return "order-status"; // templates/order-status.html
+    }
+
 
 
 //    @GetMapping("/preview/{slug}/{theme}")

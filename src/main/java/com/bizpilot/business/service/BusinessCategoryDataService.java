@@ -437,6 +437,7 @@ public class BusinessCategoryDataService {
                             .sortOrder(sortOrder)
                             .active(isActive)
                             .featured(isFeatured)
+                            .stockQuantity(request.getStockQuantity())
                             .build();
             repository.save(entity);
         }
@@ -511,6 +512,7 @@ public class BusinessCategoryDataService {
                     .fields(fields)
                     .active(entry.getValue().get(0).getActive())
                     .featured(entry.getValue().get(0).getFeatured())
+                    .stockQuantity(entry.getValue().get(0).getStockQuantity())
                     .build());
         }
 
@@ -573,6 +575,7 @@ public class BusinessCategoryDataService {
         Integer sortOrder = existing.get(0).getSortOrder();
         boolean isActive = request.getActive() == null ? existing.get(0).getActive() : request.getActive();
         boolean isFeatured = request.getFeatured() == null ? existing.get(0).getFeatured() : request.getFeatured();
+        Integer stockQuantity = request.getFeatured() == null ? existing.get(0).getStockQuantity() : request.getStockQuantity();
 
         for (String key : request.getFields().keySet()) {
             validateField(business, key);
@@ -590,6 +593,7 @@ public class BusinessCategoryDataService {
                             .sortOrder(sortOrder)
                             .active(isActive)
                             .featured(isFeatured)
+                            .stockQuantity(stockQuantity)
                             .build();
             repository.save(entity);
         }
@@ -600,6 +604,7 @@ public class BusinessCategoryDataService {
                 .fields(request.getFields())
                 .active(isActive)
                 .featured(isFeatured)
+                .stockQuantity(stockQuantity)
                 .build();
     }
 

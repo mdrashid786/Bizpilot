@@ -41,7 +41,10 @@ public class BusinessCategoryDataController {
     public CategoryRowResponse updateRow(
             @PathVariable String rowId,
             @Valid @RequestBody CategoryRowRequest request) {
-        return service.updateRow(rowId, request);
+        System.out.println("quantity : "+request.getStockQuantity()); // 👈 yeh print karo
+        CategoryRowResponse response = service.updateRow(rowId, request);
+        System.out.println("Response stockQuantity: " + response.getStockQuantity()); // 👈 yeh bhi
+        return response;
     }
 
     @DeleteMapping("/row/{rowId}")

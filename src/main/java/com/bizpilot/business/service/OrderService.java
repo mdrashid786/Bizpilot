@@ -3,11 +3,13 @@ package com.bizpilot.business.service;
 import com.bizpilot.authentication.entity.UserEntity;
 import com.bizpilot.authentication.repository.UserRepository;
 import com.bizpilot.business.dto.request.PlaceOrderRequest;
+import com.bizpilot.business.dto.response.OrderDetailResponse;
 import com.bizpilot.business.dto.response.OrderStatsResponse;
 import com.bizpilot.business.dto.response.RecentOrderResponse;
 import com.bizpilot.business.entity.BusinessEntity;
 import com.bizpilot.business.entity.CustomerEntity;
 import com.bizpilot.business.entity.OrderEntity;
+import com.bizpilot.business.model.OrderStatus;
 import com.bizpilot.business.repository.BusinessRepository;
 import com.bizpilot.business.repository.CustomerRepository;
 import com.bizpilot.business.repository.OrderRepository;
@@ -36,7 +38,7 @@ public class OrderService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
-    public void placeOrder(String slug, PlaceOrderRequest request) {
+    public Long placeOrder(String slug, PlaceOrderRequest request) {
 
         BusinessEntity business = businessRepository.findBySlug(slug)
                 .orElseThrow(() -> new BusinessNotFoundException(slug));
@@ -79,7 +81,10 @@ public class OrderService {
                 .tableNumber(request.getTableNumber())
                 .build();
 
-        orderRepository.save(order);
+//        orderRepository.save(order);
+        OrderEntity saved = orderRepository.save(order);
+        return saved.getId(); // 👈 return add karo
+
     }
 
     public List<RecentOrderResponse> getRecentOrders() {
@@ -99,6 +104,28 @@ public class OrderService {
                 .createdAt(o.getCreatedAt())
                 .build()
         ).toList();
+    }
+
+    public OrderDetailResponse getOrderDetail(Long orderId) {
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return OrderDetailResponse.builder()
+                .id(order.getId())
+                .customerName(order.getCustomerName())
+                .itemsJson(order.getItemsJson())
+                .totalAmount(order.getTotalAmount())
+                .tableNumber(order.getTableNumber())
+                .status(order.getStatus())
+                .createdAt(order.getCreatedAt())
+                .build();
+    }
+
+    @Transactional
+    public void updateStatus(Long orderId, OrderStatus status) {
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(status);
+        orderRepository.save(order);
     }
 
     public OrderStatsResponse getStats() {

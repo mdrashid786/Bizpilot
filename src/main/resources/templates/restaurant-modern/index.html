@@ -66,13 +66,11 @@
 
         .glass-card { background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); transition: border 0.3s, box-shadow 0.3s, transform 0.3s; }
 
-        /* HERO */
         .hero-bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 1; opacity: 0.3; }
         .hero-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, transparent 10%, var(--bg-main) 90%); z-index: 2; }
         .hero-z-index { z-index: 3; }
         .max-w-600 { max-width: 600px; }
 
-        /* HERO ALIGNMENT FIX */
         .hero-section {
           position: relative;
           min-height: 100vh;
@@ -129,7 +127,6 @@
           flex-wrap: wrap;
         }
 
-        /* SPACING CORRECTIONS */
         .section-padding { padding: clamp(45px, 6vw, 80px) 0; }
         .bg-dark-gradient-layer { background: linear-gradient(180deg, var(--bg-main) 0%, rgba(15,15,20,1) 50%, var(--bg-main) 100%); }
 
@@ -154,7 +151,6 @@
         .bg-nonveg { background-color: rgba(239, 68, 68, 0.25); border: 1px solid #EF4444; color: #EF4444; }
         .card-price-tag { font-size: 1.25rem; font-weight: 700; color: var(--secondary-gold); }
 
-        /* SPECIALS CAROUSEL */
         .specials-swiper { width: 100%; padding: 10px 0 45px; overflow: visible !important; }
         .special-slide-card { height: 100%; }
         .specials-swiper .swiper-pagination-bullet { background: #FFF !important; opacity: 0.3; }
@@ -166,7 +162,6 @@
 
         .border-gold-glow { border: 1px solid rgba(255, 209, 102, 0.15); }
 
-        /* REVIEWS */
         .review-card { padding: 1.5rem; border-radius: 14px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
         .reviewer-img { width: 44px; height: 44px; object-fit: cover; }
         .review-quote-mark { font-size: 2rem; font-family: var(--font-serif); color: var(--secondary-gold); opacity: 0.4; line-height: 1; }
@@ -178,7 +173,6 @@
         .gallery-zoom { width: 100%; height: 220px; object-fit: cover; transition: transform 0.4s; border-radius: 10px !important; }
         .gallery-zoom:hover { transform: scale(1.03); }
 
-        /* FLOATING UTILITIES */
         .floating-cart-btn { position: fixed; bottom: 24px; left: 24px; width: 52px; height: 52px; background-color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; z-index: 999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.3s; text-decoration: none; border: none; cursor: pointer; }
         .floating-cart-btn:hover { transform: scale(1.08); color: white; }
         .cart-badge { position: absolute; top: -3px; right: -3px; background: var(--primary-solid); color: white; font-size: 0.65rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
@@ -187,7 +181,6 @@
         #scroll-to-top.show { display: flex; }
         #scroll-to-top:hover { border-color: var(--primary-solid); color: var(--primary-solid); }
 
-        /* ORDER MODAL */
         .order-modal-overlay { position: fixed; inset: 0; z-index: 20000; background: rgba(9,9,11,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 16px; }
         .order-modal-overlay.open { opacity: 1; pointer-events: all; }
         .order-modal { background: #131316; border: 1px solid var(--card-border); border-radius: 12px; max-width: 440px; width: 100%; padding: 1.5rem; max-height: 90vh; overflow-y: auto; }
@@ -226,7 +219,6 @@
 
 <canvas id="three-bg-canvas"></canvas>
 
-<!-- FLOATING CART TRIGGER -->
 <button class="floating-cart-btn" id="cart-trigger" onclick="openOrder()">
     <i class="fas fa-shopping-bag"></i>
     <span class="cart-badge" id="cart-badge" style="display:none;">0</span>
@@ -235,7 +227,6 @@
 
 <div id="app-wrapper">
 
-    <!-- HEADER -->
     <header>
         <nav class="navbar navbar-expand-lg fixed-top dynamic-navbar">
             <div class="container">
@@ -263,8 +254,6 @@
         </nav>
     </header>
 
-    <!-- HERO -->
-    <!-- HERO SECTION -->
     <section id="hero" class="hero-section">
         <div class="hero-bg-overlay"
              th:style="${business.coverImage != null}
@@ -293,7 +282,6 @@
         </div>
     </section>
 
-    <!-- ABOUT -->
     <section id="about" class="section-padding">
         <div class="container">
             <div class="row align-items-center g-4">
@@ -351,7 +339,6 @@
         </div>
     </section>
 
-    <!-- MENU -->
     <section id="menu-section" class="section-padding bg-dark-gradient-layer">
         <div class="container">
             <div class="text-center mb-4" data-aos="zoom-in">
@@ -385,10 +372,20 @@
                         <p class="text-light-muted small mb-3 item-desc" th:if="${descriptionKey != null and item.get(descriptionKey) != null}" th:text="${item.get(descriptionKey)}">Description</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                             <span class="card-price-tag" th:if="${priceKey != null and item.get(priceKey) != null}" th:text="'₹' + ${item.get(priceKey)}">₹0</span>
-                            <button class="btn btn-outline-glass btn-sm px-3"
+                           <button class="btn btn-outline-glass btn-sm px-3"
                                     th:attr="onclick=|addToCart('${item.get(nameKey)}', ${priceKey != null and item.get(priceKey) != null ? item.get(priceKey) : 0})|">
                                 <i class="fas fa-plus me-1"></i> Add to Order
                             </button>
+                            <!--<button type="button"
+                                    th:if="${item.get('__stock') == null or Integer.parseInt(item.get('__stock')) > 0}"
+                                    th:attr="onclick=|addToCart('${item.get(nameKey)}', ${item.get(priceKey)})|">
+                                Add to Order
+                            </button>
+                            <span th:unless="${item.get('__stock') == null or Integer.parseInt(item.get('__stock')) > 0}"
+                                  style="color:#EF4444; font-size:12px; font-weight:700;">
+                                OUT OF STOCK
+                            </span>-->
+
                         </div>
                     </div>
                 </div>
@@ -401,7 +398,6 @@
         </div>
     </section>
 
-    <!-- SPECIALS -->
     <section id="special-dishes" class="section-padding" th:if="${!#lists.isEmpty(specialItems)}">
         <div class="container">
             <div class="text-center mb-4" data-aos="fade-up">
@@ -436,7 +432,6 @@
         </div>
     </section>
 
-    <!-- WHY US -->
     <section id="why-us" class="section-padding bg-dark-gradient-layer">
         <div class="container">
             <div class="text-center mb-4" data-aos="fade-up">
@@ -470,7 +465,6 @@
         </div>
     </section>
 
-    <!-- GALLERY -->
     <section id="gallery" class="section-padding">
         <div class="container">
             <div class="text-center mb-4" data-aos="zoom-in">
@@ -488,7 +482,6 @@
         </div>
     </section>
 
-    <!-- REVIEWS -->
     <section id="reviews" class="section-padding bg-dark-gradient-layer">
         <div class="container">
             <div class="text-center mb-4" data-aos="fade-up">
@@ -540,7 +533,6 @@
         </div>
     </section>
 
-    <!-- CONTACT -->
     <section id="contact" class="section-padding">
         <div class="container">
             <div class="row g-4">
@@ -568,7 +560,6 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="pt-4 pb-3 border-top border-secondary-subtle">
         <div class="container">
             <div class="row g-3 mb-3">
@@ -598,7 +589,6 @@
 
 </div>
 
-<!-- ORDER MODAL -->
 <div class="order-modal-overlay" id="orderModal" onclick="closeOrderOnBg(event)">
     <div class="order-modal">
         <div class="order-modal-header">
@@ -729,7 +719,33 @@
    function closeOrder() { document.getElementById("orderModal").classList.remove("open"); }
    function closeOrderOnBg(e) { if (e.target === document.getElementById("orderModal")) closeOrder(); }
 
-  async function placeOrder() {
+async function placeOrder() {
+    if (cart.length === 0) { alert("Please add items first!"); return; }
+    const name = document.getElementById("custName").value.trim();
+    const phone = document.getElementById("custPhone").value.trim();
+    if (!name) { alert("Please enter your name!"); return; }
+    if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                customerName: name,
+                customerPhone: phone,
+                items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
+                diningIn: !!tableNumberFromQR,
+                tableNumber: tableNumberFromQR
+            })
+        });
+        const data = await res.json();
+        window.location.href = `/order-status/${data.orderId}`; // 👈 WhatsApp ki jagah redirect
+    } catch (err) {
+        alert("Failed to place order. Please try again.");
+    }
+}
+
+  <!--async function placeOrder() {
     if (cart.length === 0) { alert("Please add items first!"); return; }
     const name = document.getElementById("custName").value.trim();
     const phone = document.getElementById("custPhone").value.trim();
@@ -738,7 +754,6 @@
 
     const tableNum = isDiningIn === true ? document.getElementById("tableNumber").value.trim() : null;
 
-    // Order ko backend mein save karo (WhatsApp khulne se pehle)
     try {
         await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
             method: "POST",
@@ -753,7 +768,6 @@
         });
     } catch (err) {
         console.error("Failed to save order:", err);
-        // Save fail ho bhi jaye, WhatsApp flow rukna nahi chahiye
     }
 
     let message = "Hello! I would like to place an order:\n\n";
@@ -782,7 +796,7 @@
     document.getElementById("diningYesBtn").style.background = "transparent";
     document.getElementById("diningNoBtn").style.background = "transparent";
     closeOrder();
-}
+}-->
 
    function initThreeJSBackground() {
        const canvas = document.getElementById("three-bg-canvas");
