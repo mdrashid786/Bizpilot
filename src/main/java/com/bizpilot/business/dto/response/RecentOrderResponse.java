@@ -1,5 +1,6 @@
 package com.bizpilot.business.dto.response;
 
+import com.bizpilot.business.model.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,5 +16,6 @@ public class RecentOrderResponse {
     private Double totalAmount;
     private Boolean diningIn;
     private String tableNumber;
+    private OrderStatus status; // 👈 Ensure OrderStatus type yahan maujood hai
     private LocalDateTime createdAt;
 }

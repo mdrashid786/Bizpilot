@@ -648,22 +648,30 @@
    const API_BASE_URL = "http://localhost:8080/api";
    /*]]>*/
 
-   document.addEventListener("DOMContentLoaded", () => {
-       initThreeJSBackground();
-       initGSAPCoreAnimations();
-       initCoreInteractions();
-       bindTiltSensors();
-       initSpecialsCarousel();
+document.addEventListener("DOMContentLoaded", () => {
+    safeInit(initThreeJSBackground);
+    safeInit(initGSAPCoreAnimations);
+    safeInit(initCoreInteractions);
+    safeInit(bindTiltSensors);
+    safeInit(initSpecialsCarousel);
 
-       setTimeout(() => {
-           const loader = document.getElementById("page-loader");
-           if (loader) {
-               loader.style.opacity = "0";
-               setTimeout(() => loader.style.display = "none", 600);
-           }
-           AOS.init({ duration: 800, once: true });
-       }, 400);
-   });
+    setTimeout(() => {
+        const loader = document.getElementById("page-loader");
+        if (loader) {
+            loader.style.opacity = "0";
+            setTimeout(() => loader.style.display = "none", 600);
+        }
+        AOS.init({ duration: 800, once: true });
+    }, 400);
+});
+
+function safeInit(fn) {
+    try {
+        fn();
+    } catch (err) {
+        console.error(`Init failed: ${fn.name}`, err);
+    }
+}
 
    let cart = [];
 
@@ -726,36 +734,10 @@ async function placeOrder() {
     if (!name) { alert("Please enter your name!"); return; }
     if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
 
-    try {
-        const res = await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                customerName: name,
-                customerPhone: phone,
-                items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
-                diningIn: !!tableNumberFromQR,
-                tableNumber: tableNumberFromQR
-            })
-        });
-        const data = await res.json();
-        window.location.href = `/order-status/${data.orderId}`; // 👈 WhatsApp ki jagah redirect
-    } catch (err) {
-        alert("Failed to place order. Please try again.");
-    }
-}
-
-  <!--async function placeOrder() {
-    if (cart.length === 0) { alert("Please add items first!"); return; }
-    const name = document.getElementById("custName").value.trim();
-    const phone = document.getElementById("custPhone").value.trim();
-    if (!name) { alert("Please enter your name!"); return; }
-    if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
-
     const tableNum = isDiningIn === true ? document.getElementById("tableNumber").value.trim() : null;
 
     try {
-        await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
+        const res = await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -766,37 +748,12 @@ async function placeOrder() {
                 tableNumber: tableNum
             })
         });
+        const data = await res.json();
+        window.location.href = `/order-status/${data.orderId}`;
     } catch (err) {
-        console.error("Failed to save order:", err);
+        alert("Failed to place order. Please try again.");
     }
-
-    let message = "Hello! I would like to place an order:\n\n";
-    message += `Name: ${name}\nMobile: ${phone}\n\n`;
-    if (isDiningIn === true) {
-        message += `Dining In: Yes\n`;
-        if (tableNum) message += `Table Number: ${tableNum}\n`;
-        message += `\n`;
-    } else if (isDiningIn === false) {
-        message += `Dining In: No\n\n`;
-    }
-    cart.forEach(item => { message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`; });
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    message += `\nTotal: ₹${total}`;
-
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
-
-    cart = [];
-    document.getElementById("custName").value = "";
-    document.getElementById("custPhone").value = "";
-    updateCartBadge();
-    renderCart();
-    isDiningIn = null;
-    document.getElementById("tableNumber").value = "";
-    document.getElementById("tableNumber").style.display = "none";
-    document.getElementById("diningYesBtn").style.background = "transparent";
-    document.getElementById("diningNoBtn").style.background = "transparent";
-    closeOrder();
-}-->
+}
 
    function initThreeJSBackground() {
        const canvas = document.getElementById("three-bg-canvas");

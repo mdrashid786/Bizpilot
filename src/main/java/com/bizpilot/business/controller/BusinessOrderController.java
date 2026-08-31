@@ -1,6 +1,7 @@
 package com.bizpilot.business.controller;
 
 import com.bizpilot.business.dto.request.UpdateOrderStatusRequest;
+import com.bizpilot.business.dto.response.OrderDetailResponse;
 import com.bizpilot.business.dto.response.OrderStatsResponse;
 import com.bizpilot.business.dto.response.RecentOrderResponse;
 import com.bizpilot.business.service.OrderService;
@@ -29,8 +30,13 @@ public class BusinessOrderController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Void> updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateOrderStatusRequest request) {
+    public OrderDetailResponse updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateOrderStatusRequest request) {
         orderService.updateStatus(id, request.getStatus());
-        return ResponseEntity.ok().build();
+        OrderDetailResponse response = orderService.getOrderDetail(id);
+
+        System.out.println("status : "+request.getStatus());
+        return response;
     }
+
+
 }

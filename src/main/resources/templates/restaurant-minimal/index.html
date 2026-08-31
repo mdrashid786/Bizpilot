@@ -376,27 +376,6 @@
                 </div>
             </div>
 
-            <!--<div class="stat-row">
-                <div class="row g-2 pt-3 border-top border-secondary-subtle">
-                    <div class="col-3 text-center">
-                        <h3 class="text-gold fw-bold mb-0 fs-4">5</h3>
-                        <small class="text-light-muted">Years Exp</small>
-                    </div>
-                    <div class="col-3 text-center">
-                        <h3 class="text-neon-accent fw-bold mb-0 fs-4">20K+</h3>
-                        <small class="text-light-muted">Guests</small>
-                    </div>
-                    <div class="col-3 text-center">
-                        <h3 class="text-white fw-bold mb-0 fs-4">50K+</h3>
-                        <small class="text-light-muted">Orders</small>
-                    </div>
-                    <div class="col-3 text-center">
-                        <h3 class="text-gold fw-bold mb-0 fs-4">4.9★</h3>
-                        <small class="text-light-muted">Rating</small>
-                    </div>
-                </div>
-            </div>-->
-
             <div class="about-meta">
                 <div th:if="${business.businessHours != null}"><b>Hours</b><span th:text="${business.businessHours}">Hours</span></div>
                 <div th:if="${business.phone != null}"><b>Phone</b><a th:href="'tel:' + ${business.phone}" th:text="${business.phone}">Phone</a></div>
@@ -681,7 +660,7 @@
             <span style="color:var(--ink-dim); font-size:0.85rem;">Total</span>
             <strong id="orderTotal" style="color:var(--gold); font-size:1.1rem;">₹0</strong>
         </div>
-        <button class="btn btn-solid" style="width:100%; justify-content:center;" onclick="placeOrder()"><span>Proceed to WhatsApp →</span></button>
+        <button class="btn btn-solid" style="width:100%; justify-content:center;" onclick="placeOrder()"><span>Proceed →</span></button>
     </div>
 </div>
 
@@ -870,59 +849,32 @@
     function closeOrderOnBg(e) { if (e.target === document.getElementById("orderModal")) closeOrder(); }
 
     async function placeOrder() {
-    if (cart.length === 0) { alert("Please add items first!"); return; }
-    const name = document.getElementById("custName").value.trim();
-    const phone = document.getElementById("custPhone").value.trim();
-    if (!name) { alert("Please enter your name!"); return; }
-    if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
+        if (cart.length === 0) { alert("Please add items first!"); return; }
+        const name = document.getElementById("custName").value.trim();
+        const phone = document.getElementById("custPhone").value.trim();
+        if (!name) { alert("Please enter your name!"); return; }
+        if (!phone || phone.length < 10) { alert("Please enter a valid mobile number!"); return; }
 
-    const tableNum = isDiningIn === true ? document.getElementById("tableNumber").value.trim() : null;
+        const tableNum = isDiningIn === true ? document.getElementById("tableNumber").value.trim() : null;
 
-    // Order ko backend mein save karo (WhatsApp khulne se pehle)
-    try {
-        await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                customerName: name,
-                customerPhone: phone,
-                items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
-                diningIn: isDiningIn,
-                tableNumber: tableNum
-            })
-        });
-    } catch (err) {
-        console.error("Failed to save order:", err);
-        // Save fail ho bhi jaye, WhatsApp flow rukna nahi chahiye
+        try {
+            const res = await fetch(`${API_BASE_URL}/public/orders/${businessSlug}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    customerName: name,
+                    customerPhone: phone,
+                    items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
+                    diningIn: isDiningIn,
+                    tableNumber: tableNum
+                })
+            });
+            const data = await res.json();
+            window.location.href = `/order-status/${data.orderId}`;
+        } catch (err) {
+            alert("Failed to place order. Please try again.");
+        }
     }
-
-    let message = "Hello! I would like to place an order:\n\n";
-    message += `Name: ${name}\nMobile: ${phone}\n\n`;
-    if (isDiningIn === true) {
-        message += `Dining In: Yes\n`;
-        if (tableNum) message += `Table Number: ${tableNum}\n`;
-        message += `\n`;
-    } else if (isDiningIn === false) {
-        message += `Dining In: No\n\n`;
-    }
-    cart.forEach(item => { message += `• ${item.name}  ₹${item.price} x ${item.qty} = ₹${item.price * item.qty}\n`; });
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    message += `\nTotal: ₹${total}`;
-
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
-
-    cart = [];
-    document.getElementById("custName").value = "";
-    document.getElementById("custPhone").value = "";
-    updateCartBadge();
-    renderCart();
-    isDiningIn = null;
-    document.getElementById("tableNumber").value = "";
-    document.getElementById("tableNumber").style.display = "none";
-    document.getElementById("diningYesBtn").style.background = "transparent";
-    document.getElementById("diningNoBtn").style.background = "transparent";
-    closeOrder();
-}
 
     gsap.to(".ff1", { y: -16, duration: 3.4, yoyo: true, repeat: -1, ease: "sine.inOut" });
     gsap.to(".ff2", { y: 14, duration: 4, yoyo: true, repeat: -1, ease: "sine.inOut", delay: .4 });

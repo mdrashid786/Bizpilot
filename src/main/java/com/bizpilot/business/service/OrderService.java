@@ -101,6 +101,7 @@ public class OrderService {
                 .totalAmount(o.getTotalAmount())
                 .diningIn(o.getDiningIn())
                 .tableNumber(o.getTableNumber())
+                .status(o.getStatus())
                 .createdAt(o.getCreatedAt())
                 .build()
         ).toList();
@@ -109,6 +110,7 @@ public class OrderService {
     public OrderDetailResponse getOrderDetail(Long orderId) {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+        System.out.println("order details : "+order.getStatus());
         return OrderDetailResponse.builder()
                 .id(order.getId())
                 .customerName(order.getCustomerName())

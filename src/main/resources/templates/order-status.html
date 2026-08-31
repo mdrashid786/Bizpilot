@@ -3,64 +3,507 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Status</title>
+    <title>Live Order Tracking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body{font-family:Arial,sans-serif; background:#0A0908; color:#EDE6D6; margin:0; padding:40px 20px; display:flex; justify-content:center;}
-        .card{max-width:480px; width:100%; background:#1B1815; border-radius:16px; padding:32px;}
-        h2{margin-bottom:6px;}
-        .status-badge{display:inline-block; padding:8px 20px; border-radius:30px; font-weight:700; font-size:14px; margin:16px 0;}
-        .item-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1); font-size:14px;}
-        .total{display:flex; justify-content:space-between; font-weight:700; margin-top:14px; font-size:16px;}
+        :root {
+            --bg: #090A0F;
+            --surface: rgba(22, 24, 34, 0.75);
+            --surface-card: rgba(30, 33, 48, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #F8FAFC;
+            --text-muted: #94A3B8;
+            --primary: #FF6B00;
+            --primary-glow: rgba(255, 107, 0, 0.25);
+            --accent-green: #10B981;
+            --accent-blue: #3B82F6;
+            --accent-purple: #8B5CF6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(255, 107, 0, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px 16px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 520px;
+            width: 100%;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 28px 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* Top Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .order-meta h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #FFFFFF;
+        }
+
+        .order-meta p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .table-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #E2E8F0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Visual Banner */
+        .hero-banner {
+            position: relative;
+            background: linear-gradient(145deg, rgba(255, 107, 0, 0.15), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(255, 107, 0, 0.2);
+            border-radius: 20px;
+            padding: 24px 20px;
+            margin: 24px 0;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            overflow: hidden;
+        }
+
+        .hero-icon-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            width: 68px;
+            height: 68px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 18px;
+            border: 2px solid var(--primary);
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 0; }
+            100% { transform: scale(0.95); opacity: 0; }
+        }
+
+        .hero-text h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #FFFFFF;
+        }
+
+        .hero-text p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Order Stepper */
+        .stepper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            margin-bottom: 8px;
+            transition: all 0.4s ease;
+        }
+
+        .step.active .step-bar {
+            background: var(--primary);
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
+
+        .step.completed .step-bar {
+            background: var(--accent-green);
+        }
+
+        .step span {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .step.active span {
+            color: #FFFFFF;
+        }
+
+        .step.completed span {
+            color: var(--accent-green);
+        }
+
+        /* Items Section */
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .items-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 18px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #F8FAFC;
+        }
+
+        .item-calculation {
+            font-size: 13px;
+            color: #94A3B8;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .item-unit-rate {
+            color: #CBD5E1;
+        }
+
+        .item-qty-tag {
+            background: rgba(255, 107, 0, 0.15);
+            color: #FF8A3D;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .item-total-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: #FFFFFF;
+            letter-spacing: -0.2px;
+        }
+
+        /* Bill Summary */
+        .bill-card {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .bill-row.total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 800;
+            color: #FFFFFF;
+        }
+
+        .bill-row.total span:last-child {
+            color: var(--primary);
+            font-size: 19px;
+        }
+
+        /* Footer Sync */
+        .footer-sync {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
     </style>
 </head>
 <body>
-<div class="card">
-    <h2>Order #<span id="orderId" th:text="${orderId}"></span></h2>
-    <p id="tableInfo" style="color:#9599A6; font-size:13px;"></p>
-    <div class="status-badge" id="statusBadge">Loading...</div>
-    <div id="itemsList"></div>
-    <div class="total"><span>Total</span><span id="totalAmount">₹0</span></div>
-    <p style="margin-top:20px; font-size:12px; color:#9599A6;">This page auto-updates every 8 seconds.</p>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="order-meta">
+            <h1>Order #<span id="orderId" th:text="${orderId}">--</span></h1>
+            <p id="orderTime">Fetching updates...</p>
+        </div>
+        <div class="table-pill" id="tableBadge" style="display:none;">
+            <span>🍽️</span>
+            <span id="tableInfo">Table --</span>
+        </div>
+    </div>
+
+    <!-- Status Visual Hero -->
+    <div class="hero-banner" id="heroBanner">
+        <div class="hero-icon-wrapper">
+            <div class="pulse-ring"></div>
+            <span id="heroEmoji">⏳</span>
+        </div>
+        <div class="hero-text">
+            <h3 id="heroTitle">Checking Status</h3>
+            <p id="heroDesc">Fetching real-time kitchen updates...</p>
+        </div>
+    </div>
+
+    <!-- Progress Tracker -->
+    <div class="stepper" id="stepperContainer">
+        <div class="step" id="step-PENDING">
+            <div class="step-bar"></div>
+            <span>Placed</span>
+        </div>
+        <div class="step" id="step-ACCEPTED">
+            <div class="step-bar"></div>
+            <span>Accepted</span>
+        </div>
+        <div class="step" id="step-PREPARING">
+            <div class="step-bar"></div>
+            <span>Cooking</span>
+        </div>
+        <div class="step" id="step-READY">
+            <div class="step-bar"></div>
+            <span>Ready</span>
+        </div>
+    </div>
+
+    <!-- Items List -->
+    <div class="section-title">Order Summary</div>
+    <div class="items-card" id="itemsList">
+        <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
+            Loading order items...
+        </div>
+    </div>
+
+    <!-- Payment Summary -->
+    <div class="bill-card">
+        <div class="bill-row total">
+            <span>Total Payable</span>
+            <span id="totalAmount">₹0</span>
+        </div>
+    </div>
+
+    <!-- Live indicator -->
+    <div class="footer-sync">
+        <div class="live-dot"></div>
+        <span>Live updates active</span>
+    </div>
 </div>
 
 <script th:inline="javascript">
     /*<![CDATA[*/
     const orderId = /*[[${orderId}]]*/ 0;
-    const API_BASE_URL = "https://admin.trybizly.com/api";
+    const API_BASE_URL = "http://localhost:8080/api";
     /*]]>*/
 
-    const STATUS_COLORS = {
-      PENDING: "#FFB020", ACCEPTED: "#3B82F6", PREPARING: "#8B5CF6",
-      READY: "#00D9B5", COMPLETED: "#22C55E", CANCELLED: "#EF4444"
+    const STATUS_MAP = {
+        PENDING: {
+            title: "Order Received",
+            desc: "The kitchen has received your order and will confirm shortly.",
+            emoji: "📝",
+            step: 1
+        },
+        ACCEPTED: {
+            title: "Order Accepted",
+            desc: "Chef has acknowledged your order. Preparation starting soon.",
+            emoji: "👨‍🍳",
+            step: 2
+        },
+        PREPARING: {
+            title: "Cooking in Progress",
+            desc: "Fresh ingredients are on the pan! Your food is being prepared.",
+            emoji: "🔥",
+            step: 3
+        },
+        READY: {
+            title: "Order is Ready!",
+            desc: "Your meal is ready to be served or picked up. Enjoy!",
+            emoji: "✨",
+            step: 4
+        },
+        COMPLETED: {
+            title: "Order Delivered",
+            desc: "Thank you for dining with us! Hope you enjoyed your meal.",
+            emoji: "🎉",
+            step: 4
+        },
+        CANCELLED: {
+            title: "Order Cancelled",
+            desc: "This order was cancelled. Please contact staff for support.",
+            emoji: "❌",
+            step: 0
+        }
     };
 
+    function updateStepper(currentStep, isCancelled) {
+        const steps = ['PENDING', 'ACCEPTED', 'PREPARING', 'READY'];
+        steps.forEach((st, idx) => {
+            const el = document.getElementById(`step-${st}`);
+            if (!el) return;
+            el.className = 'step';
+            if (isCancelled) return;
+
+            if (idx + 1 < currentStep) {
+                el.classList.add('completed');
+            } else if (idx + 1 === currentStep) {
+                el.classList.add('active');
+            }
+        });
+    }
+
     async function loadOrder() {
-      try {
-        const res = await fetch(`${API_BASE_URL}/public/orders/detail/${orderId}`);
-        const data = await res.json();
+        try {
+            const res = await fetch(`${API_BASE_URL}/public/orders/detail/${orderId}`);
+            if (!res.ok) return;
+            const data = await res.json();
 
-        const badge = document.getElementById("statusBadge");
-        badge.textContent = data.status;
-        badge.style.background = (STATUS_COLORS[data.status] || "#999") + "22";
-        badge.style.color = STATUS_COLORS[data.status] || "#999";
+            // Status details
+            const config = STATUS_MAP[data.status] || STATUS_MAP.PENDING;
+            document.getElementById("heroTitle").textContent = config.title;
+            document.getElementById("heroDesc").textContent = config.desc;
+            document.getElementById("heroEmoji").textContent = config.emoji;
 
-        if (data.tableNumber) {
-          document.getElementById("tableInfo").textContent = `Table Number: ${data.tableNumber}`;
+            // Stepper update
+            updateStepper(config.step, data.status === 'CANCELLED');
+
+            // Table info
+            if (data.tableNumber) {
+                document.getElementById("tableInfo").textContent = `Table ${data.tableNumber}`;
+                document.getElementById("tableBadge").style.display = "flex";
+            }
+
+            // Placed Time
+            if (data.createdAt) {
+                const date = new Date(data.createdAt);
+                document.getElementById("orderTime").textContent = `Placed at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            }
+
+            // Items breakdown: "₹149 × 3" format clearly showing unit price and total
+            if (data.itemsJson) {
+                const items = JSON.parse(data.itemsJson);
+                document.getElementById("itemsList").innerHTML = items.map(item => {
+                    const unitPrice = Number(item.price || 0);
+                    const qty = Number(item.qty || 1);
+                    const lineTotal = unitPrice * qty;
+
+                    return `
+                        <div class="item-row">
+                            <div class="item-left">
+                                <span class="item-title">${item.name}</span>
+                                <div class="item-calculation">
+                                    <span class="item-unit-rate">₹${unitPrice.toLocaleString('en-IN')}</span>
+                                    <span>×</span>
+                                    <span class="item-qty-tag">${qty} qty</span>
+                                </div>
+                            </div>
+                            <span class="item-total-price">₹${lineTotal.toLocaleString('en-IN')}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Total Amount
+            document.getElementById("totalAmount").textContent = `₹${Number(data.totalAmount || 0).toLocaleString('en-IN')}`;
+
+        } catch (err) {
+            console.error("Failed to load order details:", err);
         }
-
-        const items = JSON.parse(data.itemsJson);
-        document.getElementById("itemsList").innerHTML = items.map(i =>
-          `<div class="item-row"><span>${i.name} x${i.qty}</span><span>₹${i.price * i.qty}</span></div>`
-        ).join("");
-
-        document.getElementById("totalAmount").textContent = `₹${data.totalAmount}`;
-      } catch (e) {
-        console.error(e);
-      }
     }
 
     loadOrder();
-    setInterval(loadOrder, 8000);
+    setInterval(loadOrder, 6000);
 </script>
 </body>
 </html>
